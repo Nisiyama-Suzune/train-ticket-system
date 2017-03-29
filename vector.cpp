@@ -2,8 +2,8 @@
 
 template <class T>
 void vector <T>::allocate_space (unsigned int size) {
-	if (size <= m_size) return;
-	smart_ptr <T> ptr (new T[size]);
+    if (size <= m_size + 1) return;
+    smart_ptr <T> ptr (new T[size] ());
 	for (unsigned int i = 0; i < m_size; i++)
 		ptr[i] = m_ptr[i];
 	m_ptr = ptr;
@@ -49,15 +49,15 @@ const T* vector <T>::c_data () const {
 
 template <class T>
 void vector <T>::push_back (const T &x) {
-	if (++m_size > d_size) allocate_space (d_size * 2 + 1);
+    if (++m_size >= d_size) allocate_space (d_size * 2 + 2);
 	m_ptr[m_size - 1] = x;
 }
 
 template <class T>
 void vector <T>::resize (unsigned int size) {
 	unsigned int p_size = d_size;
-	while (p_size < size)
-		p_size = p_size * 2 + 1;
+    while (p_size <= size)
+        p_size = p_size * 2 + 2;
 	allocate_space (p_size);
 	m_size = size;
 }

@@ -26,10 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         server_window.cpp \
     ../smart_ptr.cpp \
-    ../vector.cpp
+    ../vector.cpp \
+    train_data_manager.cpp \
+    account_manager.cpp
 
 HEADERS  += server_window.h \
     ../smart_ptr.h \
-    ../vector.h
+    ../vector.h \
+    train_data_manager.h \
+    account_manager.h
 
 FORMS    += server_window.ui
