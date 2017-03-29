@@ -33,7 +33,7 @@ template <class T>
 smart_ptr<T>::smart_ptr (const smart_ptr<T> &ptr) {
 	m_ptr = ptr.m_ptr;
 	m_cnt = ptr.m_cnt;
-	++(*m_cnt);
+	if (m_cnt != nullptr) ++(*m_cnt);
 }
 
 template <class T>
