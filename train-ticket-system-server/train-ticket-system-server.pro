@@ -25,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         server_window.cpp \
-    ../smart_ptr.cpp
+    ../smart_ptr.cpp \
+    ../vector.cpp
 
 HEADERS  += server_window.h \
-    ../smart_ptr.h
+    ../smart_ptr.h \
+    ../vector.h
 
 FORMS    += server_window.ui

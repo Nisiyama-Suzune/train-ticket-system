@@ -15,7 +15,7 @@
 			~vector ();
 			unsigned int size () const;
 			const T* c_data () const;
-			void push_back (T x);
+            void push_back (const T &x);
 			void resize (unsigned int size);
 			void clear ();
 			T &operator [] (unsigned int loc);

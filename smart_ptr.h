@@ -9,11 +9,12 @@
 		public:
 			smart_ptr ();
 			explicit smart_ptr (T * const ptr);
-			smart_ptr (const smart_ptr<T> &ptr);
+			smart_ptr (const smart_ptr <T> &ptr);
 			~smart_ptr ();
-			const smart_ptr<T> &operator = (const smart_ptr<T> &ptr);
+			const smart_ptr <T> &operator = (const smart_ptr <T> &ptr);
 			T &operator * () const;
 			T *operator -> () const;
+			T &operator [] (unsigned int loc) const;
 			int get_count () const;
 			bool expired () const;
 	};

@@ -11,7 +11,7 @@ void vector <T>::allocate_space (unsigned int size) {
 }
 
 template <class T>
-vector <T>::vector (unsigned int size = 0) {
+vector <T>::vector (unsigned int size) {
 	clear ();
 	resize (size);
 }
@@ -82,14 +82,14 @@ const T &vector <T>::operator [] (unsigned int loc) const {
 }
 
 template <class T>
-const vector <T>::operator = (const vector <T> &rhs) {
+const vector <T> vector <T>::operator = (const vector <T> &rhs) {
 	resize (rhs.size ());
 	for (int i = 0; i < m_size; i++)
 		m_ptr[i] = rhs[i];
 }
 
 template <class T>
-const vector <T>::operator + (const vector <T> &rhs) const {
+const vector <T> vector <T>::operator + (const vector <T> &rhs) const {
 	vector <T> ans (m_size + rhs.size ());
 	for (unsigned int i = 0; i < m_size; i++)
 		ans[i] = m_ptr[i];
@@ -171,7 +171,7 @@ const vector <T> vector <T>::partition (unsigned int loc, unsigned int len) cons
 template <class T>
 unsigned int vector <T>::find (const T &x) const {
 	for (int i = 0; i < m_size; i++)
-		if !((m_ptr[i] < x || x < m_ptr[i])) return i;
+        if (!(m_ptr[i] < x || x < m_ptr[i])) return i;
 	return m_size;
 }
 
