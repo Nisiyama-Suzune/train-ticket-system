@@ -1,7 +1,7 @@
 #ifndef ACCOUNT_MANAGER_H
 #define ACCOUNT_MANAGER_H
 
-#include "vector.h"
+#include "../vector.h"
 
 struct ticket_data {
     int index;

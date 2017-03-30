@@ -1,18 +1,18 @@
 #ifndef TRAIN_DATA_MANAGER_H
 #define TRAIN_DATA_MANAGER_H
 
-#include "vector.h"
+#include "../vector.h"
 
 const int PRICE_UNAVAILABLE = -1;
 
 struct date {
-    int y;
-    int m;
-    int d;
-    int h;
-    int m;
-    date (int y, int m, int d, int h, int m) : y (y), m (m), d (d), h (h), m (m) {}
-    bool operator < (const date &rhs) {}
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
+    date (int y, int m, int d, int h, int mi) : year (y), month (m), day (d), hour (h), minute (mi) {}
+    bool operator < (const date &rhs);
 };
 
 struct station_data {
@@ -53,6 +53,7 @@ public:
     void export_to_file (char *filename); //export current data to a file
     void update (date time); //delete all trains ended before time.
     vector <int> query (date lower_bound, date upper_bound, vector <char> source, vector <char> destination);
+    vector <int> query (date lower_bound, date upper_bound, vector<char> source);
     vector <int> query (vector <char> name, date time);
     bool book_train (int index, int source, int destination, int count); //true = success
     void cancel_train (int index, int source, int destination, int count);
