@@ -16,6 +16,7 @@
 			unsigned int size () const;
 			const T* c_data () const;
             void push_back (const T &x);
+            void pop_back ();
 			void resize (unsigned int size);
 			void clear ();
 			T &operator [] (unsigned int loc);
