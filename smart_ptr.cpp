@@ -83,4 +83,3 @@ template <class T>
 smart_ptr <T> make_ptr (T * const ptr) {
 	return smart_ptr <T> (ptr);
 }
-

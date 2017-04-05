@@ -28,12 +28,14 @@ SOURCES += main.cpp\
     ../smart_ptr.cpp \
     ../vector.cpp \
     train_data_manager.cpp \
-    account_manager.cpp
+    account_manager.cpp \
+    ../hash_map.cpp
 
 HEADERS  += server_window.h \
     ../smart_ptr.h \
     ../vector.h \
     train_data_manager.h \
-    account_manager.h
+    account_manager.h \
+    ../hash_map.h
 
 FORMS    += server_window.ui

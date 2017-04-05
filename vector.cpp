@@ -54,6 +54,11 @@ void vector <T>::push_back (const T &x) {
 }
 
 template <class T>
+void vector <T>::pop_back () {
+    if (m_size > 0) resize (m_size - 1);
+}
+
+template <class T>
 void vector <T>::resize (unsigned int size) {
 	unsigned int p_size = d_size;
     while (p_size <= size)
