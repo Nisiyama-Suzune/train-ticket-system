@@ -1,0 +1,84 @@
+Server，单例类
+{
+	*Date*日期
+	*Ticket*票
+	
+	Action
+	{
+	}
+	*Log* //待写
+	{
+		Date;
+		Account //谁干了什么事，这里还没想好
+		Action
+	}
+
+	-------------------------------
+	*Station* 车站
+
+	*Line* {
+		vector<Station> 存储这条线路有哪些站
+	}
+
+	*Train* {
+		Date date;
+		share_ptr which_line; 
+		同一条线路的不同日期的火车共用同一个line，删除这条线路的时候直接删除line，相应的train
+		暂时保留，访问到这个train，或[!!退出程序!!]的时候再删除。
+
+		map<KIND, vector<int> > 车票余量，map可以换成vector或者list之类的
+		bool selling; 开卖了没有
+
+	public:
+		让User查询是否有票
+		给user的买票退票函数设置友元（可以修改该对象的余票信息）
+	}
+	-------------------------------
+
+	*Account* {
+		用户类的基类，派生User和Admin
+		登录函数返回一个Account类型指针
+
+		ID，password，name
+		vector<Log*> 行为日志(直接把总表里面的相关内容指出来就好了)
+		相应虚函数
+	}
+
+	*User* {
+		vector<Ticket> 买到的票
+		query 查票
+		buy_ticket 买票 Train from -> to, KIND, number
+		return_ticket 卖票
+		update_password 修改密码
+	}
+
+	*Admin* {
+		查看日志
+		根据用户ID查询相关记录
+		添加线路(Line) //
+		添加线路(Line Date)
+
+		删除线路(某条线路所有时间的全删)
+		删除线路(某条线路某天的一趟车删)
+
+		删除用户(不能删自己)
+	}
+	-------------------------------
+	
+private:
+	vector<Account> accounts;
+	TrainContainer trains;
+	LineContainer lines;
+	StationContainer stations;
+	list or vector <Log> logs;
+
+	每个车站都知道途径本车站的有哪些线路(maybe Station里加一个 set<Line*> ?)
+	根据起点和终点查询Train的时候，把经过start的所有line按序拿出来，把经过
+	end的所有line按序拿出来，merge一下。
+	
+	Train里面有指向line的指针，如果该line被删除(或打上删除标记)，则该Train也表示被删除了
+public:
+	void 注册新用户
+	Account* 登录
+	friend Admin;(允许Admin的函数修改server里面存储的账户信息和火车线路信息)
+} server;
