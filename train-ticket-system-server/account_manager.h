@@ -1,42 +1,93 @@
-#ifndef ACCOUNT_MANAGER_H
-#define ACCOUNT_MANAGER_H
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
 
-#include "../vector.h"
-#include "../hash_map.h"
 #include <string>
+#include <fstream>
+#include "vector.h"
+#include "list.h"
+#include "io_utilities"
 
-struct ticket_data {
-    int index;
-    int source;
-    int destination;
-    int count;
+class Account
+{
+protected:
+	std::string name;
+	std::string ID;
+	std::string password;//UI will encrypet it and here save the encrypted password
+public:
+    /// save & load
+    std::streampos save(std::ofstream & fout) {
+        write_str(fout, name);
+        write_str(fout, ID);
+        write_str(fout, password);
+    }
+    void load(std::ifstream & fin) {
+        read_str(fin, name);
+        read_str(fin, ID);
+        read_str(fin, password);
+    }
+
+	void update_password(const std::string& new_password);//double check the password at UI
+	Account(const std::string & name, const std::string& id, const std::string = "000000");
+	virtual void check_log() = 0; // only Admin have these virtual functions
+	virtual bool add_line(Line &line) = 0; //maybe we can let the orginal virtual functions puts"You don't have the permission!"?
+	virtual bool add_line(const std::string& name, Date date) = 0;
+	virtual bool delete_line(const std::string& name) = 0;
+	virtual void delete_account(const std::string& ID) = 0;
+	virtual void start_sell(weak_ptr<Train> train) = 0;
+	virtual void end_sell(weak_ptr<Train> train) = 0;
+
+	//User's rights
+	virtual bool buy_ticket(weak_ptr<Train> train, int from, int to, KIND kind, int num) = 0;
+	virtual bool return_ticket(int which, int num)= 0;
+	virtual vector<pair<weak_ptr<Train>, pair<int,int> > 
+		query(const std::string& from, const std::string& to, const Date& date) = 0;
 };
 
-struct account_data {
-    std::string ID;
-    std::string password;
-    std::string name;
-    vector <ticket_data> ticket;
-    bool is_deleted;
+class Admin : public Account
+{
+public:
+	void check_log();
+	bool add_line(Line &line);//
+	bool add_line(const std::string& name, Date date);
+	bool delete_line(const std::string &name); //Ex. D2333
+	bool delete_line(const Train_info& train_info);
+	bool delete_line(const std::string &name, const Date& date);//same as last one
+	void delete_account(const std::string &ID);
+	void start_sell(weak_ptr<Train> train);
+	void end_sell(weak_ptr<Train> train);
 };
 
-class account_manager
+class User : public Account
 {
 private:
-    vector <account_data> m_data;
-    hash_map <100000, std::string, int> m_hash_table;
-    vector <int> m_recycle;
+	list <Ticket> tickets;
+	//first, check if the user have bought the same ticket before, ifso, add the num
+	//otherwise, append a new node
 public:
-    account_manager();
-    int size ();
-    const account_data get_data (int index);
-    void import_from_file (char *filename); //import train data from a file, append to current data.
-    void export_to_file (char *filename); //export current data to a file
-    int query (const std::string &ID);
-    void add_ticket (int index, const ticket_data &ticket);
-    void remove_ticket (int index, int ticket_index);
-    bool add_account (account_data data);
-    void delete_account (int index);
+    /// save & load
+    std::streampos save(std::ofstream & fout) {
+        return write_list(fout, tickets, nontrivial_sl);
+    }
+    void load(std::ifstream & fin) {
+        read_list(fin, tickets, nontrivial_sl);
+    }
+
+	bool buy_ticket(weak_ptr<Train> train, int from, int to, KIND kind, int num);
+	bool return_ticket(int which, int num); //return the list's which-th ticket, quantity=num
+	//using the train_info to find the corresponding train
+	vector<Log> check_log(); //throw don't have the right =v=
+	vector<pair<weak_ptr<Train>, pair<int, int> > 
+		query(const std::string& from, const std::string& to, const Date& date); //query the corresponding tickets
+		//only when the train is selling!!
+       list& <Ticket> query_ticket() {
+		return tickets;
+	}
+	/*
+	query
+		string -> city
+		merge two city.lines
+		Train, start, end
+	*/
 };
 
-#endif // ACCOUNT_MANAGER_H
+#endif
