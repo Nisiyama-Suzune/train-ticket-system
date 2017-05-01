@@ -10,8 +10,8 @@ private:
 	typedef map<int, User> UserContainer; //ID -> account find an account, insert, remove
 	typedef map<int, Admin> AdminContainer; //ID -> account
 	typedef map<Train_info, Train> TrainContainer; //can be easily changed in the future //mayby map or hash
-	typedef map<std::string, Line> LineContainer; //ID -> Line
-	typedef map<std::string, City> CityContainer; //name -> City
+	typedef map<std::wstring, Line> LineContainer; //ID -> Line
+	typedef map<std::wstring, City> CityContainer; //name -> City
 	typedef list<Log> LogContainer;
 	UserContainer     users;
 	AdminContainer    admins;
@@ -21,9 +21,9 @@ private:
 	LogContainer      logs;
 	Account*          now_account;
 public:
-	bool Register(const std::string& ID, const std::string& password, const std::string& name);
+	bool Register(const std::wstring& ID, const std::wstring& password, const std::wstring& name);
 	//if have the same ID, return false, register failed
-	Account* login(const std::string &ID, const std::string& password);
+	Account* login(const std::wstring &ID, const std::wstring& password);
 	//if login failed, return nullptr
 	void import_options(ifstream& fin);
 	void import_trains(ifstream& fin);

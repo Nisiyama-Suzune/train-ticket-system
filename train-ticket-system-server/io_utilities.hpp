@@ -12,19 +12,19 @@
 #define trivial_sl true
 #define nontrivial_sl false
 
-std::ofstream& write_str(std::ofstream & fout, const std::string & str) {
+std::ofstream& write_str(std::ofstream & fout, const std::wstring & str) {
     size_t len = str.length();
     fout.write(reinterpret_cast<char*> (&len), sizeof(size_t));
     fout.write(str.c_str(), sizeof(char) * len);
     return fout;
 }
 
-std::ifstream& read_str(std::ifstream & fin, std::string & str) {
+std::ifstream& read_str(std::ifstream & fin, std::wstring & str) {
     size_t len;
     fin.read(reinterpret_cast<char*> (&len), sizeof(size_t));
     char *tmp_str = new char[len];
     fin.read(tmp_str, sizeof(char) * len);
-    str = std::string(tmp_str);
+    str = std::wstring(tmp_str);
     delete [] tmp_str;
     return fin;
 }
