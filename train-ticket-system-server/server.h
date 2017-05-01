@@ -2,8 +2,8 @@
 #define SERVER_H
 
 #include <string>
-#include "map.h"
-#include "list.h"
+#include "map.hpp"
+#include "list.hpp"
 
 class Server{
 private:
