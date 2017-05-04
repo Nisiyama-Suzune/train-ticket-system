@@ -10,7 +10,7 @@
 #include "utility.hpp"
 #include "exceptions.hpp"
 
-namespace sjtu {
+//namespace sjtu {
 
 template<
 	class Key,
@@ -528,6 +528,5 @@ public:
 	}
 };
 
-}
 
 #endif

@@ -3,21 +3,21 @@
 
 #include <string>
 #include <fstream>
-#include "map.h"
+#include "map.hpp"
 #include "list.hpp"
+#include "server.h"
 //#include "smart_ptr.h"
 #include "io_utilities.hpp"
 #include "../vector.h"
 #include "account_manager.h"
 
-// illegal headers !!!
+/// illegal headers !!!
 #include <memory>
 using std::shared_ptr;
-using std::weak_ptr;
 
-class Date;
+struct Date;
 struct Train_info;
-class Ticket;
+struct Ticket;
 struct Station;
 struct City;
 class Line;
@@ -25,7 +25,7 @@ class Train;
 
 /// if you modify the data members,
 /// please rewrite the save & load functions
-class Date
+struct Date
 {
 private:
     int year, month, day;
@@ -48,18 +48,6 @@ public:
     {
         return lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year;
     }
-
-    /// save & load
-    // if the size of this class is no longer constant,
-    // these functions should be rewrite.
-    std::streampos save(std::ofstream & fout) {
-        std::streampos result = fout.tellp();
-        default_save(fout, this);
-        return result;
-    }
-    void load(std::ifstream & fin) {
-        default_load(fin, this);
-    }
 };
 
 struct Train_info
@@ -71,51 +59,16 @@ struct Train_info
         return date < rhs.date;
     }
 
-    /// save & load
-    std::streampos save(std::ofstream & fout) {
-        std::streampos result = fout.tellp();
-        write_str(fout, Line_name);
-        date.save(fout);
-        return result;
-    }
-    void load(std::ifstream & fin) {
-        read_str(fin, Line_name);
-        date.load(fin);
-    }
 };
 
-class Ticket //users return tickets by date? //TODO
+struct Ticket //users return tickets by date? //TODO
 {
-private:
     Train_info train_info;
-    std::wstring from, to;
+    int from, to;
+    std::wstring from_name, to_name;
     int price;
     KIND kind;
     int num;
-public:
-    Ticket (const Date& date, const std::wstring& from, const std::wstring& to,
-            const std::wstring& line_name, const int& price, const KIND& kind,
-            const int & num);
-
-    /// save & load
-    std::streampos save(std::ofstream & fout) {
-        std::streampos result = fout.tellp();
-        train_info.save(fout);
-        write_str(fout, from);
-        write_str(fout, to);
-        default_save(fout, price);
-        default_save(fout, kind);
-        default_save(fout, num);
-        return result;
-    }
-    void load(std::ifstream & fin) {
-        train_info.load(fin);
-        read_str(fin, from);
-        read_str(fin, to);
-        default_load(fin, price);
-        default_load(fin, kind);
-        default_load(fin, num);
-    }
 };
 
 struct Station
@@ -130,10 +83,10 @@ struct Station
 struct City
 {
     std::wstring name;
-    list<weak_ptr<Line> > lines; //maybe ? set<pair<Line*, int> > //this is (*line)'s int'th station
+    list<map<std::wstring, Line>::iterator> lines; //maybe ? set<pair<Line*, int> > //this is (*line)'s int'th station
 };
 
-class Line
+struct Line
 {
 protected:
     char type; //K G etc
@@ -141,12 +94,9 @@ protected:
     vector<Station> stations; // stations[i].miles means from start(0) to i-th station's distance
     vector<KIND> kinds; //kind of seats
     vector<vector<int> > price; //price[kind_number][station] fen-based
-    list<weak_ptr<Train> >trains;//反正只有30趟
+    list<map<Train_info, Train>::iterator>trains;//反正只有30趟
 public:
     Line();
-    friend std::istream& operator >> (istrema& in, Line & rhs);
-    friend std::ostream& operator << (ostream& out, const Line & rhs);
-    friend Train;
 };
 
 /**Same line share one line object
@@ -154,8 +104,11 @@ public:
  */
 class Train
 {
+protected:
+    typedef map<Train_info, Train>::iterator train_iter;
+
 private:
-    weak_ptr<Line> which_line;
+    map<std::wstring, Line>::iterator which_line;
     Date date;
     bool _selling;
     vector<vector<int> > station_available_ticket;
@@ -166,24 +119,20 @@ private:
      * station_available_ticket[] = {200, 199, 199, 200}
      */
 
-    // private version
-    // TODO
-    void add_remaining_tickets(int from, int to, Kind kind, int num);
-
 public:
     Train (const Line &line, const Date &date, const int& initial_ticket = 2000);
+    // 检查(from, to, kind)的票是否还有num张
     bool have_ticket (int from, int to, KIND kind, int num);
 
-    //if (lines[i].have_ticket(from, to, kind, num)) now_user->buy_ticket(i, from, to, kind, num);
-    bool selling() {
-        return _selling;
-    }
-    void change_selling() {
-        _selling = ~_selling;
-    }
+    // 给(from, to, kind)的票加上num，其中num可以为负数
+    void add_remaining_tickets(int from, int to, KIND kind, int num);
 
-    friend istream& operator >> (istrema& in, Line & rhs);
-    friend ostream& operator << (ostream& out, const Line & rhs);
+    //if (lines[i].have_ticket(from, to, kind, num)) now_user->buy_ticket(i, from, to, kind, num);
+    bool selling();
+    void change_selling();
+
+//    friend istream& operator >> (istrema& in, Line & rhs);
+//    friend ostream& operator << (ostream& out, const Line & rhs);
 };
 
 #endif

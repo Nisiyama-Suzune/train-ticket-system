@@ -1,68 +1,54 @@
 #include "account_manager.h"
 
-void Account::check_log() {
-    throw no_permission();
-}
-bool Account::add_line(Line &line) {
-    throw no_permission();
-}
-bool Account::delete_line(const std::wstring& name) {
-    throw no_permission();
-}
-void Account::delete_account(const std::wstring& ID) {
-    throw no_permission();
-}
-void Account::start_sell(weak_ptr<Train> train) {
-    throw no_permission();
-}
-void Account::end_sell(weak_ptr<Train> train) {
-    throw no_permission();
-}
-
-bool Account::buy_ticket(weak_ptr<Train> train, int from, int to, KIND kind, int num) {
-    throw no_permission();
-}
-bool Acccount::return_ticket(int which, int num) {
-    throw no_permission();
-}
-vector<pair<weak_ptr<Train>, pair<int,int>>
-Account::query(const std::wstring& from, const std::wstring& to, const Date& date) {
-    throw no_permission();
-}
-
-void Account::update_password(const std::wstring& new_password) {
+/// Account
+Account::Account() {}
+Account::Account(const std::wstring &name, const std::string &id, const std::string password)
+ : name(name), ID(id), password(password){}
+void Account::update_password(const std::string &new_password) {
     password = new_password;
 }
-Account::Account(const std::wstring & name, const std::wstring& id, const std::wstring password= "000000")
-    : name(name), ID(id), password(password) {}
 
 
-// user
-bool User::buy_ticket(weak_ptr<Train> train, int from, int to, KIND kind, int num) {
-    if (!train.have_ticket(from, to, kind, num))
-        return false;
-    // nun \in Z
-    train.add_ramaining_tickets(from, to, kind, -num);
-    return true;
+/// Admin
+bool Admin::start_sell(Account::train_iter train) {
+    if (train->second.selling())
+        return 0;
+    train->second.change_selling();
+    return 1;
 }
 
-bool User::return_ticket(int num, int which) {
+bool Admin::end_sell(Account::train_iter train) {
+    if (!train->second.selling())
+        return 0;
+    train->second.change_selling();
+    return false;
+}
+
+
+/// User
+void User::buy_ticket(Account::train_iter info_train, int from, int to, KIND kind, int num) {
+    Train &train = info_train->second;
+    if (!train.have_ticket(from, to, kind, num))
+        throw ticket_error();
+    train.add_remaining_tickets(from, to, kind, -num);
+}
+
+void User::return_ticket(int which, int num) {
+    list<Ticket>::iterator iter;
     try {
-        list<Ticket>::iterator iter = tickets.at_iter(which);
-    } catch(...) {
-        return false;
+        // 没有这么多票
+        iter = tickets.at_iter(which);
+    } catch (...) {
+        throw ticket_error();
     }
     if (iter->num < num)
-        return false;
-    (server.get_train(iter->train_info)).add_remaining_tickets(iter->from, iter->to, iter->kind, num);
+        throw ticket_error();
 
-    return true;
+    Train &train = server.get_train(iter->train_info);
+    train.add_remaining_tickets(iter->from, iter->to, iter->kind, num);
 }
 
-// admin
-bool Admin::start_sell(weak_ptr<Train> train) {
-    if (train->selling())
-        return 0;
-    train->change_selling();
-
+list<Ticket> &User::current_ticket() {
+    return tickets;
 }
+

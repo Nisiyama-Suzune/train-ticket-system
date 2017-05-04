@@ -14,6 +14,8 @@ set(SOURCE_FILES
         train-ticket-system-server/server.h
         train-ticket-system-server/train_manager.cpp
         train-ticket-system-server/train_manager.h
+        train-ticket-system-server/utility.hpp
+        train-ticket-system-server/map.hpp
         class.hpp
         vector.cpp
         vector.h)

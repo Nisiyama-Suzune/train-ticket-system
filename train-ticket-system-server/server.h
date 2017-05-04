@@ -2,10 +2,17 @@
 #define SERVER_H
 
 #include <string>
-#include "map.h"
+#include "map.hpp"
 #include "list.hpp"
+#include "train_manager.h"
+#include "account_manager.h"
+
+typedef int KIND;
 
 class Server{
+public:
+    // 需要一个wstring[]，表示几等座，从int到wstring
+
 private:
 	typedef map<int, User> UserContainer; //ID -> account find an account, insert, remove
 	typedef map<int, Admin> AdminContainer; //ID -> account
@@ -32,7 +39,7 @@ public:
 	void exiting(); //before exit, save the train_info and account_info into the files 
 	void add_log(Log log);
 	//当前内存中log较多的时候(比如达到100条)，丢到文件中去
-	friend Admin;
+//	friend Admin;
 	/**
 	 *  friend Admin::check_log(); //virtual functions
 	 *  friend Admin::add_line();
@@ -40,7 +47,9 @@ public:
 	 *  friend Admin::
 	 */
 
+    /// 接口
     Train& get_train(const Train_info & key);
+
 
 }server;
 
