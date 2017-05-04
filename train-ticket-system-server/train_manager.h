@@ -5,10 +5,15 @@
 #include <fstream>
 #include "map.h"
 #include "list.hpp"
-#include "smart_ptr.h"
-#include "utilities.hpp"
-#include "vector.h"
+//#include "smart_ptr.h"
+#include "io_utilities.hpp"
+#include "../vector.h"
 #include "account_manager.h"
+
+// illegal headers !!!
+#include <memory>
+using std::shared_ptr;
+using std::weak_ptr;
 
 class Date;
 struct Train_info;
@@ -32,7 +37,7 @@ public:
         if      (lhs.year  != rhs.year)    return lhs.year  < rhs.year;
         else if (lhs.month != rhs.month)   return lhs.month < rhs.month;
         else if (lhs.day   != rhs.day)     return lhs.day   < rhs.day;
-        else if (lhs.hour  != rhours.hour) return lhs.hour  < rhours.hour;
+        else if (lhs.hour  != rhs.hour)    return lhs.hour  < rhs.hour;
         else if (lhs.min   != rhs.min)     return lhs.min   < rhs.min;
         else return lhs.sec < rhs.sec;
     }
@@ -86,9 +91,11 @@ private:
     std::wstring from, to;
     int price;
     KIND kind;
+    int num;
 public:
     Ticket (const Date& date, const std::wstring& from, const std::wstring& to,
-            const std::wstring& line_name, const int& price, const KIND& kind);
+            const std::wstring& line_name, const int& price, const KIND& kind,
+            const int & num);
 
     /// save & load
     std::streampos save(std::ofstream & fout) {
@@ -98,6 +105,7 @@ public:
         write_str(fout, to);
         default_save(fout, price);
         default_save(fout, kind);
+        default_save(fout, num);
         return result;
     }
     void load(std::ifstream & fin) {
@@ -106,6 +114,7 @@ public:
         read_str(fin, to);
         default_load(fin, price);
         default_load(fin, kind);
+        default_load(fin, num);
     }
 };
 
@@ -135,8 +144,8 @@ protected:
     list<weak_ptr<Train> >trains;//反正只有30趟
 public:
     Line();
-    friend istream& operator >> (istrema& in, Line & rhs);
-    friend ostream& operator << (ostream& out, const Line & rhs);
+    friend std::istream& operator >> (istrema& in, Line & rhs);
+    friend std::ostream& operator << (ostream& out, const Line & rhs);
     friend Train;
 };
 
@@ -148,24 +157,30 @@ class Train
 private:
     weak_ptr<Line> which_line;
     Date date;
-    bool selling;
+    bool _selling;
     vector<vector<int> > station_available_ticket;
     /* saves the number of remaining tickets for each station
-     * e.g. station 1--2--3--4--5 with capacity 200 seats, then
+     * e.g. station 0--1--2--3--4 with capacity 200 seats, then
      * station_available_ticket[] = {200, 200, 200, 200} //Only four interval
-     * if a customer bought a ticket from 2 to 4, then
+     * if a customer bought a ticket from 1 to 3, then
      * station_available_ticket[] = {200, 199, 199, 200}
      */
+
+    // private version
+    // TODO
+    void add_remaining_tickets(int from, int to, Kind kind, int num);
+
 public:
     Train (const Line &line, const Date &date, const int& initial_ticket = 2000);
     bool have_ticket (int from, int to, KIND kind, int num);
 
-    friend bool User::buy_ticket(weak_ptr<Train> train, int from, int to, KIND kind, int num);
-    //when buying, change the number of remained tickets
-    friend bool User::return_ticket(int which, int num);
     //if (lines[i].have_ticket(from, to, kind, num)) now_user->buy_ticket(i, from, to, kind, num);
-    friend void Admin::start_sell(weak_ptr<Train> train);
-    friend void Admin::end_sell(weak_ptr<Train> train);
+    bool selling() {
+        return _selling;
+    }
+    void change_selling() {
+        _selling = ~_selling;
+    }
 
     friend istream& operator >> (istrema& in, Line & rhs);
     friend ostream& operator << (ostream& out, const Line & rhs);

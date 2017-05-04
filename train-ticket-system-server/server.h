@@ -2,7 +2,7 @@
 #define SERVER_H
 
 #include <string>
-#include "map.hpp"
+#include "map.h"
 #include "list.hpp"
 
 class Server{
@@ -39,6 +39,9 @@ public:
 	 *  friend Admin::delete_line();
 	 *  friend Admin::
 	 */
+
+    Train& get_train(const Train_info & key);
+
 }server;
 
 #endif

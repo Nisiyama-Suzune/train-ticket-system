@@ -3,9 +3,8 @@
 
 #include <cstddef>
 #include <fstream>
-#include "utilities.hpp"
-
-namespace sjtu {
+#include "io_utilities.hpp"
+#include "exceptions.hpp"
 
 template<class T>
 class list {
@@ -126,6 +125,9 @@ public:
     bool empty() const;
 
     size_t size() const;
+
+    /// 返回第pos个位置的迭代器
+    iterator at_iter(int pos);
 
 public: // io
     std::streampos save(std::ofstream fout);
@@ -323,5 +325,14 @@ std::streampos list<T>::save(std::ofstream fout) {
     return result;
 }
 
+template <class T>
+typename list<T>::iterator list<T>::at_iter(int pos) {
+    if (pos < 0 || pos >= size())
+        throw index_out_of_range();
+    link_type iter;
+    for (iter = node->next; pos != 0; iter = iter->next, --pos) {
+    }
+    return iterator(iter);
 }
+
 #endif //SJTU_LIST_HPP
