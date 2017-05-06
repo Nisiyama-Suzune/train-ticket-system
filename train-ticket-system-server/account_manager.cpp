@@ -26,14 +26,15 @@ bool Admin::end_sell(Account::train_iter train) {
 
 
 /// User
-void User::buy_ticket(Account::train_iter info_train, int from, int to, KIND kind, int num) {
+void User::buy_ticket(Account::train_iter info_train, int from, int to, KIND kind, int num)
+                                                                        throw(ticket_error) {
     Train &train = info_train->second;
     if (!train.have_ticket(from, to, kind, num))
         throw ticket_error();
     train.add_remaining_tickets(from, to, kind, -num);
 }
 
-void User::return_ticket(int which, int num) {
+void User::return_ticket(int which, int num) throw(ticket_error) {
     list<Ticket>::iterator iter;
     try {
         // 没有这么多票

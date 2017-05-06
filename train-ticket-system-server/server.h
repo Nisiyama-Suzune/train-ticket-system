@@ -7,11 +7,26 @@
 #include "train_manager.h"
 #include "account_manager.h"
 
-typedef int KIND;
+struct Date;
+struct Train_info;
+struct Ticket;
+struct Station;
+struct City;
+class Line;
+class Train;
+class Admin;
+class User;
+class Account;
+
+
 
 class Server{
 public:
     // 需要一个wstring[]，表示几等座，从int到wstring
+
+    /// 临时
+    typedef int Log;
+    typedef int KIND;
 
 private:
 	typedef map<int, User> UserContainer; //ID -> account find an account, insert, remove
@@ -32,9 +47,9 @@ public:
 	//if have the same ID, return false, register failed
 	Account* login(const std::wstring &ID, const std::wstring& password);
 	//if login failed, return nullptr
-	void import_options(ifstream& fin);
-	void import_trains(ifstream& fin);
-	void import_accounts(ifstream& fin);
+	void import_options(std::ifstream& fin);
+	void import_trains(std::ifstream& fin);
+	void import_accounts(std::ifstream& fin);
 	void startup();
 	void exiting(); //before exit, save the train_info and account_info into the files 
 	void add_log(Log log);
@@ -49,7 +64,7 @@ public:
 
     /// 接口
     Train& get_train(const Train_info & key);
-
+    void add_line(const Line &x);
 
 }server;
 

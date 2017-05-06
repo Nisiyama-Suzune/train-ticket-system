@@ -6,14 +6,11 @@
 #include "map.hpp"
 #include "list.hpp"
 #include "server.h"
-//#include "smart_ptr.h"
+#include "smart_ptr.h"
 #include "io_utilities.hpp"
-#include "../vector.h"
+#include "vector.hpp"
 #include "account_manager.h"
 
-/// illegal headers !!!
-#include <memory>
-using std::shared_ptr;
 
 struct Date;
 struct Train_info;
@@ -63,6 +60,8 @@ struct Train_info
 
 struct Ticket //users return tickets by date? //TODO
 {
+    typedef int KIND;
+
     Train_info train_info;
     int from, to;
     std::wstring from_name, to_name;
@@ -88,15 +87,22 @@ struct City
 
 struct Line
 {
-protected:
+//protected:
+    typedef int KIND;
+
     char type; //K G etc
     std::wstring name; //K1234, G27 etc
     vector<Station> stations; // stations[i].miles means from start(0) to i-th station's distance
     vector<KIND> kinds; //kind of seats
     vector<vector<int> > price; //price[kind_number][station] fen-based
-    list<map<Train_info, Train>::iterator>trains;//反正只有30趟
+    list<map<Train_info, Train>::iterator> trains;//反正只有30趟
 public:
     Line();
+    ~Line() {
+        // TODO
+    } // delete trains
+
+    //TODO add_train
 };
 
 /**Same line share one line object
@@ -105,6 +111,7 @@ public:
 class Train
 {
 protected:
+    typedef int KIND;
     typedef map<Train_info, Train>::iterator train_iter;
 
 private:
@@ -120,6 +127,7 @@ private:
      */
 
 public:
+    // 构造时修改line里的trains
     Train (const Line &line, const Date &date, const int& initial_ticket = 2000);
     // 检查(from, to, kind)的票是否还有num张
     bool have_ticket (int from, int to, KIND kind, int num);

@@ -29,4 +29,8 @@ class ticket_error : public exception {
 
 };
 
+class container_is_empty : public exception {
+
+};
+
 #endif

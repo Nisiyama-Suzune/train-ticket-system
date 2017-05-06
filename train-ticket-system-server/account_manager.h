@@ -3,13 +3,21 @@
 
 #include <string>
 #include <fstream>
-#include "../vector.h"
+#include "vector.hpp"
 #include "list.hpp"
 #include "io_utilities.hpp"
 #include "utility.hpp"
 #include "exceptions.hpp"
 #include "train_manager.h"
 #include "server.h"
+
+struct Date;
+struct Train_info;
+struct Ticket;
+struct Station;
+struct City;
+class Line;
+class Train;
 
 class Account {
 protected:
@@ -32,9 +40,9 @@ class Admin : public Account
 public:
 	void check_log();
 	bool add_line(Line &line);//
-	bool add_line(const std::wstring& name, Date date);
+	bool add_train(const std::wstring& name, Date date);
 	bool delete_line(const std::wstring &name); //Ex. D2333
-	bool delete_line(const Train_info& train_info);
+	bool delete_train(const Train_info& train_info);
 	bool delete_line(const std::wstring &name, const Date& date);//same as last one
 	void delete_account(const std::wstring &ID);
 
@@ -45,6 +53,7 @@ public:
 
 class User : public Account
 {
+    typedef int KIND;
 private:
 	list <Ticket> tickets;
 	//first, check if the user have bought the same ticket before, ifso, add the num
@@ -52,14 +61,14 @@ private:
 public:
 
     // if failed, throw ticket_error()
-	void buy_ticket(train_iter train, int from, int to, KIND kind, int num) : throw ticket_error();
+	void buy_ticket(train_iter train, int from, int to, KIND kind, int num) throw(ticket_error);
     //return the list's which-th ticket, quantity=num
-    void return_ticket(int which, int num) : throw ticket_error();
+    void return_ticket(int which, int num) throw(ticket_error);
 
     //using the train_info to find the corresponding train
 
     // TODO ???
-	vector<pair<train_iter, pair<int, int> > 
+	vector<pair<train_iter, pair<int, int>>>
         query(const std::wstring& from, const std::wstring &to, const Date &date); //query the corresponding tickets
 		//only when the train is selling!!
 
