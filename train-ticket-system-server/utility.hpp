@@ -18,5 +18,9 @@ public:
 	pair(pair<U1, U2> &&other) : first(other.first), second(other.second) {}
 };
 
+template <class T1, class T2>
+pair<T1, T2> make_pair(const T1 & a, const T2 & b) {
+    return pair<T1, T2>(a, b);
+}
 
 #endif
