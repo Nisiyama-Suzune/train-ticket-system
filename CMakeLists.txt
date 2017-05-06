@@ -17,7 +17,6 @@ set(SOURCE_FILES
         train-ticket-system-server/utility.hpp
         train-ticket-system-server/map.hpp
         class.hpp
-        vector.cpp
-        vector.h)
+        train-ticket-system-server/vector.hpp)
 
 add_executable(train_ticket_system ${SOURCE_FILES})
