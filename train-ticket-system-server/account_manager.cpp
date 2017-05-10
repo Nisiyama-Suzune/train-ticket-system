@@ -24,6 +24,14 @@ bool Admin::end_sell(Account::train_iter train) {
     return false;
 }
 
+bool Admin::add_line(Line &line) {
+    return server.add_line(line);
+}
+
+bool Admin::add_train(const std::wstring &name, Date date) {
+    return server.add_train(name, date);
+}
+
 
 /// User
 void User::buy_ticket(Account::train_iter info_train, int from, int to, KIND kind, int num)

@@ -21,3 +21,4 @@ bool Train::have_ticket(int from, int to, KIND kind, int num) {
     }
     return 1;
 }
+

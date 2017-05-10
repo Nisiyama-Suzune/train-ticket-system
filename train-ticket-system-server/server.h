@@ -63,8 +63,14 @@ public:
 	 */
 
     /// 接口
+
     Train& get_train(const Train_info & key);
-    void add_line(const Line &x);
+    // 添加一条线路，返回是否成功添加。（如果本来已有，则返回false）
+    bool add_line(const Line &x);
+    // 如果需要添加train的line不存在，抛出。
+    // 如果添加的date已经存在，则返回false
+    // 默认_selling = 0
+    bool add_train(const std::wstring &name, const Date &date) throw(line_error);
 
 }server;
 

@@ -45,6 +45,11 @@ public:
     {
         return lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year;
     }
+
+    bool operator==(const Date &rhs) {
+        return year == rhs.year && month == rhs.month && day == rhs.day
+               && hour == rhs.hour && min == rhs.min && sec == rhs.sec;
+    }
 };
 
 struct Train_info
@@ -56,6 +61,8 @@ struct Train_info
         return date < rhs.date;
     }
 
+    Train_info(std::wstring _line, Date _date)
+            : Line_name(_line), date(_date) {}
 };
 
 struct Ticket //users return tickets by date? //TODO
@@ -82,7 +89,7 @@ struct Station
 struct City
 {
     std::wstring name;
-    list<map<std::wstring, Line>::iterator> lines; //maybe ? set<pair<Line*, int> > //this is (*line)'s int'th station
+    list<smart_ptr<Line>> lines; //maybe ? set<pair<Line*, int> > //this is (*line)'s int'th station
 };
 
 struct Line
@@ -95,12 +102,10 @@ struct Line
     vector<Station> stations; // stations[i].miles means from start(0) to i-th station's distance
     vector<KIND> kinds; //kind of seats
     vector<vector<int> > price; //price[kind_number][station] fen-based
-    list<map<Train_info, Train>::iterator> trains;//反正只有30趟
-public:
+    list<smart_ptr<Train>> trains;//反正只有30趟
+//public:
     Line();
-    ~Line() {
-        // TODO
-    } // delete trains
+    ~Line();/// delete trains
 
     //TODO add_train
 };
@@ -112,12 +117,12 @@ class Train
 {
 protected:
     typedef int KIND;
-    typedef map<Train_info, Train>::iterator train_iter;
+//    typedef map<Train_info, Train>::iterator train_iter;
 
 private:
-    map<std::wstring, Line>::iterator which_line;
-    Date date;
-    bool _selling;
+    smart_ptr<Line> which_line;
+    Date _date;
+    bool _selling = 0;
     vector<vector<int> > station_available_ticket;
     /* saves the number of remaining tickets for each station
      * e.g. station 0--1--2--3--4 with capacity 200 seats, then
@@ -127,6 +132,13 @@ private:
      */
 
 public:
+    Train(){}
+
+    /// access
+    Date date() const {
+        return _date;
+    }
+
     // 构造时修改line里的trains
     Train (const Line &line, const Date &date, const int& initial_ticket = 2000);
     // 检查(from, to, kind)的票是否还有num张
@@ -138,6 +150,7 @@ public:
     //if (lines[i].have_ticket(from, to, kind, num)) now_user->buy_ticket(i, from, to, kind, num);
     bool selling();
     void change_selling();
+    Train_info train_info() const;
 
 //    friend istream& operator >> (istrema& in, Line & rhs);
 //    friend ostream& operator << (ostream& out, const Line & rhs);

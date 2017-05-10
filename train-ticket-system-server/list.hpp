@@ -189,10 +189,10 @@ void list<T>::destroy_node(list<T>::link_type x) {
 template<class T>
 typename list<T>::iterator list<T>::insert(list<T>::iterator pos, const T &x) {
     link_type tmp = create_node(x);
-    tmp->prev = pos->prev;
+    tmp->prev = pos.iter_node->prev;
     tmp->next = pos.iter_node;
-    pos->prev->next = tmp;
-    pos->prev = tmp;
+    pos.iter_node->prev->next = tmp;
+    pos.iter_node->prev = tmp;
     return tmp;
 }
 
@@ -264,8 +264,9 @@ void list<T>::destroy_list() {
 template<class T>
 void list<T>::copy(const list<T> &x) {
     link_type tmp = x.node->next;
+    T val = *tmp->val;
     while (tmp != x.node) {
-        push_back(tmp->val);
+        push_back(val);
         tmp = tmp->next;
     }
 }
