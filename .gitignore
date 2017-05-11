@@ -3,4 +3,4 @@
 cmake-build-debug/
 build*
 train-ticket-system-server/log.txt
-
+train-ticket-system-server/structure.txt

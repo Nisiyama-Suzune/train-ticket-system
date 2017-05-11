@@ -12,74 +12,67 @@
 #include "server.h"
 
 struct Date;
-struct Train_info;
 struct Ticket;
 struct Station;
 struct City;
-class Line;
-class Train;
+struct Line;
+struct Train;
 
 class Account {
 protected:
-//    typedef map<int, int>::iterator test_iter;
-    typedef map<Train_info, Train> info_train_map;
-    typedef info_train_map::iterator train_iter;
-
 	std::wstring name;
 	std::string ID;
-	std::string password;//UI will encrypet it and here save the encrypted password
+	std::string password;//UI will encrypt it and here save the encrypted password
 public:
     Account();
-    Account(const std::wstring & name, const std::string& id, const std::string password = "000000");
+    Account(const std::wstring & name,
+			const std::string& id,
+            const std::string password = "000000");
 
-    void update_password(const std::string& new_password);//double check the password at UI
+    //double check the password at UI
+    void update_password(const std::string& new_password);
 };
 
-class Admin : public Account
-{
+class Admin : public Account {
+private:
+    bool add_line(const Line & line);
+
 public:
 	void check_log();
-	bool add_line(Line &line);//
-	bool add_train(const std::wstring& name, Date date);
-	bool delete_line(const std::wstring &name); //Ex. D2333
-	bool delete_train(const Train_info& train_info);
-	bool delete_line(const std::wstring &name, const Date& date);//same as last one
-	void delete_account(const std::wstring &ID);
+
+    /// str为操作指令，在public版本中切割str，获得正确的信息
+
+    bool add_line(const std::wstring & str);
+	bool add_train(const std::wstring & str);
+	bool delete_line(const std::wstring & str);
+	bool delete_train(const std::wstring & str);
+	void delete_account(const std::wstring & str);
 
     // return whether train->selling is modified
-    bool start_sell(train_iter train);
-    bool end_sell(train_iter train);
+    bool start_sell(const std::wstring & str);
+    bool end_sell(const std::wstring & str);
 };
 
-class User : public Account
-{
-    typedef int KIND;
+class User : public Account {
 private:
 	list <Ticket> tickets;
-	//first, check if the user have bought the same ticket before, ifso, add the num
+	//first, check if the user have bought the same ticket before, if so, add the num
 	//otherwise, append a new node
+
 public:
 
     // if failed, throw ticket_error()
-	void buy_ticket(train_iter train, int from, int to, KIND kind, int num) throw(ticket_error);
+	void buy_ticket(const std::wstring & str) throw(ticket_error);
     //return the list's which-th ticket, quantity=num
-    void return_ticket(int which, int num) throw(ticket_error);
+    void return_ticket(const std::wstring & str) throw(ticket_error);
 
-    //using the train_info to find the corresponding train
-
-    // TODO ???
-	vector<pair<train_iter, pair<int, int>>>
-        query(const std::wstring& from, const std::wstring &to, const Date &date); //query the corresponding tickets
-		//only when the train is selling!!
+	vector<smart_ptr<Train>> query(const std::wstring & str);
+    //query the corresponding tickets
+    //only when the train is selling!!
 
     // return the tickets the user has
     list<Ticket>& current_ticket();
-	/*
-	query
-		string -> city
-		merge two city.lines
-		Train, start, end
-	*/
 };
+
 
 #endif
