@@ -29,6 +29,14 @@ sjtu::pool_ptr<sjtu::Admin> sjtu::Server::find_admin(const int &ID) const {
     return admin->second;
 }
 
+sjtu::pool_ptr<sjtu::Station> sjtu::Server::find_station(const sjtu::QString &name) const {
+    auto station = stations.find(name);
+    if (station == stations.cend())
+        throw exception("station", "does not exist");
+    return station->second;
+}
+
+
 bool sjtu::Server::check_city(const sjtu::Server::QString &name) const {
     return cities.find(name) != cities.cend();
 }
@@ -39,6 +47,18 @@ bool sjtu::Server::check_user(const int &ID) const {
 
 bool sjtu::Server::check_admin(const int &ID) const {
     return admins.find(ID) != admins.cend();
+}
+
+bool sjtu::Server::check_station(const sjtu::QString &name) const {
+    return stations.find(name) != stations.cend();
+}
+
+bool sjtu::Server::add_line(const sjtu::pool_ptr<sjtu::Line> &line) {
+    return lines.insert(sjtu::make_pair(line->name, line)).second;
+}
+
+bool sjtu::Server::add_station(const sjtu::pool_ptr<sjtu::Station> &station) {
+    return stations.insert(sjtu::make_pair(station->name, station)).second;
 }
 
 
@@ -151,4 +171,35 @@ bool sjtu::TTS::login_admin(const int &ID, const std::string password) {
     return false;
 }
 
+bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
+    // station
+    pool_ptr<Line> line = t_m_p.get_line();
+    line->name = line_data.name;
+    line->seat_kind_names = line_data.seat_kind_names;
+    line->miles = line_data.miles;
+    line->price = line_data.prices;
+    for (int i = 0; i < line_data.time_arrive.size(); ++i) {
+        line->arr_time.push_back(line_data.time_arrive[i]);
+        line->dep_time.push_back(line_data.time_stop[i]);
+    }
+    for (int i = 0; i < line_data.stations.size(); ++i) {
+        QString &station_name = line_data.stations[i];
+        if (server.check_station(station_name))
+            add_station(StationData(station_name, station_name));
+
+        line->stations.push_back(
+                server.find_station(station_name));
+        line->stations.back()->lines.push_back(line);
+    }
+
+    return server.add_line(line);
+}
+
+bool sjtu::TTS::add_station(const sjtu::TTS::StationData &station_data) {
+    pool_ptr<Station> station = t_m_p.get_station();
+    station->name = station_data.name;
+    // TODO add city
+    station->location = server.find_city(station_data.location);
+    return server.add_station(station);
+}
 

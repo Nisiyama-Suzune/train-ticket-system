@@ -148,13 +148,14 @@ Account:
 函数实现进度：Y代表实现，YY代表实现并阅读，YYY表示debug过，YYYY表示确保没问题
 
 query_city_city        Y
-add_line
+add_line               Y
 add_train
 buy_ticket             Y
 return_ticket          Y
 current_ticket         Y
 login_user             Y
 login_admin            Y
+
 用户：账户余额？
 
 正在做：

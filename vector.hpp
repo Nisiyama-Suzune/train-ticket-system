@@ -264,6 +264,7 @@ public:
 		{
 			new(storage + i)T(other.storage[i]);
 		}
+		return *this;
 	}
 	/**
 	 * assigns specified element with bounds checking

@@ -34,23 +34,30 @@ class Server {
 private:
     typedef map<int, pool_ptr<User>> UserContainer; //ID -> account find an account, insert, remove
     typedef map<int, pool_ptr<Admin>> AdminContainer; //ID -> account
-    typedef map<std::string, pool_ptr<Line>> LineContainer; //ID -> Line
+    typedef map<QString, pool_ptr<Line>> LineContainer; //ID -> Line
     typedef map<QString, pool_ptr<City>> CityContainer; //name -> City
+    typedef map<QString, pool_ptr<Station>> StationContainer;
 //	typedef list<Log> LogContainer;
     UserContainer     users;
     AdminContainer    admins;
     LineContainer     lines;
     CityContainer     cities;
+    StationContainer  stations;
 //	LogContainer      logs;
 
 public:
     bool check_city(const QString & name) const;
     bool check_user(const int & ID) const;
     bool check_admin(const int & ID) const;
+    bool check_station(const QString & name) const;
 
-    pool_ptr<City>  find_city(const QString & name) const;
-    pool_ptr<User>  find_user(const int & ID) const;
-    pool_ptr<Admin> find_admin(const int & ID) const;
+    pool_ptr<City>    find_city(const QString & name) const;
+    pool_ptr<User>    find_user(const int & ID) const;
+    pool_ptr<Admin>   find_admin(const int & ID) const;
+    pool_ptr<Station> find_station(const QString & name) const;
+
+    bool add_line(const pool_ptr<Line> & line);
+    bool add_station(const pool_ptr<Station> & station);
 };
 
 
@@ -68,6 +75,8 @@ private:
     /// forward declaration
     struct LineData;
     struct BuyReturnData;
+    struct StationData;
+    struct CityData;
 
 private:
     Server server;
@@ -88,7 +97,8 @@ private:
 
 
     /// add (admin permission required)
-    bool add_line(const Line & line);
+    bool add_station(const StationData & station);
+    bool add_line(const LineData & line);
 
     /// user
     /* 买票，如果票不够了或者没开票，则返回false。
@@ -152,6 +162,20 @@ struct TTS::BuyReturnData {
     QString to_station;
     QString date;
 };
+
+struct TTS::StationData {
+    QString name;
+    QString location;
+
+    StationData(){}
+    StationData(QString _name, QString _loc)
+        : name(_name), location(_loc) {}
+};
+
+struct TTS::CityData {
+
+};
+
 
 }
 

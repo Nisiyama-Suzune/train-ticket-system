@@ -50,15 +50,15 @@ namespace sjtu {
 
 class account_memory_pool {
 private:
-    static vector<User>  users;
-    static vector<Admin> admins;
+    vector<User>  users;
+    vector<Admin> admins;
 
 public:
-    static pool_ptr<User>  get_user() {
+    pool_ptr<User>  get_user() {
         users.push_back(User());
         return pool_ptr<User>(users.size() - 1, &users);
     }
-    static pool_ptr<Admin> get_admin() {
+    pool_ptr<Admin> get_admin() {
         admins.push_back(Admin());
         return pool_ptr<Admin>(admins.size() - 1, &admins);
     }
