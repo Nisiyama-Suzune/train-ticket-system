@@ -6,7 +6,7 @@
 
 /// server
 
-sjtu::pool_ptr<sjtu::City> sjtu::Server::find_city(const sjtu::Server::Qstring &name) const {
+sjtu::pool_ptr<sjtu::City> sjtu::Server::find_city(const sjtu::Server::QString &name) const {
     auto result = cities.find(name);
     if (result == cities.cend())
         throw exception("city", "does not exist.");

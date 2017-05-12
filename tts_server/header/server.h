@@ -30,12 +30,12 @@ struct Train;
 namespace sjtu {
 
 class Server {
-    typedef std::wstring Qstring;
+    typedef std::wstring QString;
 private:
     typedef map<int, pool_ptr<User>> UserContainer; //ID -> account find an account, insert, remove
     typedef map<int, pool_ptr<Admin>> AdminContainer; //ID -> account
     typedef map<std::string, pool_ptr<Line>> LineContainer; //ID -> Line
-    typedef map<Qstring, pool_ptr<City>> CityContainer; //name -> City
+    typedef map<QString, pool_ptr<City>> CityContainer; //name -> City
 //	typedef list<Log> LogContainer;
     UserContainer     users;
     AdminContainer    admins;
@@ -44,11 +44,11 @@ private:
 //	LogContainer      logs;
 
 public:
-    bool check_city(const Qstring & name) const;
+    bool check_city(const QString & name) const;
     bool check_user(const int & ID) const;
     bool check_admin(const int & ID) const;
 
-    pool_ptr<City>  find_city(const Qstring & name) const;
+    pool_ptr<City>  find_city(const QString & name) const;
     pool_ptr<User>  find_user(const int & ID) const;
     pool_ptr<Admin> find_admin(const int & ID) const;
 };
@@ -60,12 +60,12 @@ public:
 namespace sjtu {
 
 class TTS {
-    typedef std::wstring Qstring;
+    typedef std::wstring QString;
 
 private:
     Server server;
     train_memory_pool   t_m_p;
-//    account_memory_pool a_m_p;
+    account_memory_pool a_m_p;
     pool_ptr<User>  current_user;
     pool_ptr<Admin> current_admin;
 
@@ -108,10 +108,10 @@ private:
 public:
 
     /**
-     * Qstring query_train(const Qstring & str);
+     * QString query_train(const QString & str);
      *
-     * bool account_register(const Qstring & str);
-     * bool login(const Qstring & str);
+     * bool account_register(const QString & str);
+     * bool login(const QString & str);
      *
      * add_line
      * add_train
