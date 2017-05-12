@@ -29,18 +29,21 @@ public:
     bool check_password(const std::string &other_password);
 };
 
-class Admin : public Account {
-
-};
-
 class User : public Account {
 public:
+    static const int Type = 5;
+
     list<pool_ptr<Ticket>> tickets;
 
 public:
     // 会检查是否有相同的票，如果有则只增加其张数。
     void add_ticket(pool_ptr<Ticket> ticket);
 
+};
+
+class Admin : public Account {
+public:
+    static const int Type = 6;
 };
 
 }

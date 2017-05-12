@@ -63,6 +63,8 @@ struct Date {
 };
 
 struct Station {
+    static const int Type = 0;
+
     std::wstring name;
     // 车站所处城市
     pool_ptr<City> location;
@@ -73,12 +75,16 @@ struct Station {
 };
 
 struct City {
+    static const int Type = 1;
+
     std::wstring name;
     // 城市中的车站
     vector<pool_ptr<Station>> stations;
 };
 
 struct Line {
+    static const int Type = 2;
+
     QString name;                     // K1234, G27 etc
     vector<QString> seat_kind_names; // 座位种类名
     vector<pool_ptr<Station>> stations;  // 经过的车站，0为起点站
@@ -99,6 +105,8 @@ struct Line {
  * Only Date is different
  */
 struct Train {
+    static const int Type = 3;
+
     pool_ptr<Line> line;
     Date date;
     bool selling = 0;
@@ -112,6 +120,8 @@ struct Train {
 };
 
 struct Ticket {
+    static const int Type = 4;
+
     pool_ptr<Train> train;    // 所属的train
     int from, to;              // 起点站终点站在line中的位置
     int kind;                  // 这张票的种类

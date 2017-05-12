@@ -11,14 +11,21 @@
 namespace sjtu {
 template<class T>
 class pool_ptr {
-    friend class train_memory_pool;
-    friend class account_memory_pool;
     friend pool_ptr<T> get_T(vector<T> * container);
 
 protected:
     size_t pos;
     vector<T> *container;
 
+    int * cnt;
+    void terminate() {
+        --(*cnt);
+        if (*cnt == 0) {
+            if (container != nullptr) {
+
+            }
+        }
+    }
 
 public:
     pool_ptr(size_t _pos, vector<T> *_container)

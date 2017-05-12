@@ -7,8 +7,9 @@
 #include <memory>
 #include <iostream>
 #include "tts_server/header/server.h"
+#include "tts_server/header/memory_pool.h"
 
 int main() {
-    sjtu::TTS tts;
+
     return 0;
 }
