@@ -130,6 +130,7 @@ namespace sjtu {
 
 class train_memory_pool {
 private:
+
     vector<Station> stations;
     vector<City>    cities;
     vector<Line>    lines;

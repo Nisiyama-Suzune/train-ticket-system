@@ -58,6 +58,7 @@ public:
 
     bool add_line(const pool_ptr<Line> & line);
     bool add_station(const pool_ptr<Station> & station);
+    bool add_city(const pool_ptr<City> & city);
 };
 
 
@@ -99,6 +100,7 @@ private:
     /// add (admin permission required)
     bool add_station(const StationData & station);
     bool add_line(const LineData & line);
+    bool add_city(const CityData & city);
 
     /// user
     /* 买票，如果票不够了或者没开票，则返回false。
@@ -173,7 +175,11 @@ struct TTS::StationData {
 };
 
 struct TTS::CityData {
+    QString name;
 
+    CityData(){}
+    CityData(QString _name)
+            : name(_name) {}
 };
 
 

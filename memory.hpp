@@ -38,19 +38,11 @@ public:
     }
 
 
-    T &operator*() {
+    T &operator*() const {
         return (*container)[pos];
     }
 
-    T *operator->() {
-        return &(operator*());
-    }
-
-    const T& operator*() const {
-        return (*container)[pos];
-    }
-
-    const T*operator->() const {
+    T *operator->() const {
         return &(operator*());
     }
 };

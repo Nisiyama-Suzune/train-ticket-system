@@ -61,6 +61,10 @@ bool sjtu::Server::add_station(const sjtu::pool_ptr<sjtu::Station> &station) {
     return stations.insert(sjtu::make_pair(station->name, station)).second;
 }
 
+bool sjtu::Server::add_city(const sjtu::pool_ptr<sjtu::City> &city) {
+    return cities.insert(sjtu::make_pair(city->name, city)).second;
+}
+
 
 
 
@@ -183,8 +187,8 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
         line->dep_time.push_back(line_data.time_stop[i]);
     }
     for (int i = 0; i < line_data.stations.size(); ++i) {
-        QString &station_name = line_data.stations[i];
-        if (server.check_station(station_name))
+        const QString &station_name = line_data.stations[i];
+        if (!server.check_station(station_name))
             add_station(StationData(station_name, station_name));
 
         line->stations.push_back(
@@ -198,8 +202,16 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
 bool sjtu::TTS::add_station(const sjtu::TTS::StationData &station_data) {
     pool_ptr<Station> station = t_m_p.get_station();
     station->name = station_data.name;
-    // TODO add city
+    if (!server.check_city(station_data.location))
+        add_city(CityData(station_data.location));
     station->location = server.find_city(station_data.location);
+    station->location->stations.push_back(station);
     return server.add_station(station);
+}
+
+bool sjtu::TTS::add_city(const sjtu::TTS::CityData &city_data) {
+    pool_ptr<City> city = t_m_p.get_city();
+    city->name = city_data.name;
+    return server.add_city(city);
 }
 
