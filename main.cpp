@@ -10,6 +10,11 @@
 #include "tts_server/header/memory_pool.h"
 
 int main() {
-
+	using namespace sjtu;
+	TTS tts;
+	pool_ptr<City> tmp;
+	tmp = sjtu::memory_pool::get_city();
+	QDataStream fin;
+	tmp.load<sjtu::memory_pool>(fin);
     return 0;
 }

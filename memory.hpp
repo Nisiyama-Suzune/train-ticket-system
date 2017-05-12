@@ -6,6 +6,7 @@
 #define TTS_MEMORY_H
 
 #include "vector.hpp"
+#include <QDataStream>
 
 /// pool_ptr, allocate
 namespace sjtu {
@@ -47,6 +48,16 @@ public:
     bool operator!=(const pool_ptr &other) {
         return !(*this == other);
     }
+	///input
+	template <class pool>
+	void load(QDataStream& in)
+	{
+		qint32 tmp;
+		in >> tmp;
+		pos = tmp;
+		container = (vector<T>*)pool::container[T::Type];
+		put = pool::put[T::Type];
+	}
 };
 
 template <class T>
