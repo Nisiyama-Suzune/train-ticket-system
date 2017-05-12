@@ -1,0 +1,146 @@
+//
+// Created by Aaron Ren on 11/05/2017.
+//
+
+#ifndef TTS_TRAIN_MANAGER_H
+#define TTS_TRAIN_MANAGER_H
+
+#include "../../map.hpp"
+#include "../../vector.hpp"
+#include "../../list.hpp"
+#include "../../memory.hpp"
+
+#include <string>
+
+/// Stations, etc.
+namespace sjtu {
+
+/// forward declaration
+struct Date;
+struct Station;
+struct City;
+struct Line;
+struct Train;
+
+struct Date {
+    int year, month, day;
+    int hour, min, sec;
+
+
+    Date(int y = 0, int m = 0, int d = 0, int h = 0, int min = 0, int sec = 0) :
+            year(y), month(m), day(d), hour(h), min(min), sec(sec) {}
+
+    friend bool operator<(const Date &lhs, const Date &rhs) {
+        if (lhs.year != rhs.year) return lhs.year < rhs.year;
+        else if (lhs.month != rhs.month) return lhs.month < rhs.month;
+        else if (lhs.day != rhs.day) return lhs.day < rhs.day;
+        else if (lhs.hour != rhs.hour) return lhs.hour < rhs.hour;
+        else if (lhs.min != rhs.min) return lhs.min < rhs.min;
+        else return lhs.sec < rhs.sec;
+    }
+
+    bool same_day(const Date &rhs) const {
+        return year == rhs.year && month == rhs.month && day == rhs.day;
+    }
+
+    friend bool same_day(const Date &lhs, const Date &rhs) {
+        return lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year;
+    }
+
+    bool operator==(const Date &rhs) {
+        return year == rhs.year && month == rhs.month && day == rhs.day
+               && hour == rhs.hour && min == rhs.min && sec == rhs.sec;
+    }
+
+    class cmp_date {
+    public:
+        bool operator()(const Date &a, const Date &b) const {
+            return a.same_day(b);
+        }
+    };
+};
+
+struct Station {
+    std::wstring name;
+    // 车站所处城市
+    pool_ptr<City> location;
+    // 经过这个车站的线路
+    vector<pool_ptr<Line>> lines;
+
+    Station(){}
+};
+
+struct City {
+    std::wstring name;
+    // 城市中的车站
+    vector<pool_ptr<Station>> stations;
+};
+
+struct Line {
+    std::string name;                     // K1234, G27 etc
+    vector<std::wstring> seat_kind_names; // 座位种类名
+    vector<pool_ptr<Station>> stations;  // 经过的车站，0为起点站
+    vector<Date> time;                   // 到站时间
+    vector<int> miles;                   // 距离始发站的里程
+    vector<vector<double>> price;            // 从第i到第i+1站的第j种票票价
+
+    // 给定日期的train
+    map<Date, pool_ptr<Train>, Date::cmp_date> trains;
+
+    bool check_date(const Date & date) const {
+        return trains.find(date) != trains.cend();
+    }
+};
+
+/**Same line share one line object
+ * Only Date is different
+ */
+struct Train {
+    pool_ptr<Line> line;
+    Date date;
+    bool selling = 0;
+    vector<vector<int>> station_available_tickets;
+    /* saves the number of remaining tickets for each station
+     * e.g. station 0--1--2--3--4 with capacity 200 seats, then
+     * station_available_ticket[] = {200, 200, 200, 200} //Only four interval
+     * if a customer bought a ticket from 1 to 3, then
+     * station_available_ticket[] = {200, 199, 199, 200}
+     */
+};
+
+struct Ticket {
+    pool_ptr<Train> train;    // 所属的train
+    int from, to;              // 起点站终点站在line中的位置
+    int kind;                  // 这张票的种类
+    int price;                 // 票价 = Sigma price[i][kind]
+    int num;                   // user拥有的张数
+
+    bool equal_ex_num(const Ticket & rhs) {
+        return train == rhs.train && from == rhs.from && to == rhs.to
+               && kind == rhs.kind;
+    }
+};
+}
+
+/// train_memory_pool
+namespace sjtu {
+
+class train_memory_pool {
+private:
+    vector<Station> stations;
+    vector<City>    cities;
+    vector<Line>    lines;
+    vector<Train>   trains;
+    vector<Ticket>  tickets;
+
+public:
+    pool_ptr<Station> get_station();
+    pool_ptr<City>    get_city();
+    pool_ptr<Line>    get_line();
+    pool_ptr<Train>   get_train();
+    pool_ptr<Ticket>  get_ticket(int from = -1, int to = -1, int kind = -1, double price = -1, int num = -1);
+};
+
+}
+
+#endif //TTS_TRAIN_MANAGER_H
