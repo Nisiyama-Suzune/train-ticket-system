@@ -55,14 +55,8 @@ public:
     static pool_ptr<Train> get_train();
     static pool_ptr<Ticket> get_ticket(int from = -1, int to = -1, int kind = -1, double price = -1, int num = -1);
 
-    static pool_ptr<User>  get_user() {
-        users.push_back(User());
-        return pool_ptr<User>(users.size() - 1, &users);
-    }
-    static pool_ptr<Admin> get_admin() {
-        admins.push_back(Admin());
-        return pool_ptr<Admin>(admins.size() - 1, &admins);
-    }
+    static pool_ptr<User>  get_user();
+    static pool_ptr<Admin> get_admin();
 
 public:
     static void init_pool();

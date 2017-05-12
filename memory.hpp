@@ -11,29 +11,22 @@
 namespace sjtu {
 template<class T>
 class pool_ptr {
-    friend pool_ptr<T> get_T(vector<T> * container);
+    friend pool_ptr<T> get_T(vector<T> * container, void (*put)(size_t));
 
 protected:
     size_t pos;
     vector<T> *container;
+    void (*put)(size_t);
 
-    int * cnt;
-    void terminate() {
-        --(*cnt);
-        if (*cnt == 0) {
-            if (container != nullptr) {
 
-            }
-        }
-    }
 
 public:
-    pool_ptr(size_t _pos, vector<T> *_container)
-            : pos(_pos), container(_container) {}
-    pool_ptr() : pos(0), container(nullptr) {}
+    pool_ptr(size_t _pos, vector<T> *_container, void (*_put)(size_t))
+            : pos(_pos), container(_container), put(_put) {}
+    pool_ptr() : pos(0), container(nullptr), put(nullptr) {}
 
     pool_ptr(const pool_ptr &other)
-            : pos(other.pos), container(other.container) {}
+            : pos(other.pos), container(other.container), put(other.put) {}
 
     bool operator==(const pool_ptr &other) {
         return pos == other.pos && container == other.container;
@@ -54,9 +47,9 @@ public:
 };
 
 template <class T>
-pool_ptr<T> get_T(vector<T> * container) {
+pool_ptr<T> get_T(vector<T> * container, void (*put)(size_t)) {
     container->push_back(T());
-    return pool_ptr<T>(container->size(), container);
+    return pool_ptr<T>(container->size(), container, put);
 }
 
 }
