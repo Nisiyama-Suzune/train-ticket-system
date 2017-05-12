@@ -68,11 +68,6 @@ bool sjtu::Server::add_city(const sjtu::pool_ptr<sjtu::City> &city) {
 
 
 
-
-
-
-
-
 /// TTS
 
 smart_ptr<sjtu::vector<sjtu::pool_ptr<sjtu::Train>>>
@@ -132,7 +127,7 @@ bool sjtu::TTS::buy_ticket(sjtu::pool_ptr<sjtu::Train> train, int from, int to, 
     }
 
     // 更新账户
-    pool_ptr<Ticket> ticket = t_m_p.get_ticket(from, to, kind, ticket_price, num);
+    pool_ptr<Ticket> ticket = m_p.get_ticket(from, to, kind, ticket_price, num);
     ticket->train = train;
     current_user->add_ticket(ticket);
     return true;
@@ -177,7 +172,7 @@ bool sjtu::TTS::login_admin(const int &ID, const std::string password) {
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
-    pool_ptr<Line> line = t_m_p.get_line();
+    pool_ptr<Line> line = m_p.get_line();
     line->name = line_data.name;
     line->seat_kind_names = line_data.seat_kind_names;
     line->miles = line_data.miles;
@@ -200,7 +195,7 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
 }
 
 bool sjtu::TTS::add_station(const sjtu::TTS::StationData &station_data) {
-    pool_ptr<Station> station = t_m_p.get_station();
+    pool_ptr<Station> station = m_p.get_station();
     station->name = station_data.name;
     if (!server.check_city(station_data.location))
         add_city(CityData(station_data.location));
@@ -210,7 +205,7 @@ bool sjtu::TTS::add_station(const sjtu::TTS::StationData &station_data) {
 }
 
 bool sjtu::TTS::add_city(const sjtu::TTS::CityData &city_data) {
-    pool_ptr<City> city = t_m_p.get_city();
+    pool_ptr<City> city = m_p.get_city();
     city->name = city_data.name;
     return server.add_city(city);
 }

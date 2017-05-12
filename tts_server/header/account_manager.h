@@ -45,25 +45,5 @@ public:
 
 }
 
-/// account_memory_pool
-namespace sjtu {
-
-class account_memory_pool {
-private:
-    vector<User>  users;
-    vector<Admin> admins;
-
-public:
-    pool_ptr<User>  get_user() {
-        users.push_back(User());
-        return pool_ptr<User>(users.size() - 1, &users);
-    }
-    pool_ptr<Admin> get_admin() {
-        admins.push_back(Admin());
-        return pool_ptr<Admin>(admins.size() - 1, &admins);
-    }
-};
-
-}
 
 #endif //TTS_ACCOUNT_MANAGER_H

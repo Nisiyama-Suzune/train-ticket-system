@@ -22,6 +22,7 @@ struct Train;
 
 #include "train_manager.h"
 #include "account_manager.h"
+#include "memory_pool.h"
 #include "../../memory.hpp"
 #include "../../smart_ptr.hpp"
 
@@ -81,8 +82,7 @@ private:
 
 private:
     Server server;
-    train_memory_pool   t_m_p;
-    account_memory_pool a_m_p;
+    memory_pool   m_p;
     pool_ptr<User>  current_user;
     pool_ptr<Admin> current_admin;
 
@@ -128,21 +128,9 @@ private:
 
 public:
 
-    /**
-     * QString query_train(const QString & str);
-     *
-     * bool account_register(const QString & str);
-     * bool login(const QString & str);
-     *
-     * add_line
-     * add_train
-     *
-     * @User
-     *
-     */
-
 
 };
+static TTS tts;
 
 struct TTS::LineData {
     QString name;

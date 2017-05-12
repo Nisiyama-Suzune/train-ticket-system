@@ -6,10 +6,9 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include "tts_server/header/server.h"
 
 int main() {
-    smart_ptr<sjtu::vector<int>> t;
-//    std::shared_ptr<sjtu::vector<int>> t;
-
+    sjtu::TTS tts;
     return 0;
 }

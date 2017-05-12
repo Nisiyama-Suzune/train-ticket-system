@@ -125,26 +125,5 @@ struct Ticket {
 };
 }
 
-/// train_memory_pool
-namespace sjtu {
-
-class train_memory_pool {
-private:
-
-    vector<Station> stations;
-    vector<City>    cities;
-    vector<Line>    lines;
-    vector<Train>   trains;
-    vector<Ticket>  tickets;
-
-public:
-    pool_ptr<Station> get_station();
-    pool_ptr<City>    get_city();
-    pool_ptr<Line>    get_line();
-    pool_ptr<Train>   get_train();
-    pool_ptr<Ticket>  get_ticket(int from = -1, int to = -1, int kind = -1, double price = -1, int num = -1);
-};
-
-}
 
 #endif //TTS_TRAIN_MANAGER_H
