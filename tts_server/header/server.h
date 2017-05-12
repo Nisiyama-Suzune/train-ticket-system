@@ -108,11 +108,11 @@ struct Line_Data
 {
 public:
 	QString name;
-	QVector<QString> seat_kind_names;
-	QVector<QString> stations;
-	QVector<int> time_arrive, time_stop;
-	QVector<int> miles;
-	QVector<QVector<double> > prices;
+	vector<QString> seat_kind_names;
+	vector<QString> stations;
+	vector<int> time_arrive, time_stop;
+	vector<int> miles;
+	vector<vector<double> > prices;
 	friend QTextStream& operator << (QTextStream& out, const Line_Data& x) {
 		out << "name = " <<  x.name << endl;
 
@@ -169,7 +169,7 @@ Line_Data line_transform(QString str)
 		++kinds;
 	}
 	for (int i = 0; i < kinds; ++i)
-		ans.prices.push_back(QVector<double>());
+		ans.prices.push_back(vector<double>());
 //	ans.prices.reserve(kinds);
 
 	while (sin.readLineInto(&tmp)) {
