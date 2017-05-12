@@ -24,6 +24,9 @@ struct Train;
 #include "account_manager.h"
 #include "../../memory.hpp"
 #include "../../smart_ptr.hpp"
+#include <qstring.h>
+#include <QTextStream>
+#include <QDataStream>
 
 
 /// Server
@@ -53,7 +56,6 @@ public:
     pool_ptr<Admin> find_admin(const int & ID) const;
 };
 
-
 }
 
 /// wrapper
@@ -65,7 +67,7 @@ class TTS {
 private:
     Server server;
     train_memory_pool   t_m_p;
-//    account_memory_pool a_m_p;
+	account_memory_pool a_m_p;
     pool_ptr<User>  current_user;
     pool_ptr<Admin> current_admin;
 
@@ -103,9 +105,7 @@ private:
 
 private:
     /// parser
-    
-struct Line_Data
-{
+struct Line_Data {
 public:
 	QString name;
 	vector<QString> seat_kind_names;
@@ -113,6 +113,7 @@ public:
 	vector<int> time_arrive, time_stop;
 	vector<int> miles;
 	vector<vector<double> > prices;
+	#ifdef output_debug
 	friend QTextStream& operator << (QTextStream& out, const Line_Data& x) {
 		out << "name = " <<  x.name << endl;
 
@@ -150,8 +151,8 @@ public:
 		out << endl;
 		return out;
 	}
+	#endif //output_debug
 };
-
 Line_Data line_transform(QString str)
 {
 	QTextStream sin(&str);
@@ -205,10 +206,11 @@ Line_Data line_transform(QString str)
 			ans.prices[i].push_back(price);
 		}
 	}
+#ifdef output_debug
 	cout << ans << endl;
+#endif //output_debug
 	return ans;
 }
-
 struct buy_data
 {
 	QString name;
@@ -233,7 +235,6 @@ struct buy_data
 		return out;
 	}
 };
-
 buy_data operation_transform(QString str)
 {
 	QTextStream sin(&str);
@@ -262,7 +263,10 @@ buy_data operation_transform(QString str)
 	cout << ans << endl;
 	return ans;
 }
+	///parser end
 
+	///save & load
+	friend QDataStream& operator << (QDataStream& out, );
 public:
 
     /**
