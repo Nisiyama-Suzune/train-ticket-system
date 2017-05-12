@@ -15,6 +15,8 @@
 /// Stations, etc.
 namespace sjtu {
 
+typedef std::wstring QString;
+
 /// forward declaration
 struct Date;
 struct Station;
@@ -77,10 +79,11 @@ struct City {
 };
 
 struct Line {
-    std::string name;                     // K1234, G27 etc
-    vector<std::wstring> seat_kind_names; // 座位种类名
+    QString name;                     // K1234, G27 etc
+    vector<QString> seat_kind_names; // 座位种类名
     vector<pool_ptr<Station>> stations;  // 经过的车站，0为起点站
-    vector<Date> time;                   // 到站时间
+    vector<Date> arr_time;               // 到站时间
+    vector<Date> dep_time;               // 离站时间
     vector<int> miles;                   // 距离始发站的里程
     vector<vector<double>> price;            // 从第i到第i+1站的第j种票票价
 

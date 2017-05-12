@@ -33,27 +33,34 @@ struct Train;
 namespace sjtu {
 
 class Server {
-    typedef std::wstring Qstring;
+    typedef std::wstring QString;
 private:
     typedef map<int, pool_ptr<User>> UserContainer; //ID -> account find an account, insert, remove
     typedef map<int, pool_ptr<Admin>> AdminContainer; //ID -> account
-    typedef map<std::string, pool_ptr<Line>> LineContainer; //ID -> Line
-    typedef map<Qstring, pool_ptr<City>> CityContainer; //name -> City
+    typedef map<QString, pool_ptr<Line>> LineContainer; //ID -> Line
+    typedef map<QString, pool_ptr<City>> CityContainer; //name -> City
+    typedef map<QString, pool_ptr<Station>> StationContainer;
 //	typedef list<Log> LogContainer;
     UserContainer     users;
     AdminContainer    admins;
     LineContainer     lines;
     CityContainer     cities;
+    StationContainer  stations;
 //	LogContainer      logs;
 
 public:
-    bool check_city(const Qstring & name) const;
+    bool check_city(const QString & name) const;
     bool check_user(const int & ID) const;
     bool check_admin(const int & ID) const;
+    bool check_station(const QString & name) const;
 
-    pool_ptr<City>  find_city(const Qstring & name) const;
-    pool_ptr<User>  find_user(const int & ID) const;
-    pool_ptr<Admin> find_admin(const int & ID) const;
+    pool_ptr<City>    find_city(const QString & name) const;
+    pool_ptr<User>    find_user(const int & ID) const;
+    pool_ptr<Admin>   find_admin(const int & ID) const;
+    pool_ptr<Station> find_station(const QString & name) const;
+
+    bool add_line(const pool_ptr<Line> & line);
+    bool add_station(const pool_ptr<Station> & station);
 };
 
 }
@@ -61,13 +68,22 @@ public:
 /// wrapper
 namespace sjtu {
 
+
+
 class TTS {
-    typedef std::wstring Qstring;
+    typedef std::wstring QString;
+
+private:
+    /// forward declaration
+    struct LineData;
+    struct BuyReturnData;
+    struct StationData;
+    struct CityData;
 
 private:
     Server server;
     train_memory_pool   t_m_p;
-	account_memory_pool a_m_p;
+    account_memory_pool a_m_p;
     pool_ptr<User>  current_user;
     pool_ptr<Admin> current_admin;
 
@@ -83,7 +99,8 @@ private:
 
 
     /// add (admin permission required)
-    bool add_line(const Line & line);
+    bool add_station(const StationData & station);
+    bool add_line(const LineData & line);
 
     /// user
     /* 买票，如果票不够了或者没开票，则返回false。
@@ -270,10 +287,10 @@ buy_data operation_transform(QString str)
 public:
 
     /**
-     * Qstring query_train(const Qstring & str);
+     * QString query_train(const QString & str);
      *
-     * bool account_register(const Qstring & str);
-     * bool login(const Qstring & str);
+     * bool account_register(const QString & str);
+     * bool login(const QString & str);
      *
      * add_line
      * add_train
@@ -284,6 +301,41 @@ public:
 
 
 };
+
+struct TTS::LineData {
+    QString name;
+    vector<QString> seat_kind_names;
+    vector<QString> stations;
+    vector<int> time_arrive, time_stop;
+    vector<int> miles;
+    vector<vector<double> > prices;
+};
+
+struct TTS::BuyReturnData {
+    QString name;
+    int ID;
+    QString operation;
+    int num;
+    QString kind_of_seat;
+    QString train_ID;
+    QString from_station;
+    QString to_station;
+    QString date;
+};
+
+struct TTS::StationData {
+    QString name;
+    QString location;
+
+    StationData(){}
+    StationData(QString _name, QString _loc)
+        : name(_name), location(_loc) {}
+};
+
+struct TTS::CityData {
+
+};
+
 
 }
 
