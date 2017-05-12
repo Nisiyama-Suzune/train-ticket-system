@@ -148,8 +148,10 @@ Account:
 函数实现进度：Y代表实现，YY代表实现并阅读，YYY表示debug过，YYYY表示确保没问题
 
 query_city_city        Y
+add_station            Y
 add_line               Y
-add_train
+add_city               Y
+add_train              Y
 buy_ticket             Y
 return_ticket          Y
 current_ticket         Y

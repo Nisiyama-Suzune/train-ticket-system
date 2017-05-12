@@ -258,6 +258,8 @@ public:
 	 */
 	vector &operator=(const vector &other)
 	{
+		if (this == &other)
+			return *this;
 		MaxSize = other.MaxSize;
 		NowLength = other.NowLength;
 		for(int i = 0; i < NowLength; ++i)

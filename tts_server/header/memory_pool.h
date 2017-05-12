@@ -28,7 +28,6 @@ private:
     static vector<User>  users;
     static vector<Admin> admins;
 
-    static vector<int> ints;
 
 public:
     static pool_ptr<Station> get_station();
@@ -47,9 +46,6 @@ public:
         return pool_ptr<Admin>(admins.size() - 1, &admins);
     }
 
-    static void get_int() {
-        ints.push_back(1);
-    }
 };
 
 

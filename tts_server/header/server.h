@@ -29,7 +29,6 @@ struct Train;
 
 /// Server
 namespace sjtu {
-
 class Server {
     typedef std::wstring QString;
 private:
@@ -51,11 +50,13 @@ public:
     bool check_user(const int & ID) const;
     bool check_admin(const int & ID) const;
     bool check_station(const QString & name) const;
+    bool check_line(const QString & name) const;
 
     pool_ptr<City>    find_city(const QString & name) const;
     pool_ptr<User>    find_user(const int & ID) const;
     pool_ptr<Admin>   find_admin(const int & ID) const;
     pool_ptr<Station> find_station(const QString & name) const;
+    pool_ptr<Line>    find_line(const QString & name) const;
 
     bool add_line(const pool_ptr<Line> & line);
     bool add_station(const pool_ptr<Station> & station);
@@ -65,11 +66,8 @@ public:
 
 }
 
-/// wrapper
+/// wrapper TTS
 namespace sjtu {
-
-
-
 class TTS {
     typedef std::wstring QString;
 
@@ -79,10 +77,10 @@ private:
     struct BuyReturnData;
     struct StationData;
     struct CityData;
+    struct TrainData;
 
 private:
     Server server;
-//    memory_pool   m_p;
     pool_ptr<User>  current_user;
     pool_ptr<Admin> current_admin;
 
@@ -98,9 +96,10 @@ private:
 
 
     /// add (admin permission required)
-    bool add_station(const StationData & station);
-    bool add_line(const LineData & line);
-    bool add_city(const CityData & city);
+    bool add_station(const StationData &);
+    bool add_line(const LineData &);
+    bool add_city(const CityData &);
+    bool add_train(const TrainData &);
 
     /// user
     /* 买票，如果票不够了或者没开票，则返回false。
@@ -127,10 +126,10 @@ private:
     
 
 public:
+    /// API
 
 
 };
-static TTS tts;
 
 struct TTS::LineData {
     QString name;
@@ -139,18 +138,6 @@ struct TTS::LineData {
     vector<int> time_arrive, time_stop;
     vector<int> miles;
     vector<vector<double> > prices;
-};
-
-struct TTS::BuyReturnData {
-    QString name;
-    int ID;
-    QString operation;
-    int num;
-    QString kind_of_seat;
-    QString train_ID;
-    QString from_station;
-    QString to_station;
-    QString date;
 };
 
 struct TTS::StationData {
@@ -168,6 +155,31 @@ struct TTS::CityData {
     CityData(){}
     CityData(QString _name)
             : name(_name) {}
+};
+
+struct TTS::TrainData {
+    QString line_name;
+    int date; // 2017.1.20 -> 20170120
+    bool selling = 0;
+    vector<vector<int>> station_available_tickets;
+    /* saves the number of remaining tickets for each station
+     * e.g. station 0--1--2--3--4 with capacity 200 seats, then
+     * station_available_ticket[] = {200, 200, 200, 200} //Only four interval
+     * if a customer bought a ticket from 1 to 3, then
+     * station_available_ticket[] = {200, 199, 199, 200}
+     */
+};
+
+struct TTS::BuyReturnData {
+    QString name;
+    int ID;
+    QString operation;
+    int num;
+    QString kind_of_seat;
+    QString train_ID;
+    QString from_station;
+    QString to_station;
+    QString date;
 };
 
 

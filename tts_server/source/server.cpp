@@ -36,6 +36,13 @@ sjtu::pool_ptr<sjtu::Station> sjtu::Server::find_station(const sjtu::QString &na
     return station->second;
 }
 
+sjtu::pool_ptr<sjtu::Line> sjtu::Server::find_line(const sjtu::QString &name) const {
+    auto line = lines.find(name);
+    if (line == lines.cend())
+        throw exception("line", "does not exist");
+    return line->second;
+}
+
 
 bool sjtu::Server::check_city(const sjtu::Server::QString &name) const {
     return cities.find(name) != cities.cend();
@@ -53,6 +60,10 @@ bool sjtu::Server::check_station(const sjtu::QString &name) const {
     return stations.find(name) != stations.cend();
 }
 
+bool sjtu::Server::check_line(const sjtu::QString &name) const {
+    return lines.find(name) != lines.cend();
+}
+
 bool sjtu::Server::add_line(const sjtu::pool_ptr<sjtu::Line> &line) {
     return lines.insert(sjtu::make_pair(line->name, line)).second;
 }
@@ -64,6 +75,9 @@ bool sjtu::Server::add_station(const sjtu::pool_ptr<sjtu::Station> &station) {
 bool sjtu::Server::add_city(const sjtu::pool_ptr<sjtu::City> &city) {
     return cities.insert(sjtu::make_pair(city->name, city)).second;
 }
+
+
+
 
 
 
@@ -211,3 +225,15 @@ bool sjtu::TTS::add_city(const sjtu::TTS::CityData &city_data) {
     return server.add_city(city);
 }
 
+bool sjtu::TTS::add_train(const sjtu::TTS::TrainData & train_data) {
+    if (!server.check_line(train_data.line_name))
+        return false;
+
+    pool_ptr<Train> train = memory_pool::get_train();
+    pool_ptr<Line> line = server.find_line(train_data.line_name);
+    train->line = line;
+    train->date = train_data.date;
+    train->selling = train_data.selling;
+    train->station_available_tickets = train_data.station_available_tickets;
+    return line->trains.insert(make_pair(train_data.date, train)).second;
+}

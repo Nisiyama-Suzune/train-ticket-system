@@ -20,7 +20,6 @@ protected:
     vector<T> *container;
 
 
-
 public:
     pool_ptr(size_t _pos, vector<T> *_container)
             : pos(_pos), container(_container) {}
