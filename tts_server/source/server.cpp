@@ -29,7 +29,7 @@ sjtu::pool_ptr<sjtu::Admin> sjtu::Server::find_admin(const int &ID) const {
     return admin->second;
 }
 
-bool sjtu::Server::check_city(const sjtu::Server::Qstring &name) const {
+bool sjtu::Server::check_city(const sjtu::Server::QString &name) const {
     return cities.find(name) != cities.cend();
 }
 
