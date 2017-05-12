@@ -26,3 +26,11 @@ sjtu::memory_pool::get_ticket(int from, int to, int kind, double price, int num)
 }
 
 sjtu::vector<int> sjtu::memory_pool::ints;
+sjtu::vector<sjtu::Station> sjtu::memory_pool::stations;
+sjtu::vector<sjtu::City>    sjtu::memory_pool::cities;
+sjtu::vector<sjtu::Line>    sjtu::memory_pool::lines;
+sjtu::vector<sjtu::Train>   sjtu::memory_pool::trains;
+sjtu::vector<sjtu::Ticket>  sjtu::memory_pool::tickets;
+
+sjtu::vector<sjtu::User>    sjtu::memory_pool::users;
+sjtu::vector<sjtu::Admin>   sjtu::memory_pool::admins;

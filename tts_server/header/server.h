@@ -82,7 +82,7 @@ private:
 
 private:
     Server server;
-    memory_pool   m_p;
+//    memory_pool   m_p;
     pool_ptr<User>  current_user;
     pool_ptr<Admin> current_admin;
 
