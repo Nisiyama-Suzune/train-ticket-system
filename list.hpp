@@ -3,7 +3,7 @@
 
 #include <cstddef>
 #include <fstream>
-#include "utilities.hpp"
+#include "exceptions.hpp"
 
 namespace sjtu {
 
@@ -80,30 +80,60 @@ public:
 
         iterator(const iterator &x) : iter_node(x.iter_node) {}
 
-        bool operator==(const iterator &x) const;
+        bool operator==(const iterator &x) const {
+            return iter_node == x.iter_node;
+        }
 
-        bool operator!=(const iterator &x) const;
+        bool operator!=(const iterator &x) const {
+            return iter_node != x.iter_node;
+        }
 
-        T &operator*();
+        T &operator*() {
+            return *(iter_node->val);
+        }
 
-        T *operator->();
+        T *operator->() {
+            return &(operator*());
+        }
 
-        iterator &operator++();
+        iterator &operator++() {
+            iter_node = iter_node->next;
+            return *this;
+        }
 
-        iterator operator++(int);
+        iterator operator++(int) {
+            iterator tmp = *this;
+            ++*this;
+            return tmp;
+        }
 
-        iterator &operator--();
+        iterator &operator--() {
+            iter_node = iter_node->prev;
+            return *this;
+        }
 
-        iterator operator--(int);
+        iterator operator--(int) {
+            iterator tmp = *this;
+            --*this;
+            return tmp;
+        }
     };
 
-    iterator begin();
+    iterator begin() {
+        return iterator(node->next);
+    }
 
-    iterator end();
+    iterator end() {
+        return iterator(node);
+    }
 
-    T &front();
+    T &front() {
+        return *(node->next->val);
+    }
 
-    T &back();
+    T &back() {
+        return *(node->prev->val);
+    }
 
 public:
     /// 在pos位置前插入一个节点，返回插入值位置的迭代器
@@ -127,67 +157,9 @@ public:
 
     size_t size() const;
 
-public: // io
-    std::streampos save(std::ofstream fout);
-    std::streampos load(std::ifstream fin);
-
+    /// 返回第pos个位置的迭代器
+    iterator at_iter(int pos);
 };
-
-template<class T>
-bool list<T>::iterator::operator==(const list<T>::iterator &x) const {
-    return iter_node == x.iter_node;
-}
-
-template<class T>
-bool list<T>::iterator::operator!=(const list<T>::iterator &x) const {
-    return iter_node != x.iter_node;
-}
-
-template<class T>
-T &list<T>::iterator::operator*() {
-    return *(iter_node->val);
-}
-
-template<class T>
-T *list<T>::iterator::operator->() {
-    return &(operator*());
-}
-
-template<class T>
-typename list<T>::iterator &list<T>::iterator::operator++() {
-    iter_node = iter_node->next;
-    return *this;
-}
-
-template<class T>
-typename list<T>::iterator list<T>::iterator::operator++(int) {
-    iterator tmp = *this;
-    ++*this;
-    return tmp;
-}
-
-template<class T>
-typename list<T>::iterator &list<T>::iterator::operator--() {
-    iter_node = iter_node->prev;
-    return *this;
-}
-
-template<class T>
-typename list<T>::iterator list<T>::iterator::operator--(int) {
-    iterator tmp = *this;
-    --*this;
-    return tmp;
-}
-
-template<class T>
-typename list<T>::iterator list<T>::begin() {
-    return iterator(node->next);
-}
-
-template<class T>
-typename list<T>::iterator list<T>::end() {
-    return iterator(node);
-}
 
 template<class T>
 typename list<T>::link_type list<T>::get_node() {
@@ -218,10 +190,10 @@ void list<T>::destroy_node(list<T>::link_type x) {
 template<class T>
 typename list<T>::iterator list<T>::insert(list<T>::iterator pos, const T &x) {
     link_type tmp = create_node(x);
-    tmp->prev = pos->prev;
+    tmp->prev = pos.iter_node->prev;
     tmp->next = pos.iter_node;
-    pos->prev->next = tmp;
-    pos->prev = tmp;
+    pos.iter_node->prev->next = tmp;
+    pos.iter_node->prev = tmp;
     return tmp;
 }
 
@@ -262,18 +234,6 @@ void list<T>::clear() {
 }
 
 template<class T>
-T &list<T>::front() {
-    return *begin();
-}
-
-template<class T>
-T &list<T>::back() {
-    iterator tmp = end();
-    --tmp;
-    return *tmp;
-}
-
-template<class T>
 bool list<T>::empty() const {
     return node == node->next;
 }
@@ -305,22 +265,21 @@ void list<T>::destroy_list() {
 template<class T>
 void list<T>::copy(const list<T> &x) {
     link_type tmp = x.node->next;
+    T val = *tmp->val;
     while (tmp != x.node) {
-        push_back(tmp->val);
+        push_back(val);
         tmp = tmp->next;
     }
 }
 
-template <class T>
-std::streampos list<T>::save(std::ofstream fout) {
-    std::streampos result = fout.tellp();
-    size_t sz = size();
-    fout.write(reinterpret_cast<char*>(&sz), sizeof(sz));
-    for (link_type i = node->next; i != node; i = i->next) {
-
+template<class T>
+typename list<T>::iterator list<T>::at_iter(int pos) {
+    if (pos < 0 || pos >= size())
+        throw index_out_of_bound();
+    link_type iter;
+    for (iter = node->next; pos != 0; iter = iter->next, --pos) {
     }
-
-    return result;
+    return iterator(iter);
 }
 
 }

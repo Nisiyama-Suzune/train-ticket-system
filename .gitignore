@@ -1,6 +1,6 @@
 .DS_Store
 .idea/
 cmake-build-debug/
-build*
-train-ticket-system-server/log.txt
-train-ticket-system-server/structure.txt
+\#temp.cpp
+test/
+header_structure.txt
