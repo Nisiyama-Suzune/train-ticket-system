@@ -349,8 +349,13 @@ bool sjtu::TTS::load_ascii() {
 	QTextStream fin2(&file2);
 	while (fin2.readLineInto(&str)) {
 		BuyReturnData ans = operation_transform(str);
-		current_user = _add_user(ans.name, ans.ID);
-		if (true); ///TODO
+		if (server.check_user(ans.ID)) {
+			current_user = server.find_user(ans.ID);
+		} else {
+			current_user = register_user(ans.name, "000000");
+			current_user->ID = ans.ID;
+		}
+//		buy_ticket(server.find_line(ans.train_ID)->trains[ans.date], )
 	}
 	return true;
 }
