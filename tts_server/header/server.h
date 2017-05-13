@@ -25,6 +25,9 @@ struct Train;
 #include "memory_pool.h"
 #include "../../memory.hpp"
 #include "../../smart_ptr.hpp"
+#include <qstring.h>
+#include <QTextStream>
+#include <QDataStream>
 
 
 /// Server
@@ -61,8 +64,10 @@ public:
     bool add_line(const pool_ptr<Line> & line);
     bool add_station(const pool_ptr<Station> & station);
     bool add_city(const pool_ptr<City> & city);
-};
 
+	void load(QDataStream &in);
+	void save(QDataStream &out);
+};
 
 }
 
@@ -121,10 +126,169 @@ private:
 
 private:
     /// parser
-    
+struct LineData {
+public:
+	QString name;
+	vector<QString> seat_kind_names;
+	vector<QString> stations;
+	vector<int> time_arrive, time_stop;
+	vector<int> miles;
+	vector<vector<double> > prices;
+	#ifdef output_debug
+	friend QTextStream& operator << (QTextStream& out, const Line_Data& x) {
+		out << "name = " <<  x.name << endl;
 
-    
+		out << "seat_kind_names" << endl;
+		for (int i = 0; i < x.seat_kind_names.size(); ++i)
+			out << x.seat_kind_names[i] << ' ';
+		out << endl;
 
+		out << "stations" << endl;
+		for (int i = 0; i < x.stations.size(); ++i)
+			out << x.stations[i] << ' ';
+		out << endl;
+
+		out << "time_arrive" << endl;
+		for (int i = 0; i < x.time_arrive.size(); ++i)
+			out << x.time_arrive[i] << ' ';
+		out << endl;
+
+		out << "time_stop" << endl;
+		for (int i = 0; i < x.time_stop.size(); ++i)
+			out << x.time_stop[i] << ' ';
+		out << endl;
+
+		out << "miles" << endl;
+		for (int i = 0; i < x.miles.size(); ++i)
+			out << x.miles[i] << ' ';
+		out << endl;
+
+		out << "prices" << endl;
+		for (int i = 0; i < x.prices.size(); ++i) {
+			for (int j = 0; j < x.prices[i].size(); ++j)
+				out << x.prices[i][j] << ' ';
+			out << endl;
+		}
+		out << endl;
+		return out;
+	}
+	#endif //output_debug
+};
+LineData line_transform(QString str)
+{
+	QTextStream sin(&str);
+	QTextStream cout(stdout);
+
+	LineData ans;
+	QString tmp = sin.readLine();
+	QStringList parts = tmp.split(",");
+	ans.name = parts[0];
+	tmp = sin.readLine();
+	parts = tmp.split(",");
+	int kinds = 0;
+	for (int i = 5; i < parts.size(); ++i) {
+		ans.seat_kind_names.push_back(parts[i]);
+		++kinds;
+	}
+	for (int i = 0; i < kinds; ++i)
+		ans.prices.push_back(vector<double>());
+//	ans.prices.reserve(kinds);
+
+	while (sin.readLineInto(&tmp)) {
+		parts = tmp.split(",");
+		ans.stations.push_back(parts[0]);
+
+		int time_arrive = 0, x, time_stop;
+
+		QChar maohao;
+		QTextStream cin2(&parts[2]);
+		cin2 >> time_arrive >> maohao >> x;
+		time_arrive = time_arrive * 100 + x;
+		ans.time_arrive.push_back(time_arrive);
+
+		QTextStream cin3(&parts[3]);
+		cin3 >> time_stop >> maohao >> x;
+		time_stop = time_stop * 100 + x;
+		ans.time_stop.push_back(time_stop);
+
+		QTextStream cin4(&parts[4]);
+		cin4 >> x;
+		ans.miles.push_back(x);
+
+		double price = 0.0;
+		for (int i = 0; i < kinds; ++i) {
+			if (parts[5 + i][0] == '-')
+				price = -1;
+			else {
+				QTextStream cin5(&parts[5 + i]);
+				cin5 >> maohao;
+				cin5 >> price;
+			}
+			ans.prices[i].push_back(price);
+		}
+	}
+#ifdef output_debug
+	cout << ans << endl;
+#endif //output_debug
+	return ans;
+}
+struct BuyReturnData
+{
+	QString name;
+	int ID;
+	QString operation;
+	int num;
+	QString kind_of_seat;
+	QString train_ID;
+	QString from_station;
+	QString to_station;
+	QString date;
+	#ifdef output_debug
+	friend QTextStream& operator << (QTextStream& out, const BuyData& x) {
+		out << "name         = " << x.name << endl;
+		out << "ID           = " << x.ID << endl;
+		out << "operation    = " << x.operation << endl;
+		out << "num          = " << x.num << endl;
+		out << "kind_of_seat = " << x.kind_of_seat << endl;
+		out << "train_ID     = " << x.train_ID << endl;
+		out << "from_station = " << x.from_station << endl;
+		out << "to_station   = " << x.to_station << endl;
+		out << "data         = " << x.date << endl;
+		return out;
+	}
+	#endif //output_debug
+};
+BuyReturnData operation_transform(QString str)
+{
+	QTextStream sin(&str);
+	QTextStream cout(stdout);
+
+	BuyReturnData ans;
+	QString tmp = sin.readLine();
+	QStringList parts = tmp.split(' ');
+
+	ans.name = parts[0];
+
+	QTextStream cin1(&parts[1]);
+//	ans.ID = parts[1];
+	cin1 >> ans.ID;
+
+	ans.operation = parts[2];
+
+	QTextStream cin2(&parts[3]);
+	cin2 >> ans.num;
+
+	ans.kind_of_seat = parts[4];
+	ans.train_ID = parts[7];
+	ans.from_station = parts[9];
+	ans.to_station = parts[11];
+	ans.date = parts[13];
+	cout << ans << endl;
+	return ans;
+}
+	///parser end
+
+	///save & load
 public:
     /// API
 

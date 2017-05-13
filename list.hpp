@@ -218,7 +218,6 @@ void list<T>::push_front(const T &x) {
 
 template<class T>
 void list<T>::pop_back() {
-    iterator tmp = end();
     erase(--end());
 }
 

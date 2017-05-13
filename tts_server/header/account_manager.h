@@ -27,6 +27,8 @@ public:
 
     void update_password(const std::string &new_password);
     bool check_password(const std::string &other_password);
+	void load(QDataStream &in);
+	void save(QDataStream &out);
 };
 
 class User : public Account {
@@ -38,12 +40,16 @@ public:
 public:
     // 会检查是否有相同的票，如果有则只增加其张数。
     void add_ticket(pool_ptr<Ticket> ticket);
+	void load(QDataStream &in);
+	void save(QDataStream &out);
 
 };
 
 class Admin : public Account {
 public:
     static const int Type = 6;
+	void load(QDataStream &in);
+	void save(QDataStream &out);
 };
 
 }

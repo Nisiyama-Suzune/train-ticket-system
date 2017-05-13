@@ -6,9 +6,7 @@
 #define TTS_MEMORY_H
 
 #include "vector.hpp"
-#include <fstream>
-using std::ifstream;
-using std::ofstream;
+#include <QDataStream>
 
 /// pool_ptr, allocate
 namespace sjtu {
@@ -52,18 +50,20 @@ public:
     }
 
 public:
-    /// IO
-    void save(ofstream & fout) {
-        fout << pos;
-    }
-    template <class pool>
-    void load(ifstream & fin) {
-        fin >> pos;
-        container = (vector<T>*)pool::containers[T::Type];
-        put = pool::put[T::Type];
-        cnt = pool::cnt[T::Type];
+    /// output
+    void save(QDataStream& out) {
+        out << pos;
     }
 
+	///input
+	template <class pool>
+	void load(QDataStream& in) {
+		in >> pos;
+		pos = pos;
+		container = (vector<T>*)pool::container[T::Type];
+		put = pool::put[T::Type];
+        cnt = pool::cnt[T::Type];
+	}
 };
 
 
