@@ -193,10 +193,13 @@ bool sjtu::TTS::login_admin(const int &ID, const QString password) {
     return false;
 }
 
+bool sjtu::TTS::is_train_type(QChar ch) {
+	return (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
+}
 bool sjtu::TTS::load_ascii() {
 	QDir dir = QDir::current();
 	QString directory = QDir::currentPath();
-	directory += "operation.out";
+	directory += "/../train-ticket-system/trains.csv";
 	QFile file(directory);
 	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No such file!" << std::endl;
@@ -207,16 +210,36 @@ bool sjtu::TTS::load_ascii() {
 	QString str, tmp;
 	str = fin.readLine();
 
-	while (fin.readLineInto(tmp)) {
+	while (fin.readLineInto(&tmp)) {
 		if (is_train_type(tmp[0])) {
-			add_line(line_transform(ans));
+			server.add_line(line_transform(str));
 			str = tmp;
 		} else str = str + '\n' + tmp;
 	}
-	add_line(str);
+	server.add_line(line_transform(str));
+	file.close();
+
+	directory = QDir::currentPath();
+	directory += "/../train-ticket-system/operation.out";
+	file = QFile(directory);
+	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+		std::cout << "No operation file!" << std::endl;
+		return false;
+	}
+	fin = QTextStream(&file);
+	while (fin.readLineInto(&str)) {
+		BuyReturnData ans = operation_transform(str);
+		current_user = _add_user(ans.name, ans.ID);
+		if (); ///TODO
+	}
 	return true;
 }
 
+bool sjtu::TTS::load_binary() {
+	QString directory = QDir::currentPath();
+	directory += "/../train-ticket-system/operation.dat";
+	file = QFile(directory);
+}
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
@@ -354,7 +377,22 @@ sjtu::TTS::BuyReturnData sjtu::TTS::operation_transform(QString str)
 	ans.train_ID = parts[7];
 	ans.from_station = parts[9];
 	ans.to_station = parts[11];
-	ans.date = parts[13];
+
+	QStringList date_parts = parts[13].split('-');
+	int date = 0;
+	for (int i = 0; i < 4; ++i)
+		date = date * 10 + (date_parts[0][i].toLatin1() - '0');
+	date = date * 100;
+	if (date_parts[1][1].toLatin1() >= '0' && date_parts[1][1].toLatin1() <= '9') {
+		date += 10 * (date_parts[1][0].toLatin1() - '0');
+		date += date_parts[1][1].toLatin1() - '0';
+	} else date += date_parts[1][0].toLatin1() - '0';
+	date *= 100;
+	if (date_parts[2][1].toLatin1() >= '0' && date_parts[2][1].toLatin1() <= '9') {
+		date += 10 * (date_parts[2][0].toLatin1() - '0');
+		date += date_parts[2][1].toLatin1() - '0';
+	} else date += date_parts[2][0].toLatin1() - '0';
+	ans.date = date;
 	#ifdef output_debug
 	cout << ans << endl;
 	#endif //output_debug
