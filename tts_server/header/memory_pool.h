@@ -39,14 +39,7 @@ private:
     static vector<Admin> admins;
 
     // recycle
-    static vector<int> stations_recycle;
-    static vector<int> cities_recycle;
-    static vector<int> lines_recycle;
-    static vector<int> trains_recycle;
-    static vector<int> tickets_recycle;
-
-    static vector<int> users_recycle;
-    static vector<int> admins_recycle;
+    static vector<vector<int>> recycle;
 
     // cnt
     static vector<vector<int>> cnt;

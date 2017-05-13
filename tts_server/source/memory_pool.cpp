@@ -7,6 +7,7 @@
 sjtu::vector<void*>             sjtu::memory_pool::container;
 sjtu::vector<void (*)(int)>     sjtu::memory_pool::put;
 sjtu::vector<sjtu::vector<int>> sjtu::memory_pool::cnt;
+sjtu::vector<sjtu::vector<int>> sjtu::memory_pool::recycle;
 
 sjtu::vector<sjtu::Station> sjtu::memory_pool::stations;
 sjtu::vector<sjtu::City>    sjtu::memory_pool::cities;
@@ -17,75 +18,66 @@ sjtu::vector<sjtu::Ticket>  sjtu::memory_pool::tickets;
 sjtu::vector<sjtu::User>    sjtu::memory_pool::users;
 sjtu::vector<sjtu::Admin>   sjtu::memory_pool::admins;
 
-sjtu::vector<int>        sjtu::memory_pool::stations_recycle;
-sjtu::vector<int>        sjtu::memory_pool::cities_recycle;
-sjtu::vector<int>        sjtu::memory_pool::lines_recycle;
-sjtu::vector<int>        sjtu::memory_pool::trains_recycle;
-sjtu::vector<int>        sjtu::memory_pool::tickets_recycle;
-
-sjtu::vector<int>        sjtu::memory_pool::users_recycle;
-sjtu::vector<int>        sjtu::memory_pool::admins_recycle;
-
 // station, city, line, train, ticket, user, admin
 // 0,       1,    2,    3,     4,      5,    6
 
 sjtu::pool_ptr<sjtu::Station> sjtu::memory_pool::get_station() {
-    return sjtu::get_T(&stations, put_station, &cnt[0]);
+    return sjtu::get_T<Station, memory_pool>();
 }
 
 sjtu::pool_ptr<sjtu::City> sjtu::memory_pool::get_city() {
-    return sjtu::get_T(&cities, put_city, &cnt[1]);
+    return sjtu::get_T<City, memory_pool>();
 }
 
 sjtu::pool_ptr<sjtu::Line> sjtu::memory_pool::get_line() {
-    return sjtu::get_T(&lines, put_line, &cnt[2]);
+    return sjtu::get_T<Line, memory_pool>();
 }
 
 sjtu::pool_ptr<sjtu::Train> sjtu::memory_pool::get_train() {
-    return sjtu::get_T(&trains, put_train, &cnt[3]);
+    return sjtu::get_T<Train, memory_pool>();
 }
 
 sjtu::pool_ptr<sjtu::Ticket>
 sjtu::memory_pool::get_ticket(int from, int to, int kind, double price, int num) {
-    return sjtu::get_T(&tickets, put_ticket, &cnt[4]);
+    return sjtu::get_T<Ticket, memory_pool>();
 }
 
 sjtu::pool_ptr<sjtu::User> sjtu::memory_pool::get_user() {
-    return sjtu::get_T(&users, put_user, &cnt[5]);
+    return sjtu::get_T<User, memory_pool>();
 }
 
 sjtu::pool_ptr<sjtu::Admin> sjtu::memory_pool::get_admin() {
-    return sjtu::get_T(&admins, put_admin, &cnt[6]);
+    return sjtu::get_T<Admin, memory_pool>();
 }
 
 
 
 void sjtu::memory_pool::put_station(int pos) {
-    stations_recycle.push_back(pos);
+    recycle[Station::Type].push_back(pos);
 }
 
 void sjtu::memory_pool::put_city(int pos) {
-    cities_recycle.push_back(pos);
+    recycle[City::Type].push_back(pos);
 }
 
 void sjtu::memory_pool::put_line(int pos) {
-    lines_recycle.push_back(pos);
+    recycle[Line::Type].push_back(pos);
 }
 
 void sjtu::memory_pool::put_train(int pos) {
-    trains_recycle.push_back(pos);
+    recycle[Train::Type].push_back(pos);
 }
 
 void sjtu::memory_pool::put_ticket(int pos) {
-    tickets_recycle.push_back(pos);
+    recycle[Ticket::Type].push_back(pos);
 }
 
 void sjtu::memory_pool::put_user(int pos) {
-    users_recycle.push_back(pos);
+    recycle[User::Type].push_back(pos);
 }
 
 void sjtu::memory_pool::put_admin(int pos) {
-    admins_recycle.push_back(pos);
+    recycle[User::Type].push_back(pos);
 }
 
 void sjtu::memory_pool::init_pool() {

@@ -12,7 +12,8 @@
 namespace sjtu {
 template<class T>
 class pool_ptr {
-    friend pool_ptr<T> get_T(vector<T> * container, void (*put)(int), vector<int>*);
+    template <typename U, typename pool>
+    friend pool_ptr<U> get_T<U, pool>();
 
 protected:
     int pos;
@@ -68,11 +69,19 @@ public:
 
 
 
-template <class T>
-pool_ptr<T> get_T(vector<T> * container,
-                  void (*put)(int), vector<int>* cnt) {
-    container->push_back(T());
-    return pool_ptr<T>((int)container->size(), container, put, cnt);
+template <class T, class pool>
+pool_ptr<T> get_T() {
+    vector<T>* container = (vector<T>*)pool::container[T::Type];
+    void (*put)(int) = pool::put[T::Type];
+    vector<int> *cnt = &pool::cnt[T::Type];
+
+    if (pool::recycle[T::Type].empty()) {
+        container->push_back(T());
+        return pool_ptr<T>((int)container->size(), container, put, cnt);
+    }
+    int pos = pool::recycle[T::Type].back();
+    pool::recycle[T::Type].pop_back();
+    return pool_ptr<T>(pos, container, put, cnt);
 }
 
 template <class T>
