@@ -181,7 +181,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="train_list">
+      <widget class="QListWidget" name="listWidget">
        <item>
         <property name="text">
          <string>新建项目</string>

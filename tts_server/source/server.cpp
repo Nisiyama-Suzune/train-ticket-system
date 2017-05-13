@@ -412,7 +412,7 @@ sjtu::TTS::TTS() {
 	QString directory = QDir::currentPath();
 	directory += "/../train-ticket-system/operation.dat";
 	QFile file(directory);
-	if(!file.open()) {
+    if(!file.open(QIODevice::ReadOnly)) {
 		file.close();
 		load_ascii();
 	} else {
@@ -422,14 +422,6 @@ sjtu::TTS::TTS() {
 }
 sjtu::TTS::~TTS() {
 	save_binary();
-}
-
-sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
-	user_ptr user = memory_pool<User>::get_T();
-	user->name = name;
-	user->ID = ID;
-	server.add_user(user);
-	return user;
 }
 
 
@@ -480,7 +472,7 @@ bool sjtu::TTS::add_train(const sjtu::TTS::TrainData & train_data) {
 	train_ptr train = memory_pool<Train>::get_T();
 	line_ptr line = server.find_line(train_data.line_name);
 	train->line = line;
-	train->date = train_data.date;
+    train->date = Date(train_data.date);
 	train->selling = train_data.selling;
 	train->station_available_tickets = train_data.station_available_tickets;
 	return line->trains.insert(make_pair(train_data.date, train)).second;
@@ -596,23 +588,6 @@ bool sjtu::TTS::add_line(const QString & str) {
 	return add_line(data);
 }
 
-sjtu::vector<QString> sjtu::TTS::query_city_city(const QString &f, const QString &t, int date) {
-    /// TODO
-    Date t_date(date);
-    const City &from = server.find_city(f);
-    const City &to   = server.find_city(t);
-    smart_ptr<vector<train_ptr>> tmp = query_train(from, to, t_date);
-    QString str;
-    for (auto iter = tmp->begin(); iter != tmp->end(); ++iter) {
-        const Train& train = **iter;
-        for (auto iter = train.line->seat_kind_names.begin();
-             iter != train.line->seat_kind_names.end(); ++iter) {
-            str = "";
-            str += train.line->name + "  ";
-            str += "起点：" + f + "（" + train.line->arr()
-        }
-    }
-}
 
 sjtu::vector<QString> sjtu::TTS::current_tickets(int ID) {
     vector<QString> result;
@@ -620,12 +595,12 @@ sjtu::vector<QString> sjtu::TTS::current_tickets(int ID) {
 
     current_user =  server.find_user(ID);
     const deque<ticket_ptr> & cur_tickets = current_tickets();
-    for (auto iter = cur_tickets.begin(); iter != cur_tickets.end(); ++iter) {
+    for (auto iter = cur_tickets.cbegin(); iter != cur_tickets.cend(); ++iter) {
         const Ticket & ticket = **iter;
         str = "";
         str += ticket.train->line->name + " ";
-        str += "从" + ticket.train->line->stations[ticket.from]
-                + "到" + ticket.train->line->stations[ticket.to];
+        str += "从" + ticket.train->line->stations[ticket.from]->name
+                + "到" + ticket.train->line->stations[ticket.to]->name;
         str += " " + ticket.train->date.toStr();
         str += " " + QString::number(ticket.num) + "张";
         result.push_back(str);
@@ -644,8 +619,8 @@ sjtu::vector<QString> sjtu::TTS::current_tickets(int ID) {
  */
 
 sjtu::vector<sjtu::Ticket> sjtu::TTS::q_ss_ticket(const QString &f, const QString &t, int date) {
-    const Station & from = server.find_station(f);
-    const Station & to   = server.find_station(t);
+    const Station & from = *server.find_station(f);
+    const Station & to   = *server.find_station(t);
     Date t_date(date);
     smart_ptr<vector<train_ptr>> tmp = query_train(from, to, t_date);
 
@@ -666,7 +641,7 @@ sjtu::vector<sjtu::Ticket> sjtu::TTS::q_ss_ticket(const QString &f, const QStrin
         }
         add.train = *iter;
         add.from = st;
-        add.to   = to;
+        add.to   = ed;
 
         for (int i = 0; i < train.line->seat_kind_names.size(); ++i)
         {
@@ -674,9 +649,9 @@ sjtu::vector<sjtu::Ticket> sjtu::TTS::q_ss_ticket(const QString &f, const QStrin
             int num;
             double price;
             for (int p = st; p < ed; ++p) {
-                price += train.line->price[p];
-                if (num > train.station_available_tickets[p]) {
-                    num = train.station_available_tickets[p];
+                price += train.line->price[i][p];
+                if (num > train.station_available_tickets[i][p]) {
+                    num = train.station_available_tickets[i][p];
                     if (num == 0)
                         break;
                 }
@@ -713,7 +688,3 @@ sjtu::vector<QString> sjtu::TTS::q_ss(const QString &f, const QString &t, int da
 
 
 
-
-sjtu::TTS::TTS() {
-
-}
