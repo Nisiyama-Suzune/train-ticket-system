@@ -207,7 +207,7 @@ struct TTS::TrainData {
  * 传参：出发站(qstr)， 终点站(qstr)，出发时间(int)
  *
  * 添加线路函数(admin)
- * 传参：出发站（qstr)，出发时间(int)，终点站(qstr)，到达时间(int），车次编号（qstr)
+ * 传参：出发站（qstr)，出发时间(int).，终点站(qstr)，到达时间(int），车次编号（qstr)
  * 返回值：bool（是否添加成功）//可不需要返回值
  *
  * 删除线路函数（admin)

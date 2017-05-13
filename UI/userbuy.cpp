@@ -47,7 +47,7 @@ void userbuy::on_pushButton_6_clicked()
 
 void userbuy::on_search_by_station_clicked()
 {
-    sjtu::vector<QString> vec = tts.query_station_station(ui->start_by_station->currentText(), ui->end_by_station->currentText(), ui->time_by_station->currentData());
+    sjtu::vector<QString> vec = tts.q_station_station(ui->start_by_station->currentText(), ui->end_by_station->currentText(), ui->time_by_station->currentData());
     for(int i = 0; i < vec.size(); ++i)
     {
         QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
