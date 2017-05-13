@@ -60,6 +60,14 @@ struct Date {
             return a.same_day(b);
         }
     };
+	void load(QDataStream& in)
+	{
+		in >> year >> month >> day >> hour >> min >> sec;
+	}
+	void save(QDataStream& out)
+	{
+		out << year << month << day << hour << min << sec;
+	}
 };
 
 struct Station {
@@ -72,6 +80,18 @@ struct Station {
     vector<pool_ptr<Line>> lines;
 
     Station(){}
+	void load(QDataStream& in)
+	{
+		in >> name;
+		location.load(in);
+		lines.load(in);
+	}
+	void save(QDataStream& out)
+	{
+		out << name;
+		location.save(out);
+		lines.save(out);
+	}
 };
 
 struct City {
@@ -80,6 +100,16 @@ struct City {
     std::wstring name;
     // 城市中的车站
     vector<pool_ptr<Station>> stations;
+	void load(QDataStream& in)
+	{
+		in >> name;
+		stations.load(in);
+	}
+	void save(QDataStream& out)
+	{
+		out << name;
+		stations.save(out);
+	}
 };
 
 struct Line {
@@ -99,6 +129,28 @@ struct Line {
     bool check_date(const Date & date) const {
         return trains.find(date) != trains.cend();
     }
+	void load(QDataStream &in)
+	{
+		in >> name;
+		seat_kind_names.load(in);
+		stations.load(in);
+		arr_time.load(in);
+		dep_time.load(in);
+		miles.load(in);
+		price.load(in);
+		trains.load(in);
+	}
+	void save(QDataStream &out)
+	{
+		out >> name;
+		seat_kind_names.save(out);
+		stations.save(out);
+		arr_time.save(out);
+		dep_time.save(out);
+		miles.save(out);
+		price.save(out);
+		trains.save(out);
+	}
 };
 
 /**Same line share one line object
@@ -117,6 +169,20 @@ struct Train {
      * if a customer bought a ticket from 1 to 3, then
      * station_available_ticket[] = {200, 199, 199, 200}
      */
+	void load(QDataStream &in)
+	{
+		line.load(in);
+		date.load(in);
+		in >> selling;
+		station_available_tickets.load(in);
+	}
+	void save(QDataStream &out)
+	{
+		line.save(out);
+		date.save(out);
+		out >> selling;
+		station_available_tickets.save(out);
+	}
 };
 
 struct Ticket {
@@ -132,6 +198,16 @@ struct Ticket {
         return train == rhs.train && from == rhs.from && to == rhs.to
                && kind == rhs.kind;
     }
+	void load(QDataStream &in)
+	{
+		train.load(in);
+		in >> from >> to >> kind >> price >> num;
+	}
+	void save(QDataStream &save)
+	{
+		train.save(out);
+		out << from << to << kind << price << num;
+	}
 };
 }
 
