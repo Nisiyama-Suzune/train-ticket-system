@@ -9,6 +9,7 @@
 #include <iostream>
 #include "utility.hpp"
 #include "exceptions.hpp"
+#include <QDataStream>
 
 namespace sjtu {
 
@@ -70,12 +71,46 @@ private:
 
 	void out(std::ostream &os, node *n) {
 		if (!n) {
-			os << -1 << std::endl;
+			long long tmp = -1;
+			os << tmp << std::endl;
 			return;
 		}
 		os << n->heap << std::endl;
 		os << n->value->first << std::endl;
 		os << n->value->second << std::endl;
+		out(os, n->left);
+		out(os, n->right);
+	}
+	pair<node *, node *> in(QDataStream &is, node *prevnode) {
+		long long heap;
+		is >> heap;
+		if (heap < 0) return pair<node *, node *>(nullptr, prevnode);
+		m_size++;
+		Key k;
+		T v;
+		is >> k >> v;
+		node *ans = new node(heap, new value_type(k, v));
+		pair<node *, node *> left = in(is, prevnode);
+		ans->left = left.first;
+		ans->prev = left.second;
+		if (left.second)
+			left.second->next = ans;
+		else
+			nbegin = ans;
+		pair<node *, node *> right = in(is, ans);
+		ans->right = right.first;
+		return pair<node *, node *>(ans, right.second);
+	}
+
+	void out(QDataStream &os, node *n) {
+		if (!n) {
+			long long tmp = -1;
+			os << tmp;
+			return;
+		}
+		os << n->heap;
+		os << n->value->first;
+		os << n->value->second;
 		out(os, n->left);
 		out(os, n->right);
 	}
@@ -590,6 +625,19 @@ public:
 	}
 
 	friend std::istream &operator>>(std::istream &is, map<Key, T, Compare> &m) {
+		m.clear();
+		pair<node *, node *> n = m.in(is, nullptr);
+		m.nend->left = n.first;
+		m.nend->prev = n.second;
+		n.second->next = m.nend;
+		return is;
+	}
+	friend QDataStream &operator<<(QDataStream &os, map<Key, T, Compare> &m) {
+		m.out(os, m.nend->left);
+		return os;
+	}
+
+	friend QDataStream &operator>>(QDataStream &is, map<Key, T, Compare> &m) {
 		m.clear();
 		pair<node *, node *> n = m.in(is, nullptr);
 		m.nend->left = n.first;
