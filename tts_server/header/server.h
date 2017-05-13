@@ -134,35 +134,6 @@ public:
 
 struct TTS::BuyReturnData
 {
-<<<<<<< Updated upstream
-	QString name;
-	int ID;
-	QString operation;
-	int num;
-	QString kind_of_seat;
-	QString train_ID;
-	QString from_station;
-	QString to_station;
-	QString date;
-	#ifdef output_debug
-	friend QTextStream& operator << (QTextStream& out, const BuyData& x) {
-		out << "name         = " << x.name << endl;
-		out << "ID           = " << x.ID << endl;
-		out << "operation    = " << x.operation << endl;
-		out << "num          = " << x.num << endl;
-		out << "kind_of_seat = " << x.kind_of_seat << endl;
-		out << "train_ID     = " << x.train_ID << endl;
-		out << "from_station = " << x.from_station << endl;
-		out << "to_station   = " << x.to_station << endl;
-		out << "data         = " << x.date << endl;
-		return out;
-	}
-	#endif //output_debug
-};
-
-struct TTS::LineData {
-=======
->>>>>>> Stashed changes
     QString name;
     int ID;
     QString operation;
@@ -203,21 +174,6 @@ struct TTS::TrainData {
      * station_available_ticket[] = {200, 199, 199, 200}
 	 */
 };
-
-/*
-struct TTS::BuyReturnData {
-    QString name;
-    int ID;
-    QString operation;
-    int num;
-    QString kind_of_seat;
-    QString train_ID;
-    QString from_station;
-    QString to_station;
-    QString date;
-};
-*/
-
 
 }
 
