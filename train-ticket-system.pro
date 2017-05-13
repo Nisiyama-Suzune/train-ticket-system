@@ -23,27 +23,72 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES +=\
     tts_server/source/server.cpp \
     tts_server/source/train_manager.cpp \
     tts_server/source/account_manager.cpp \
-    tts_server/source/memory_pool.cpp
+    UI/adminadd.cpp \
+    UI/admindelete.cpp \
+    UI/adminlogin.cpp \
+    UI/adminmainwindow.cpp \
+    UI/adminregister.cpp \
+    UI/beginwindow.cpp \
+    UI/main.cpp \
+    UI/mainwindow.cpp \
+    UI/userbuy.cpp \
+    UI/userhistory.cpp \
+    UI/userlogin.cpp \
+    UI/usermainwindow.cpp \
+    UI/userregister.cpp \
+    UI/userreturn.cpp \
+    UI/userticket.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     vector.hpp \
     utility.hpp \
     smart_ptr.hpp \
     map.hpp \
-    list.hpp \
+    deque.hpp \
     memory.hpp \
     exceptions.hpp \
     tts_server/header/train_manager.h \
     tts_server/header/server.h \
     tts_server/header/account_manager.h \
-    tts_server/header/memory_pool.h
+    tts_server/header/forward_declaration.h \
+    UI/adminadd.h \
+    UI/admindelete.h \
+    UI/adminlogin.h \
+    UI/adminmainwindow.h \
+    UI/adminregister.h \
+    UI/beginwindow.h \
+    UI/mainwindow.h \
+    UI/userbuy.h \
+    UI/userhistory.h \
+    UI/userlogin.h \
+    UI/usermainwindow.h \
+    UI/userregister.h \
+    UI/userreturn.h \
+    UI/userticket.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    UI/adminadd.ui \
+    UI/admindelete.ui \
+    UI/adminlogin.ui \
+    UI/adminmainwindow.ui \
+    UI/adminregister.ui \
+    UI/beginwindow.ui \
+    UI/mainwindow.ui \
+    UI/old.ui \
+    UI/userbuy.ui \
+    UI/userhistory.ui \
+    UI/userlogin.ui \
+    UI/usermainwindow.ui \
+    UI/userregister.ui \
+    UI/userreturn.ui \
+    UI/userticket.ui
 
 DISTFILES += \
     log.txt
+
+SUBDIRS += \
+    UI/ticket3.pro

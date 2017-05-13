@@ -222,10 +222,7 @@ public:
 
 
 	};
-	/**
-	 * TODO Constructs
-	 * Atleast three: default constructor, copy constructor and a constructor for std::vector
-	 */
+
 	vector(int initial = 100)
 	{
 		storage = (T*)operator new[](initial * sizeof(T));
@@ -244,9 +241,7 @@ public:
 			//storage[i] = other.storage[i];
 		}
 	}
-	/**
-	 * TODO Destructor
-	 */
+
 	~vector()
 	{
 	    for(int i = 0; i < NowLength; ++i)

@@ -15,10 +15,10 @@ void sjtu::User::add_ticket(sjtu::ticket_ptr ticket) {
     tickets.push_back(ticket);
 }
 
-bool sjtu::Account::check_password(const std::string & other_password) {
+bool sjtu::Account::check_password(const QString & other_password) {
     return password == other_password;
 }
 
-void sjtu::Account::update_password(const std::string &new_password) {
+void sjtu::Account::update_password(const QString &new_password) {
     password = new_password;
 }

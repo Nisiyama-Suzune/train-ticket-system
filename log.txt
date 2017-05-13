@@ -160,6 +160,19 @@ login_admin            Y
 
 用户：账户余额？
 
+
+
+
+
 正在做：
-添加city etc.
-引用计数recycle部分
+TTS构造
+  初始化读入
+  非初始化读入
+TTS析构：
+  写入
+log
+  直接写文件
+UI
+欣赏memory.hpp
+一键解体
+外存操作
