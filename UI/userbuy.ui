@@ -30,14 +30,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="start_station_lable">
        <property name="text">
         <string>起始站</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="start_station">
        <item>
         <property name="text">
          <string>北京</string>
@@ -56,14 +56,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="end_station_label">
        <property name="text">
         <string>终点站</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="end_station">
        <item>
         <property name="text">
          <string>北京</string>
@@ -79,10 +79,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_3"/>
+      <widget class="QComboBox" name="leave_date_station"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="query_with_station">
        <property name="text">
         <string>按站查询</string>
        </property>
@@ -93,14 +93,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="start_city_label">
        <property name="text">
         <string>起始站</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_4">
+      <widget class="QComboBox" name="start_city">
        <item>
         <property name="text">
          <string>北京</string>
@@ -119,14 +119,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="end_city_label">
        <property name="text">
         <string>终点站</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_5">
+      <widget class="QComboBox" name="end_city">
        <item>
         <property name="text">
          <string>北京</string>
@@ -142,10 +142,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_6"/>
+      <widget class="QComboBox" name="leave_date_city"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_7">
+      <widget class="QPushButton" name="query_with_city">
        <property name="text">
         <string>按城市查询</string>
        </property>
@@ -158,21 +158,21 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="return_main_menu_button">
          <property name="text">
           <string>回到主页</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="query_my_ticket">
          <property name="text">
           <string>我已买的票</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="log_out_button">
          <property name="text">
           <string>登出</string>
          </property>
@@ -181,7 +181,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="listWidget">
+      <widget class="QListWidget" name="train_list">
        <item>
         <property name="text">
          <string>新建项目</string>
