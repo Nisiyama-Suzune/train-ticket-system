@@ -133,6 +133,7 @@ public:
 private: // 查找station-station的票
     vector<Ticket> q_ss_ticket(const QString &f, const QString &t, int date);
 public:
+    vector<QString> q_ss(const QString &f, const QString &t, int date);
     vector<QString> query_city_city(const QString &f, const QString &t, int date);
 
 
