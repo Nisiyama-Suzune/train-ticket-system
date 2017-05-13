@@ -122,6 +122,46 @@ private:
 	// 返回用户当前的票的
 	const deque<ticket_ptr> & current_tickets();
 
+    Server server;
+    user_ptr  current_user;
+    admin_ptr current_admin;
+    int id_cnt;
+
+    /// query
+    smart_ptr<vector<train_ptr>>
+    query_train(const City & from, const City & to, Date date) const;
+    smart_ptr<vector<train_ptr>>
+    query_train(const Station & from, const City & to, Date date) const;
+    smart_ptr<vector<train_ptr>>
+    query_train(const City & from, const Station & to, Date date) const;
+    smart_ptr<vector<train_ptr>>
+    query_train(const Station & from, const Station & to, Date date) const;
+
+
+    /// add (loading)
+    user_ptr _add_user(const QString &name, int ID);
+
+    /// add (admin permission required)
+    bool add_station(const StationData &);
+    bool add_line(const LineData &);
+    bool add_city(const CityData &);
+    bool add_train(const TrainData &);
+
+    /// user
+    /* 买票，如果票不够了或者没开票，则返回false。
+     * 否则则修改余票，并且往当前登陆账户的票数里新增一张票。
+     */
+    bool buy_ticket(train_ptr train, int from, int to, int kind, int num);
+
+    /* 退票，如果当前该张票余票不够，则返回false
+     */
+    bool return_ticket(ticket_ptr ticket, int num);
+
+private: // 返回用户当前的票的
+    const deque<ticket_ptr> & current_tickets();
+public:
+    vector<QString> current_tickets(int ID);
+
 public:
 	// 登陆账户，返回登录成功与否（只检查ID和密码是否匹配），
 	// 出问题会抛出异常
@@ -138,7 +178,10 @@ public:
 	/// API
 	bool add_line(const QString & str);
 
-	vector<QString> query_city_city(const QString &f, const QString &t, int date);
+private: // 查找station-station的票
+    vector<Ticket> q_ss_ticket(const QString &f, const QString &t, int date);
+public:
+    vector<QString> query_city_city(const QString &f, const QString &t, int date);
 
 
 
