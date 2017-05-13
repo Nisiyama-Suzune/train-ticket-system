@@ -203,7 +203,7 @@ struct TTS::TrainData {
  * 传参：出发站（qstr)，终点站(qstr)，出发时间(int)
  * 返回：字符串vector
  *
- * 查票函数_城到城（user,admin)
+ * 查票函数_城到城 （user,admin)
  * 传参：出发站(qstr)， 终点站(qstr)，出发时间(int)
  *
  * 添加线路函数(admin)

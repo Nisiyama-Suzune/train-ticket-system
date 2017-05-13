@@ -38,9 +38,9 @@ struct Date {
         return year == rhs.year && month == rhs.month && day == rhs.day;
     }
 
-    friend bool same_day(const Date &lhs, const Date &rhs) {
+    /*friend bool same_day(const Date &lhs, const Date &rhs) {
         return lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year;
-    }
+    }*/
 
     bool operator==(const Date &rhs) {
         return year == rhs.year && month == rhs.month && day == rhs.day
@@ -61,6 +61,8 @@ struct Date {
 		out << rhs.year << rhs.month << rhs.day << rhs.hour << rhs.min << rhs.sec;
 		return out;
 	}
+
+
 /*
 	void load(QDataStream& in)
 	{
