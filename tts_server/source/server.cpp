@@ -6,14 +6,14 @@
 
 /// server
 
-sjtu::pool_ptr<sjtu::City> sjtu::Server::find_city(const sjtu::Server::QString &name) const {
+sjtu::city_ptr sjtu::Server::find_city(const sjtu::Server::QString &name) const {
     auto result = cities.find(name);
     if (result == cities.cend())
         throw exception("city", "does not exist.");
     return result->second;
 }
 
-sjtu::pool_ptr<sjtu::User> sjtu::Server::find_user(const int &ID) const {
+sjtu::user_ptr sjtu::Server::find_user(const int &ID) const {
     auto user = users.find(ID);
     if (user == users.cend()) {
         throw exception("user", "does not exist.");
@@ -21,7 +21,7 @@ sjtu::pool_ptr<sjtu::User> sjtu::Server::find_user(const int &ID) const {
     return user->second;
 }
 
-sjtu::pool_ptr<sjtu::Admin> sjtu::Server::find_admin(const int &ID) const {
+sjtu::admin_ptr sjtu::Server::find_admin(const int &ID) const {
     auto admin = admins.find(ID);
     if (admin == admins.cend()) {
         throw exception("admin", "does not exist");
@@ -29,14 +29,14 @@ sjtu::pool_ptr<sjtu::Admin> sjtu::Server::find_admin(const int &ID) const {
     return admin->second;
 }
 
-sjtu::pool_ptr<sjtu::Station> sjtu::Server::find_station(const sjtu::QString &name) const {
+sjtu::station_ptr sjtu::Server::find_station(const sjtu::QString &name) const {
     auto station = stations.find(name);
     if (station == stations.cend())
         throw exception("station", "does not exist");
     return station->second;
 }
 
-sjtu::pool_ptr<sjtu::Line> sjtu::Server::find_line(const sjtu::QString &name) const {
+sjtu::line_ptr sjtu::Server::find_line(const sjtu::QString &name) const {
     auto line = lines.find(name);
     if (line == lines.cend())
         throw exception("line", "does not exist");
@@ -64,41 +64,27 @@ bool sjtu::Server::check_line(const sjtu::QString &name) const {
     return lines.find(name) != lines.cend();
 }
 
-bool sjtu::Server::add_line(const sjtu::pool_ptr<sjtu::Line> &line) {
+bool sjtu::Server::add_line(const sjtu::line_ptr &line) {
     return lines.insert(sjtu::make_pair(line->name, line)).second;
 }
 
-bool sjtu::Server::add_station(const sjtu::pool_ptr<sjtu::Station> &station) {
+bool sjtu::Server::add_station(const sjtu::station_ptr &station) {
     return stations.insert(sjtu::make_pair(station->name, station)).second;
 }
 
-bool sjtu::Server::add_city(const sjtu::pool_ptr<sjtu::City> &city) {
+bool sjtu::Server::add_city(const sjtu::city_ptr &city) {
     return cities.insert(sjtu::make_pair(city->name, city)).second;
 }
 
-void sjtu::Server::load(QDataStream &in)
-{
-	users.load(in);
-	admins.load(in);
-	lines.load(in);
-	cities.load(in);
-	stations.load(in);
-}
 
-void sjtu::Server::save(QDataStream &out)
-{
-	users.save(out);
-	admins.save(out);
-	lines.save(out);
-	cities.save(out);
-	stations.save(out);
-}
+
+
 
 
 
 /// TTS
 
-smart_ptr<sjtu::vector<sjtu::pool_ptr<sjtu::Train>>>
+smart_ptr<sjtu::vector<sjtu::train_ptr>>
 sjtu::TTS::query_train(const sjtu::City &from, const sjtu::City &to, sjtu::Date date) const {
     /* 实现：
      * 首先枚举出发城市中的每一个车站，再枚举经过这个车站的每一条线路，再枚举线路上的每一个车站，
@@ -106,16 +92,16 @@ sjtu::TTS::query_train(const sjtu::City &from, const sjtu::City &to, sjtu::Date 
      * 其中如果当前线路在该日期没有车次，则跳过。（有date的情况）
      */
 
-    smart_ptr<vector<pool_ptr<Train>>> result(new vector<pool_ptr<Train>>);
+    smart_ptr<vector<train_ptr>> result(new vector<train_ptr>);
 
-    vector<pool_ptr<Station>>::const_iterator from_station;
+    vector<station_ptr>::const_iterator from_station;
     for (from_station = from.stations.cbegin(); from_station != from.stations.cend() ; ++from_station) {
-        vector<pool_ptr<Line>>::const_iterator cur_line;
+        vector<line_ptr>::const_iterator cur_line;
         for (cur_line = (*from_station)->lines.cbegin(); cur_line != (*from_station)->lines.cend(); ++cur_line) {
             if (!(*cur_line)->check_date(date)) {
                 continue;
             }
-            vector<pool_ptr<Station>>::const_iterator cur_station = (*cur_line)->stations.cbegin();
+            vector<station_ptr>::const_iterator cur_station = (*cur_line)->stations.cbegin();
             while ((*cur_station)->name != (*from_station)->name) {
                 ++cur_station;
             }
@@ -136,7 +122,7 @@ sjtu::TTS::query_train(const sjtu::City &from, const sjtu::City &to, sjtu::Date 
 
 /// User
 
-bool sjtu::TTS::buy_ticket(sjtu::pool_ptr<sjtu::Train> train, int from, int to, int kind, int num) {
+bool sjtu::TTS::buy_ticket(sjtu::train_ptr train, int from, int to, int kind, int num) {
     vector<vector<double>> &price = train->line->price;
     vector<vector<int>> &remaining = train->station_available_tickets;
     if (!train->selling)
@@ -156,14 +142,19 @@ bool sjtu::TTS::buy_ticket(sjtu::pool_ptr<sjtu::Train> train, int from, int to, 
     }
 
     // 更新账户
-    pool_ptr<Ticket> ticket = memory_pool::get_ticket(from, to, kind, ticket_price, num);
+    ticket_ptr ticket = memory_pool<Ticket>::get_T();//(from, to, kind, ticket_price, num);
+    ticket->from  = from;
+    ticket->to    = to;
+    ticket->kind  = kind;
+    ticket->price = ticket_price;
+    ticket->num   = num;
     ticket->train = train;
     current_user->add_ticket(ticket);
     return true;
 }
 
-bool sjtu::TTS::return_ticket(sjtu::pool_ptr<sjtu::Ticket> ticket, int num) {
-    list<pool_ptr<Ticket>> &tickets = current_user->tickets;
+bool sjtu::TTS::return_ticket(sjtu::ticket_ptr ticket, int num) {
+    deque<ticket_ptr> &tickets = current_user->tickets;
     for (auto iter = tickets.begin(); iter != tickets.end(); ++iter) {
         if ((*iter)->equal_ex_num(*ticket)) {
             if ((*iter)->num < num)
@@ -175,25 +166,25 @@ bool sjtu::TTS::return_ticket(sjtu::pool_ptr<sjtu::Ticket> ticket, int num) {
     return false;
 }
 
-const sjtu::list<sjtu::pool_ptr<sjtu::Ticket>> &sjtu::TTS::current_tickets() {
+const sjtu::deque<sjtu::ticket_ptr> &sjtu::TTS::current_tickets() {
     return current_user->tickets;
 }
 
 bool sjtu::TTS::login_user(const int & ID, const std::string password) {
-    pool_ptr<User> user = server.find_user(ID);
+    user_ptr user = server.find_user(ID);
     if (user->check_password(password)) {
         current_user = user;
-        current_admin = pool_ptr<Admin>();
+        current_admin = admin_ptr();
         return true;
     }
     return false;
 }
 
 bool sjtu::TTS::login_admin(const int &ID, const std::string password) {
-    pool_ptr<Admin> admin = server.find_admin(ID);
+    admin_ptr admin = server.find_admin(ID);
     if (admin->check_password(password)) {
         current_admin = admin;
-        current_user = pool_ptr<User>();
+        current_user = user_ptr();
         return true;
     }
     return false;
@@ -201,7 +192,7 @@ bool sjtu::TTS::login_admin(const int &ID, const std::string password) {
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
-    pool_ptr<Line> line = memory_pool::get_line();
+    line_ptr line = memory_pool<Line>::get_T();
     line->name = line_data.name;
     line->seat_kind_names = line_data.seat_kind_names;
     line->miles = line_data.miles;
@@ -224,7 +215,7 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
 }
 
 bool sjtu::TTS::add_station(const sjtu::TTS::StationData &station_data) {
-    pool_ptr<Station> station = memory_pool::get_station();
+    station_ptr station = memory_pool<Station>::get_T();
     station->name = station_data.name;
     if (!server.check_city(station_data.location))
         add_city(CityData(station_data.location));
@@ -234,7 +225,7 @@ bool sjtu::TTS::add_station(const sjtu::TTS::StationData &station_data) {
 }
 
 bool sjtu::TTS::add_city(const sjtu::TTS::CityData &city_data) {
-    pool_ptr<City> city = memory_pool::get_city();
+    city_ptr city = memory_pool<City>::get_T();
     city->name = city_data.name;
     return server.add_city(city);
 }
@@ -243,8 +234,8 @@ bool sjtu::TTS::add_train(const sjtu::TTS::TrainData & train_data) {
     if (!server.check_line(train_data.line_name))
         return false;
 
-    pool_ptr<Train> train = memory_pool::get_train();
-    pool_ptr<Line> line = server.find_line(train_data.line_name);
+    train_ptr train = memory_pool<Train>::get_T();
+    line_ptr line = server.find_line(train_data.line_name);
     train->line = line;
     train->date = train_data.date;
     train->selling = train_data.selling;

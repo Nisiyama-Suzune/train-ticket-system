@@ -5,7 +5,10 @@
 #ifndef TTS_ACCOUNT_MANAGER_H
 #define TTS_ACCOUNT_MANAGER_H
 
+#include "forward_declaration.h"
+
 #include "train_manager.h"
+#include "../../memory.hpp"
 
 #include <string>
 
@@ -27,29 +30,23 @@ public:
 
     void update_password(const std::string &new_password);
     bool check_password(const std::string &other_password);
-	void load(QDataStream &in);
-	void save(QDataStream &out);
 };
 
 class User : public Account {
 public:
     static const int Type = 5;
 
-    list<pool_ptr<Ticket>> tickets;
+    deque<ticket_ptr> tickets;
 
 public:
     // 会检查是否有相同的票，如果有则只增加其张数。
-    void add_ticket(pool_ptr<Ticket> ticket);
-	void load(QDataStream &in);
-	void save(QDataStream &out);
+    void add_ticket(ticket_ptr ticket);
 
 };
 
 class Admin : public Account {
 public:
     static const int Type = 6;
-	void load(QDataStream &in);
-	void save(QDataStream &out);
 };
 
 }
