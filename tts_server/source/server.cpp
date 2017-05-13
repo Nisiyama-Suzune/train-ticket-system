@@ -291,6 +291,31 @@ bool sjtu::TTS::login_admin(const int &ID, const QString & password) {
 bool sjtu::TTS::is_train_type(QChar ch) {
 	return (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
 }
+int sjtu::TTS::register_user(const QString & name, const QString & password) {
+    while (server.check_user(id_cnt))
+        ++id_cnt;
+    int ID = id_cnt++;
+    user_ptr user = memory_pool<User>::get_T();
+    user->ID = ID;
+    user->name = name;
+    user->password = password;
+    server.add_user(user);
+    return ID;
+}
+
+int sjtu::TTS::register_admin(const QString & name, const QString & password) {
+    while (server.check_admin(id_cnt))
+        ++id_cnt;
+    int ID = id_cnt++;
+    admin_ptr admin = memory_pool<Admin>::get_T();
+    admin->ID = ID;
+    admin->name = name;
+    admin->password = password;
+    server.add_admin(admin);
+    return ID;
+}
+
+
 bool sjtu::TTS::load_ascii() {
 	QDir dir = QDir::current();
 	QString directory = QDir::currentPath();
@@ -354,6 +379,15 @@ int sjtu::TTS::register_admin(const QString & name, const QString & password) {
     server.add_admin(admin);
     return ID;
 }
+
+sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
+    user_ptr user = memory_pool<User>::get_T();
+    user->name = name;
+    user->ID = ID;
+    server.add_user(user);
+    return user;
+}
+
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
@@ -513,9 +547,23 @@ sjtu::TTS::BuyReturnData sjtu::TTS::operation_transform(QString str)
 	return ans;
 }
 
+bool sjtu::TTS::add_line(const QString & str) {
+    LineData data = line_transform(str);
+    return add_line(data);
+}
 
-
-
+sjtu::vector<QString> sjtu::TTS::query_city_city(const QString &f, const QString &t, int date) {
+    Date t_date(date);
+    const City &from = server.find_city(f);
+    const City &to   = server.find_city(t);
+    smart_ptr<vector<train_ptr>> tmp = query_train(from, to, t_date);
+    QString str;
+    for (auto iter = tmp->begin(); iter != tmp->end(); ++iter) {
+        const Train& train = **iter;
+        str += train.line->name + "  ";
+        str += f + " -> " + t + "\n";
+    }
+}
 
 
 

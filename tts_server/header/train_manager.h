@@ -24,6 +24,12 @@ struct Date {
 
     Date(int y = 0, int m = 0, int d = 0, int h = 0, int min = 0, int sec = 0) :
             year(y), month(m), day(d), hour(h), min(min), sec(sec) {}
+    Date(int date) {
+        year = date / 10000;
+        month = (date / 100) % 100;
+        day = date % 100
+    }
+
 
     friend bool operator<(const Date &lhs, const Date &rhs) {
         if (lhs.year != rhs.year) return lhs.year < rhs.year;
