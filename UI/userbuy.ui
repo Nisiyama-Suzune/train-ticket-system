@@ -37,7 +37,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="start_by_station">
        <item>
         <property name="text">
          <string>北京</string>
@@ -63,7 +63,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="end_by_station">
        <item>
         <property name="text">
          <string>北京</string>
@@ -79,10 +79,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_3"/>
+      <widget class="QComboBox" name="time_by_station"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="search_by_station">
        <property name="text">
         <string>按站查询</string>
        </property>
@@ -100,7 +100,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_4">
+      <widget class="QComboBox" name="start_by_city">
        <item>
         <property name="text">
          <string>北京</string>
@@ -126,7 +126,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_5">
+      <widget class="QComboBox" name="end_by_city">
        <item>
         <property name="text">
          <string>北京</string>
@@ -142,10 +142,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_6"/>
+      <widget class="QComboBox" name="time_by_city"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_7">
+      <widget class="QPushButton" name="search_by_city">
        <property name="text">
         <string>按城市查询</string>
        </property>

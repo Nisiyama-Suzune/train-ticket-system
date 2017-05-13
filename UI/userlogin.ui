@@ -32,12 +32,12 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>账号</string>
+        <string>ID</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="textEdit"/>
+      <widget class="QLineEdit" name="userLineEdit"/>
      </item>
     </layout>
    </item>
@@ -51,21 +51,21 @@
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="textEdit_2"/>
+      <widget class="QLineEdit" name="pwdLineEdit"/>
      </item>
     </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="loginBtn">
        <property name="text">
         <string>登录</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="exitBtn">
        <property name="text">
         <string>取消</string>
        </property>

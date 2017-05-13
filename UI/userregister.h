@@ -15,6 +15,9 @@ public:
     explicit userregister(QWidget *parent = 0);
     ~userregister();
 
+private slots:
+    void on_confirm_clicked();
+
 private:
     Ui::userregister *ui;
 };

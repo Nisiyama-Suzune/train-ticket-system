@@ -1,6 +1,11 @@
 #include "adminlogin.h"
 #include "ui_adminlogin.h"
 #include "adminregister.h"
+#include "adminmainwindow.h"
+#include "../tts_server/header/server.h"
+#include <QMessageBox>
+
+extern sjtu::TTS tts;
 
 adminlogin::adminlogin(QWidget *parent) :
     QDialog(parent),
@@ -18,4 +23,17 @@ void adminlogin::on_pushButton_3_clicked()
 {
     Adminregister a_reg;
     a_reg.exec();
+}
+
+void adminlogin::on_loginBtn_clicked()
+{
+    if(tts.login_admin(ui->userLineEdit->text().toInt(),ui->pwdLineEdit->text() ))
+    {
+        adminmainwindow a_main;
+        a_main.exec();
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("user name or password error!"), QMessageBox::Yes);
+    }
 }

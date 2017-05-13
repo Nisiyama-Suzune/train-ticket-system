@@ -27,7 +27,6 @@ void MainWindow::on_pushButton_2_clicked()
 {
     adminlogin a_log;
     a_log.exec();
-    this->destroy();
 }
 
 void MainWindow::on_commandLinkButton_clicked()
