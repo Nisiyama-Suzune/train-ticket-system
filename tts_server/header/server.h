@@ -84,43 +84,6 @@ private:
 	const QDir data_path;
 
 private:
-	Server server;
-	user_ptr  current_user;
-	admin_ptr current_admin;
-	int id_cnt;
-
-	/// query
-	smart_ptr<vector<train_ptr>>
-	query_train(const City & from, const City & to, Date date) const;
-	smart_ptr<vector<train_ptr>>
-	query_train(const Station & from, const City & to, Date date) const;
-	smart_ptr<vector<train_ptr>>
-	query_train(const City & from, const Station & to, Date date) const;
-	smart_ptr<vector<train_ptr>>
-	query_train(const Station & from, const Station & to, Date date) const;
-
-
-	/// add (loading)
-	user_ptr _add_user(const QString &name, int ID);
-
-	/// add (admin permission required)
-	bool add_station(const StationData &);
-	bool add_line(const LineData &);
-	bool add_city(const CityData &);
-	bool add_train(const TrainData &);
-
-	/// user
-	/* 买票，如果票不够了或者没开票，则返回false。
-	 * 否则则修改余票，并且往当前登陆账户的票数里新增一张票。
-	 */
-	bool buy_ticket(train_ptr train, int from, int to, int kind, int num);
-
-	/* 退票，如果当前该张票余票不够，则返回false
-	 */
-	bool return_ticket(ticket_ptr ticket, int num);
-
-	// 返回用户当前的票的
-	const deque<ticket_ptr> & current_tickets();
 
     Server server;
     user_ptr  current_user;
