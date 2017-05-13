@@ -307,22 +307,22 @@ bool sjtu::TTS::load_ascii() {
 
 	while (fin.readLineInto(&tmp)) {
 		if (is_train_type(tmp[0])) {
-			server.add_line(line_transform(str));
+			add_line(line_transform(str));
 			str = tmp;
 		} else str = str + '\n' + tmp;
 	}
-	server.add_line(line_transform(str));
+	add_line(line_transform(str));
 	file.close();
 
 	directory = QDir::currentPath();
 	directory += "/../train-ticket-system/operation.out";
-	file = QFile(directory);
-	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+	QFile file2(directory);
+	if (!file2.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No operation file!" << std::endl;
 		return false;
 	}
-	fin = QTextStream(&file);
-	while (fin.readLineInto(&str)) {
+	QTextStream fin2(&file2);
+	while (fin2.readLineInto(&str)) {
 		BuyReturnData ans = operation_transform(str);
 		current_user = _add_user(ans.name, ans.ID);
 		if (); ///TODO
