@@ -130,9 +130,12 @@ public:
 
 
 
+private:
+	bool is_train_type(QChar ch);
 public:
     /// init
 	bool load_ascii();
+	bool load_binary();
     TTS();
 };
 }
@@ -160,7 +163,7 @@ struct TTS::BuyReturnData
     QString train_ID;
     QString from_station;
     QString to_station;
-    QString date;
+	int date;
 };
 
 struct TTS::StationData {

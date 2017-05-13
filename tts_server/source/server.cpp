@@ -91,6 +91,7 @@ bool sjtu::Server::add_admin(const sjtu::admin_ptr & admin) {
 
 
 /// TTS
+
 smart_ptr<sjtu::vector<sjtu::train_ptr>>
 sjtu::TTS::query_train(const sjtu::City &from, const sjtu::City &to, sjtu::Date date) const {
     /* 实现：
@@ -312,10 +313,14 @@ int sjtu::TTS::register_admin(const QString & name, const QString & password) {
 }
 
 
+bool sjtu::TTS::is_train_type(QChar ch) {
+	return (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
+}
+
 bool sjtu::TTS::load_ascii() {
 	QDir dir = QDir::current();
 	QString directory = QDir::currentPath();
-	directory += "operation.out";
+	directory += "/../train-ticket-system/trains.csv";
 	QFile file(directory);
 	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No such file!" << std::endl;
@@ -326,6 +331,7 @@ bool sjtu::TTS::load_ascii() {
 	QString str, tmp;
 	str = fin.readLine();
 
+<<<<<<< HEAD
     while (fin.readLineInto(&tmp)) {
         if (tmp[0] == 'G') {
             add_line(str);
@@ -344,6 +350,57 @@ sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
     return user;
 }
 
+=======
+	while (fin.readLineInto(&tmp)) {
+		if (is_train_type(tmp[0])) {
+			add_line(line_transform(str));
+			str = tmp;
+		} else str = str + '\n' + tmp;
+	}
+	add_line(line_transform(str));
+	file.close();
+
+	directory = QDir::currentPath();
+	directory += "/../train-ticket-system/operation.out";
+	QFile file2(directory);
+	if (!file2.open(QIODevice::ReadOnly|QIODevice::Text)) {
+		std::cout << "No operation file!" << std::endl;
+		return false;
+	}
+	QTextStream fin2(&file2);
+	while (fin2.readLineInto(&str)) {
+		BuyReturnData ans = operation_transform(str);
+		current_user = _add_user(ans.name, ans.ID);
+		if (); ///TODO
+	}
+	return true;
+}
+
+bool sjtu::TTS::load_binary() {
+	QString directory = QDir::currentPath();
+	directory += "/../train-ticket-system/operation.dat";
+	file = QFile(directory);
+}
+int sjtu::TTS::register_user(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    user_ptr user = memory_pool<User>::get_T();
+    user->ID = ID;
+    user->name = name;
+    user->password = password;
+    server.add_user(user);
+    return ID;
+}
+
+int sjtu::TTS::register_admin(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    admin_ptr admin = memory_pool<Admin>::get_T();
+    admin->ID = ID;
+    admin->name = name;
+    admin->password = password;
+    server.add_admin(admin);
+    return ID;
+}
+>>>>>>> yhy
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
@@ -481,7 +538,22 @@ sjtu::TTS::BuyReturnData sjtu::TTS::operation_transform(QString str)
 	ans.train_ID = parts[7];
 	ans.from_station = parts[9];
 	ans.to_station = parts[11];
-	ans.date = parts[13];
+
+	QStringList date_parts = parts[13].split('-');
+	int date = 0;
+	for (int i = 0; i < 4; ++i)
+		date = date * 10 + (date_parts[0][i].toLatin1() - '0');
+	date = date * 100;
+	if (date_parts[1][1].toLatin1() >= '0' && date_parts[1][1].toLatin1() <= '9') {
+		date += 10 * (date_parts[1][0].toLatin1() - '0');
+		date += date_parts[1][1].toLatin1() - '0';
+	} else date += date_parts[1][0].toLatin1() - '0';
+	date *= 100;
+	if (date_parts[2][1].toLatin1() >= '0' && date_parts[2][1].toLatin1() <= '9') {
+		date += 10 * (date_parts[2][0].toLatin1() - '0');
+		date += date_parts[2][1].toLatin1() - '0';
+	} else date += date_parts[2][0].toLatin1() - '0';
+	ans.date = date;
 	#ifdef output_debug
 	cout << ans << endl;
 	#endif //output_debug
@@ -516,3 +588,7 @@ sjtu::vector<QString> sjtu::TTS::query_city_city(const QString &f, const QString
 
 
 
+
+sjtu::TTS::TTS() {
+
+}
