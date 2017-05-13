@@ -6,6 +6,7 @@
 #include "../tts_server/header/forward_declaration.h"
 
 sjtu::TTS tts;
+int ID;
 
 int main(int argc, char *argv[])
 {

@@ -5,6 +5,7 @@
 #include "../tts_server/header/server.h"
 
 extern sjtu::TTS tts;
+extern int ID;
 
 userlogin::userlogin(QWidget *parent) :
     QDialog(parent),
@@ -28,6 +29,7 @@ void userlogin::on_loginBtn_clicked()
 {
     if(tts.login_user(ui->userLineEdit->text().toInt(), ui->pwdLineEdit->text()))
     {
+        ID = ui->userLineEdit->text().toInt();
         usermainwindow u_main;
         u_main.exec();
     }
