@@ -76,8 +76,13 @@ bool sjtu::Server::add_city(const sjtu::city_ptr &city) {
     return cities.insert(sjtu::make_pair(city->name, city)).second;
 }
 
+bool sjtu::Server::add_user(const sjtu::user_ptr & user) {
+    return users.insert(sjtu::make_pair(user->ID, user)).second;
+}
 
-
+bool sjtu::Server::add_admin(const sjtu::admin_ptr & admin) {
+    return admins.insert(sjtu::make_pair(admin->ID, admin)).second;
+}
 
 
 
@@ -259,7 +264,7 @@ const sjtu::deque<sjtu::ticket_ptr> &sjtu::TTS::current_tickets() {
     return current_user->tickets;
 }
 
-bool sjtu::TTS::login_user(const int & ID, const QString password) {
+bool sjtu::TTS::login_user(const int & ID, const QString & password) {
     user_ptr user = server.find_user(ID);
     if (user->check_password(password)) {
         current_user = user;
@@ -269,7 +274,7 @@ bool sjtu::TTS::login_user(const int & ID, const QString password) {
     return false;
 }
 
-bool sjtu::TTS::login_admin(const int &ID, const QString password) {
+bool sjtu::TTS::login_admin(const int &ID, const QString & password) {
     admin_ptr admin = server.find_admin(ID);
     if (admin->check_password(password)) {
         current_admin = admin;
@@ -277,6 +282,26 @@ bool sjtu::TTS::login_admin(const int &ID, const QString password) {
         return true;
     }
     return false;
+}
+
+int sjtu::TTS::register_user(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    user_ptr user = memory_pool<User>::get_T();
+    user->ID = ID;
+    user->name = name;
+    user->password = password;
+    server.add_user(user);
+    return ID;
+}
+
+int sjtu::TTS::register_admin(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    admin_ptr admin = memory_pool<Admin>::get_T();
+    admin->ID = ID;
+    admin->name = name;
+    admin->password = password;
+    server.add_admin(admin);
+    return ID;
 }
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
@@ -436,6 +461,3 @@ sjtu::TTS::BuyReturnData sjtu::TTS::operation_transform(QString str)
 
 
 
-
-sjtu::TTS::TTS() {
-}
