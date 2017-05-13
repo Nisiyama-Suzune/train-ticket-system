@@ -331,26 +331,6 @@ bool sjtu::TTS::load_ascii() {
 	QString str, tmp;
 	str = fin.readLine();
 
-<<<<<<< HEAD
-    while (fin.readLineInto(&tmp)) {
-        if (tmp[0] == 'G') {
-            add_line(str);
-			str = tmp;
-		} else str = str + '\n' + tmp;
-	}
-    add_line(str);
-	return true;
-}
-
-sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
-    user_ptr user = memory_pool<User>::get_T();
-    user->name = name;
-    user->ID = ID;
-    server.add_user(user);
-    return user;
-}
-
-=======
 	while (fin.readLineInto(&tmp)) {
 		if (is_train_type(tmp[0])) {
 			add_line(line_transform(str));
@@ -374,6 +354,14 @@ sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
 		if (); ///TODO
 	}
 	return true;
+}
+
+sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
+    user_ptr user = memory_pool<User>::get_T();
+    user->name = name;
+    user->ID = ID;
+    server.add_user(user);
+    return user;
 }
 
 bool sjtu::TTS::load_binary() {
@@ -400,7 +388,6 @@ int sjtu::TTS::register_admin(const QString & name, const QString & password) {
     server.add_admin(admin);
     return ID;
 }
->>>>>>> yhy
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
