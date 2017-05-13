@@ -111,7 +111,16 @@ public:
     /// API
 
 
+
+
+public:
+    /// init
+    TTS();
 };
+}
+
+// Data
+namespace sjtu {
 
 struct TTS::LineData {
 public:
@@ -121,49 +130,11 @@ public:
 	vector<int> time_arrive, time_stop;
 	vector<int> miles;
 	vector<vector<double> > prices;
-	#ifdef output_debug
-	friend QTextStream& operator << (QTextStream& out, const Line_Data& x) {
-		out << "name = " <<  x.name << endl;
-
-		out << "seat_kind_names" << endl;
-		for (int i = 0; i < x.seat_kind_names.size(); ++i)
-			out << x.seat_kind_names[i] << ' ';
-		out << endl;
-
-		out << "stations" << endl;
-		for (int i = 0; i < x.stations.size(); ++i)
-			out << x.stations[i] << ' ';
-		out << endl;
-
-		out << "time_arrive" << endl;
-		for (int i = 0; i < x.time_arrive.size(); ++i)
-			out << x.time_arrive[i] << ' ';
-		out << endl;
-
-		out << "time_stop" << endl;
-		for (int i = 0; i < x.time_stop.size(); ++i)
-			out << x.time_stop[i] << ' ';
-		out << endl;
-
-		out << "miles" << endl;
-		for (int i = 0; i < x.miles.size(); ++i)
-			out << x.miles[i] << ' ';
-		out << endl;
-
-		out << "prices" << endl;
-		for (int i = 0; i < x.prices.size(); ++i) {
-			for (int j = 0; j < x.prices[i].size(); ++j)
-				out << x.prices[i][j] << ' ';
-			out << endl;
-		}
-		out << endl;
-		return out;
-	}
-	#endif //output_debug
 };
 
 struct TTS::BuyReturnData
 {
+<<<<<<< Updated upstream
 	QString name;
 	int ID;
 	QString operation;
@@ -189,17 +160,19 @@ struct TTS::BuyReturnData
 	#endif //output_debug
 };
 
-	///parser end
-/*
 struct TTS::LineData {
+=======
+>>>>>>> Stashed changes
     QString name;
-    vector<QString> seat_kind_names;
-    vector<QString> stations;
-    vector<int> time_arrive, time_stop;
-    vector<int> miles;
-    vector<vector<double> > prices;
+    int ID;
+    QString operation;
+    int num;
+    QString kind_of_seat;
+    QString train_ID;
+    QString from_station;
+    QString to_station;
+    QString date;
 };
-*/
 
 struct TTS::StationData {
     QString name;
