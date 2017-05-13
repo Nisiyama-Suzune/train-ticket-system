@@ -348,6 +348,6 @@ sjtu::TTS::BuyReturnData sjtu::TTS::operation_transform(QString str)
 
 
 
-TTS::TTS() {
+sjtu::TTS::TTS() {
 
 }
