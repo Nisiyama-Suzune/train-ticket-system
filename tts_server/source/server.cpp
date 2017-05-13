@@ -332,3 +332,22 @@ sjtu::TTS::BuyReturnData sjtu::TTS::operation_transform(QString str)
 	#endif //output_debug
 	return ans;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TTS::TTS() {
+
+}
