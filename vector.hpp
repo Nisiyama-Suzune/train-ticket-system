@@ -4,6 +4,8 @@
 #include <iostream>
 #include <climits>
 #include <cstddef>
+#include <QDataStream>
+#include <QTextStream>
 
 
 namespace sjtu {
@@ -465,6 +467,23 @@ public:
 	{
 		if(NowLength == 0) throw container_is_empty();
 		--NowLength;
+	}
+	void load(QDataStream &in)
+	{
+		int tmp;
+		in >> tmp;
+		T x;
+		clear();
+		for (int i = 0; i < tmp; ++i) {
+			in >> x;
+			push_back(x);
+		}
+	}
+	void save(QDataStream &out)
+	{
+		out << NowLength;
+		for (int i = 0; i < NowLength; ++i)
+			out << storage[i];
 	}
 };
 
