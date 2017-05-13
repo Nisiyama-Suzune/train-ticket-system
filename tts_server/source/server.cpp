@@ -3,6 +3,9 @@
 //
 
 #include "../header/server.h"
+#include <QFile>
+#include <QDir>
+#include <QIODevice>
 
 /// server
 
@@ -189,6 +192,31 @@ bool sjtu::TTS::login_admin(const int &ID, const QString password) {
     }
     return false;
 }
+
+bool sjtu::TTS::load_ascii() {
+	QDir dir = QDir::current();
+	QString directory = QDir::currentPath();
+	directory += "operation.out";
+	QFile file(directory);
+	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+		std::cout << "No such file!" << std::endl;
+		return false;
+	}
+	QTextStream fin(&file);
+
+	QString str, tmp;
+	str = fin.readLine();
+
+	while (fin.readLineInto(tmp)) {
+		if (is_train_type(tmp[0])) {
+			add_line(line_transform(ans));
+			str = tmp;
+		} else str = str + '\n' + tmp;
+	}
+	add_line(str);
+	return true;
+}
+
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station

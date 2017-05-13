@@ -115,6 +115,7 @@ public:
 
 public:
     /// init
+	bool load_ascii();
     TTS();
 };
 }
