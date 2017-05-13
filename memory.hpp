@@ -8,6 +8,7 @@
 #include "vector.hpp"
 #include <QDataStream>
 
+class memory_pool;
 /// pool_ptr, allocate
 namespace sjtu {
 template<class T>
@@ -49,14 +50,19 @@ public:
         return !(*this == other);
     }
 	///input
-	template <class pool>
+	friend QDataStream& operator >> (QDataStream &in, pool_ptr& rhs);
+	/*
 	void load(QDataStream& in)
 	{
 		qint32 tmp;
 		in >> tmp;
 		pos = tmp;
-		container = (vector<T>*)pool::container[T::Type];
-		put = pool::put[T::Type];
+		container = (vector<T>*)memory_pool::container[T::Type];
+		put = memory_pool::put[T::Type];
+	}*/
+	void save(QDataStream& out)
+	{
+		out << (int)pos;
 	}
 };
 
@@ -129,5 +135,16 @@ bool pool_ptr<T>::expired() const {
 
 
 }
+#include "tts_server/header/memory_pool.h"
 
+namespace sjtu {
+template<class T>
+QDataStream& operator >> (QDataStream &in, pool_ptr<T>& rhs) {
+	int tmp;
+	in >> tmp;
+	rhs.pos = tmp;
+	rhs.container = (vector<T>*) memory_pool::container[T::Type];
+	rhs.put = memory_pool::put[T::Type];
+}
+}
 #endif //TTS_MEMORY_H

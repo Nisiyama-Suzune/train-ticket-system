@@ -468,22 +468,22 @@ public:
 		if(NowLength == 0) throw container_is_empty();
 		--NowLength;
 	}
-	void load(QDataStream &in)
-	{
+	friend QDataStream& operator >> (QDataStream &in, vector &rhs) {
 		int tmp;
 		in >> tmp;
 		T x;
-		clear();
+		rhs.clear();
 		for (int i = 0; i < tmp; ++i) {
 			in >> x;
-			push_back(x);
+			rhs.push_back(x);
 		}
+		return in;
 	}
-	void save(QDataStream &out)
-	{
-		out << NowLength;
-		for (int i = 0; i < NowLength; ++i)
-			out << storage[i];
+	friend QDataStream& operator << (QDataStream &out, const vector &rhs) {
+		out << rhs.NowLength;
+		for (int i = 0; i < rhs.NowLength; ++i)
+			out << rhs.storage[i];
+		return out;
 	}
 };
 
