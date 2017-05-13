@@ -6,6 +6,8 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include "vector.hpp"
+#include <QString>
+#include "chooseseat.h"
 
 extern sjtu::TTS tts;
 
@@ -45,18 +47,24 @@ void userbuy::on_pushButton_6_clicked()
 
 void userbuy::on_search_by_station_clicked()
 {
-    vector<Qstring> vec = tts.query_station_station(ui->start_by_station->currentText(), ui->end_by_station->currentText(), ui->time_by_station->currentData());
+    sjtu::vector<QString> vec = tts.query_station_station(ui->start_by_station->currentText(), ui->end_by_station->currentText(), ui->time_by_station->currentData());
     for(int i = 0; i < vec.size(); ++i)
     {
-        QListWidgetItem Qlw = new QListWidgetItem(q_str, ui->listWidget);
+        QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
     }
 }
 
 void userbuy::on_search_by_city_clicked()
 {
-    vector<Qstring> vec = tts.query_city_city(ui->start_by_city->currentText(), ui->end_by_city->currentText(), ui->time_by_city->currentData());
+    sjtu::vector<QString> vec = tts.query_city_city(ui->start_by_city->currentText(), ui->end_by_city->currentText(), ui->time_by_city->currentData());
     for(int i = 0; i < vec.size(); ++i)
     {
-        QListWidgetItem Qlw = new QListWidgetItem(q_str, ui->listWidget);
+        QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
     }
+}
+
+void userbuy::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+    chooseseat chs;
+    chs.exec();
 }

@@ -28,6 +28,8 @@ private slots:
 
     void on_search_by_city_clicked();
 
+    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::userbuy *ui;
 };

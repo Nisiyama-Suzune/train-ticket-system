@@ -190,3 +190,29 @@ struct TTS::TrainData {
 }
 
 #endif //TTS_SERVER_H
+
+/*当前订单函数(user)
+ *传参：无(当前id)
+ *返回值：一个字符串的vector
+ *
+ * 历史购票函数（user)
+ * 传参：无（当前id）
+ * 返回值：一个字符串的vector
+ *
+ * 查票函数_站到站（user, admin)
+ * 传参：出发站（qstr)，终点站(qstr)，出发时间(int)
+ * 返回：字符串vector
+ *
+ * 查票函数_城到城（user,admin)
+ * 传参：出发站(qstr)， 终点站(qstr)，出发时间(int)
+ *
+ * 添加线路函数(admin)
+ * 传参：出发站（qstr)，出发时间(int)，终点站(qstr)，到达时间(int），车次编号（qstr)
+ * 返回值：bool（是否添加成功）//可不需要返回值
+ *
+ * 删除线路函数（admin)
+ * 传参：车次编号（qstr)
+ * 返回值：bool（是否删除成功）//可不需要返回值
+ *
+ *
+
