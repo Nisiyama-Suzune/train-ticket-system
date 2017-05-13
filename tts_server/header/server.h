@@ -113,7 +113,7 @@ public:
 
 };
 
-struct LineData {
+struct TTS::LineData {
 public:
 	QString name;
 	vector<QString> seat_kind_names;
@@ -162,7 +162,7 @@ public:
 	#endif //output_debug
 };
 
-struct BuyReturnData
+struct TTS::BuyReturnData
 {
 	QString name;
 	int ID;
