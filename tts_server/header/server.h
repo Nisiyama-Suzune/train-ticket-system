@@ -88,6 +88,8 @@ private:
     query_train(const Station & from, const Station & to, Date date) const;
 
 
+    /// add (loading)
+    user_ptr _add_user(const QString &name, int ID);
 
     /// add (admin permission required)
     bool add_station(const StationData &);
@@ -122,12 +124,16 @@ private:
 	BuyReturnData operation_transform(QString str);
 public:
     /// API
+    bool add_line(const QString & str);
 
+    vector<QString> query_city_city(const QString &f, const QString &t, int date);
 
 
 
 public:
-
+    /// init
+	bool load_ascii();
+    TTS();
 };
 }
 
