@@ -5,18 +5,10 @@
 #ifndef TTS_ACCOUNT_MANAGER_H
 #define TTS_ACCOUNT_MANAGER_H
 
-namespace sjtu {
-struct Ticket;
-struct Train;
-struct Line;
-struct City;
-struct Date;
-struct Station;
-class Account;
-class User;
-class Admin;
-}
+#include "forward_declaration.h"
+
 #include "train_manager.h"
+#include "../../memory.hpp"
 
 #include <string>
 
@@ -52,7 +44,7 @@ class User : public Account {
 public:
     static const int Type = 5;
 
-    list<pool_ptr<Ticket>> tickets;
+    deque<ticket_ptr> tickets;
 
 public:
     // 会检查是否有相同的票，如果有则只增加其张数。
@@ -65,6 +57,7 @@ public:
 		out << rhs.name << rhs.ID << rhs.password;
 		return out;
 	}
+    void add_ticket(ticket_ptr ticket);
 };
 
 class Admin : public Account {

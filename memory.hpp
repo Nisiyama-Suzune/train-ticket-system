@@ -6,145 +6,121 @@
 #define TTS_MEMORY_H
 
 #include "vector.hpp"
-#include <QDataStream>
 
-class memory_pool;
-/// pool_ptr, allocate
 namespace sjtu {
+
 template<class T>
-class pool_ptr {
-    friend pool_ptr<T> get_T(vector<T> * container, void (*put)(size_t));
+class memory_pool {
+    friend class pool_ptr;
 
-protected:
-    size_t pos;
-    vector<T> *container;
-    void (*put)(size_t);
-
-    int *cnt;
-    void terminate();
+private:
+    static vector<T>   container;
+    static vector<int> recycler;
+    static vector<int> counter;
+    static int sz;
 
 public:
-    pool_ptr();
-    explicit pool_ptr(size_t, vector<T>*, void (*)(size_t));
-    pool_ptr(const pool_ptr &other);
-    ~pool_ptr();
-    const pool_ptr &operator=(const pool_ptr &ptr);
+    class pool_ptr {
+        friend class memory_pool;
 
-    bool expired() const;
+    private:
+        int pos;
 
-    /// ptr operations
+        void terminate();
 
-    T &operator*() const {
-        return (*container)[pos];
-    }
+    public:
+        pool_ptr() : pos(-1) {}
+        explicit pool_ptr(int _pos) : pos(_pos) {
+            memory_pool::counter[pos]++;
+        }
+        pool_ptr(const pool_ptr & other) : pos(other.pos) {
+            if (pos != -1)
+                memory_pool::counter[pos]++;
+        }
+        ~pool_ptr() {
+            terminate();
+        }
+        const pool_ptr &operator=(const pool_ptr & other) {
+            if (this == &other)
+                return *this;
+            terminate();
+            pos = other.pos;
+            if (pos != -1)
+                memory_pool<T>::counter[pos]++;
+            return *this;
+        }
 
-    T *operator->() const {
-        return &(operator*());
-    }
+        T& operator*() const {
+            return memory_pool::container[pos];
+        }
+        T* operator->() const {
+            return &(operator*());
+        }
 
-    bool operator==(const pool_ptr &other) {
-        return pos == other.pos && container == other.container;
-    }
+        bool operator==(const pool_ptr& rhs) {
+            return pos == rhs.pos;
+        }
+        bool operator!=(const pool_ptr& rhs) {
+            return pos != rhs.pos;
+        }
+    };
 
-    bool operator!=(const pool_ptr &other) {
-        return !(*this == other);
-    }
-	///input
-	friend QDataStream& operator >> (QDataStream &in, pool_ptr& rhs);
-	/*
-	void load(QDataStream& in)
-	{
-		qint32 tmp;
-		in >> tmp;
-		pos = tmp;
-		container = (vector<T>*)memory_pool::container[T::Type];
-		put = memory_pool::put[T::Type];
-	}*/
-	void save(QDataStream& out)
-	{
-		out << (int)pos;
-	}
+    static void     put_T(int pos);
+public:
+    static pool_ptr get_T(T a = T());
+    static int size();
+
 };
 
+/// memory_pool
+template<class T>
+vector<T> memory_pool<T>::container;
 template <class T>
-void pool_ptr<T>::terminate() {
-    if (cnt != nullptr) {
-        --(*cnt);
-        if (*cnt == 0) {
-            put(pos);
-            delete cnt;
-        }
+vector<int> memory_pool<T>::recycler;
+template <class T>
+vector<int> memory_pool<T>::counter;
+template <class T>
+int memory_pool<T>::sz = 0;
+
+
+// get & put
+template<class T>
+typename memory_pool<T>::pool_ptr memory_pool<T>::get_T(T a) {
+    ++sz;
+    if (recycler.empty()) {
+        container.push_back(a);
+        counter.push_back(0);
+        return pool_ptr((int)container.size() -1);
+    }
+    int pos = recycler.back();
+    recycler.pop_back();
+    return pool_ptr((int)container.size() - 1);
+}
+template <class T>
+void memory_pool<T>::put_T(int pos) {
+    if (pos != -1) {
+        recycler.push_back(pos);
+        --sz;
     }
 }
 
 template <class T>
-pool_ptr<T> get_T(vector<T> * container, void (*put)(size_t)) {
-    container->push_back(T());
-    return pool_ptr<T>(container->size(), container, put);
+int memory_pool<T>::size() {
+    return sz;
 }
 
+
+/// pool_ptr
 template <class T>
-pool_ptr<T>::pool_ptr() {
-    pos = 0;
-    container = nullptr;
-    put = nullptr;
-    cnt = nullptr;
+void memory_pool<T>::pool_ptr::terminate() {
+    if (pos == -1)
+        return;
+    --memory_pool<T>::counter[pos];
+    if (memory_pool<T>::counter[pos]-- == 0) {
+        put_T(pos);
+    }
 }
 
-template <class T>
-pool_ptr<T>::pool_ptr(size_t _pos, vector <T> * _container, void (*_put)(size_t)) {
-    pos = _pos;
-    container = _container;
-    put = _put;
-    cnt = new int(1);
 }
 
-template <class T>
-pool_ptr<T>::pool_ptr(const pool_ptr<T> &other) {
-    pos = other.pos;
-    container = other.container;
-    put = other.put;
-    cnt = other.cnt;
-    if (cnt != nullptr)
-        ++(*cnt);
-}
-
-template <class T>
-pool_ptr<T>::~pool_ptr() {
-    terminate();
-}
-
-template <class T>
-const pool_ptr<T> &pool_ptr<T>::operator=(const pool_ptr<T> &ptr) {
-    if (this == &ptr)
-        return *this;
-    terminate();
-    pos = ptr.pos;
-    container = ptr.container;
-    put = ptr.put;
-    cnt = ptr.cnt;
-    if (cnt != nullptr)
-        ++(*cnt);
-    return ptr;
-}
-
-template <class T>
-bool pool_ptr<T>::expired() const {
-    return (cnt == nullptr);
-}
-
-
-}
-#include "tts_server/header/memory_pool.h"
-
-namespace sjtu {
-template<class T>
-QDataStream& operator >> (QDataStream &in, pool_ptr<T>& rhs) {
-	int tmp;
-	in >> tmp;
-	rhs.pos = tmp;
-	rhs.container = (vector<T>*) memory_pool::container[T::Type];
-	rhs.put = memory_pool::put[T::Type];
-}
-}
 #endif //TTS_MEMORY_H

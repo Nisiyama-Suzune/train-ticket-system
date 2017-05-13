@@ -18,11 +18,11 @@ set(SOURCE_FILES
 
 
         vector.hpp
-        list.hpp
+        deque.hpp
         utility.hpp
         exceptions.hpp
         map.hpp
         memory.hpp
         smart_ptr.hpp
-        tts_server/source/memory_pool.cpp tts_server/header/memory_pool.h)
+        tts_server/header/forward_declaration.h)
 add_executable(tts ${SOURCE_FILES})
