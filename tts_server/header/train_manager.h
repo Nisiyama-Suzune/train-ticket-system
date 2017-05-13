@@ -5,6 +5,17 @@
 #ifndef TTS_TRAIN_MANAGER_H
 #define TTS_TRAIN_MANAGER_H
 
+namespace sjtu {
+struct Ticket;
+struct Train;
+struct Line;
+struct City;
+struct Date;
+struct Station;
+class Account;
+class User;
+class Admin;
+}
 #include "../../map.hpp"
 #include "../../vector.hpp"
 #include "../../list.hpp"
@@ -14,8 +25,6 @@
 
 /// Stations, etc.
 namespace sjtu {
-
-typedef std::wstring QString;
 
 /// forward declaration
 struct Date;
@@ -60,6 +69,15 @@ struct Date {
             return a.same_day(b);
         }
     };
+	friend QDataStream& operator >> (QDataStream &in, Date& rhs) {
+		in >> rhs.year >> rhs.month >> rhs.day >> rhs.hour >> rhs.min >> rhs.sec;
+		return in;
+	}
+	friend QDataStream& operator << (QDataStream &out, const Date& rhs) {
+		out << rhs.year << rhs.month << rhs.day << rhs.hour << rhs.min << rhs.sec;
+		return out;
+	}
+
 	void load(QDataStream& in)
 	{
 		in >> year >> month >> day >> hour >> min >> sec;
@@ -73,33 +91,38 @@ struct Date {
 struct Station {
     static const int Type = 0;
 
-    std::wstring name;
+	QString name;
     // 车站所处城市
     pool_ptr<City> location;
     // 经过这个车站的线路
     vector<pool_ptr<Line>> lines;
 
     Station(){}
-	void load(QDataStream& in)
-	{
-		in >> name;
-		location.load(in);
-		lines.load(in);
+	friend QDataStream& operator >> (QDataStream &in, Station &rhs) {
+		in >> rhs.name >> rhs.location >> rhs.lines;
+		return in;
 	}
-	void save(QDataStream& out)
-	{
-		out << name;
-		location.save(out);
-		lines.save(out);
+	friend QDataStream& operator << (QDataStream &out, const Station &rhs) {
+		out << rhs.name << rhs.location << rhs.lines;
+		return out;
 	}
 };
 
 struct City {
     static const int Type = 1;
 
-    std::wstring name;
+	QString name;
     // 城市中的车站
     vector<pool_ptr<Station>> stations;
+	friend QDataStream& operator >> (QDataStream& in, City &rhs) {
+		in >> rhs.name >> rhs.stations;
+		return in;
+	}
+	friend QDataStream& operator << (QDataStream& out, const City &rhs) {
+		out << rhs.name << rhs.stations;
+		return out;
+	}
+	/*
 	void load(QDataStream& in)
 	{
 		in >> name;
@@ -110,6 +133,7 @@ struct City {
 		out << name;
 		stations.save(out);
 	}
+	*/
 };
 
 struct Line {
@@ -129,6 +153,17 @@ struct Line {
     bool check_date(const Date & date) const {
         return trains.find(date) != trains.cend();
     }
+	friend QDataStream& operator >> (QDataStream &in, Line& rhs) {
+		in >> rhs.name >> rhs.seat_kind_names >> rhs.stations >> rhs.arr_time
+		   >> rhs.dep_time >> rhs.miles >> rhs.price;
+		return in;
+	}
+	friend QDataStream& operator << (QDataStream &out, const Line &rhs) {
+		out << rhs.name << rhs.seat_kind_names << rhs.stations << rhs.arr_time
+			<< rhs.dep_time << rhs.miles << rhs.price;
+		return out;
+	}
+	/*
 	void load(QDataStream &in)
 	{
 		in >> name;
@@ -138,8 +173,10 @@ struct Line {
 		dep_time.load(in);
 		miles.load(in);
 		price.load(in);
-		trains.load(in);
+		in >> trains;
+//		trains.load(in);
 	}
+
 	void save(QDataStream &out)
 	{
 		out >> name;
@@ -149,8 +186,10 @@ struct Line {
 		dep_time.save(out);
 		miles.save(out);
 		price.save(out);
-		trains.save(out);
+		out << trains;
+//		trains.save(out);
 	}
+	*/
 };
 
 /**Same line share one line object
@@ -169,6 +208,15 @@ struct Train {
      * if a customer bought a ticket from 1 to 3, then
      * station_available_ticket[] = {200, 199, 199, 200}
      */
+	friend QDataStream& operator >> (QDataStream &in, Train& rhs) {
+		in >> rhs.line >> rhs.date >> rhs.selling >> rhs.station_available_tickets;
+		return in;
+	}
+	friend QDataStream& operator << (QDataStream &out, const Train& rhs) {
+		out << rhs.line << rhs.date << rhs.selling << rhs.station_available_tickets;
+		return out;
+	}
+	/*
 	void load(QDataStream &in)
 	{
 		line.load(in);
@@ -183,6 +231,7 @@ struct Train {
 		out >> selling;
 		station_available_tickets.save(out);
 	}
+	*/
 };
 
 struct Ticket {
@@ -198,15 +247,13 @@ struct Ticket {
         return train == rhs.train && from == rhs.from && to == rhs.to
                && kind == rhs.kind;
     }
-	void load(QDataStream &in)
-	{
-		train.load(in);
-		in >> from >> to >> kind >> price >> num;
+	friend QDataStream& operator >> (QDataStream &in, Ticket &rhs) {
+		in >> rhs.train >> rhs.from >> rhs.to >> rhs.kind >> rhs.price >> rhs.num;
+		return in;
 	}
-	void save(QDataStream &save)
-	{
-		train.save(out);
-		out << from << to << kind << price << num;
+	friend QDataStream& operator << (QDataStream &out, const Ticket &rhs) {
+		out << rhs.train << rhs.from << rhs.to << rhs.kind << rhs.price << rhs.num;
+		return out;
 	}
 };
 }

@@ -33,7 +33,6 @@ struct Train;
 /// Server
 namespace sjtu {
 class Server {
-    typedef std::wstring QString;
 private:
     typedef map<int, pool_ptr<User>> UserContainer; //ID -> account find an account, insert, remove
     typedef map<int, pool_ptr<Admin>> AdminContainer; //ID -> account
@@ -74,7 +73,6 @@ public:
 /// wrapper TTS
 namespace sjtu {
 class TTS {
-    typedef std::wstring QString;
 
 private:
     /// forward declaration
@@ -258,6 +256,7 @@ struct BuyReturnData
 	}
 	#endif //output_debug
 };
+
 BuyReturnData operation_transform(QString str)
 {
 	QTextStream sin(&str);
@@ -283,7 +282,9 @@ BuyReturnData operation_transform(QString str)
 	ans.from_station = parts[9];
 	ans.to_station = parts[11];
 	ans.date = parts[13];
+	#ifdef output_debug
 	cout << ans << endl;
+	#endif //output_debug
 	return ans;
 }
 	///parser end
@@ -295,6 +296,7 @@ public:
 
 };
 
+/*
 struct TTS::LineData {
     QString name;
     vector<QString> seat_kind_names;
@@ -303,6 +305,7 @@ struct TTS::LineData {
     vector<int> miles;
     vector<vector<double> > prices;
 };
+*/
 
 struct TTS::StationData {
     QString name;
@@ -331,9 +334,10 @@ struct TTS::TrainData {
      * station_available_ticket[] = {200, 200, 200, 200} //Only four interval
      * if a customer bought a ticket from 1 to 3, then
      * station_available_ticket[] = {200, 199, 199, 200}
-     */
+	 */
 };
 
+/*
 struct TTS::BuyReturnData {
     QString name;
     int ID;
@@ -345,7 +349,7 @@ struct TTS::BuyReturnData {
     QString to_station;
     QString date;
 };
-
+*/
 
 }
 
