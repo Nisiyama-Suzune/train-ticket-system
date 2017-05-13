@@ -690,7 +690,24 @@ sjtu::vector<sjtu::Ticket> sjtu::TTS::q_ss_ticket(const QString &f, const QStrin
     return result;
 }
 
+sjtu::vector<QString> sjtu::TTS::q_ss(const QString &f, const QString &t, int date) {
+    vector<sjtu::Ticket> tmp = q_ss_ticket(f, t, date);
+    vector<QString> result;
+    QString str;
+    for (int i = 0; i < tmp.size(); ++i) {
+        const Ticket & t = tmp[i];
+        str = "";
+        str += t.train->line->name + " ";
+        str += t.train->line->stations[t.from]->name[t.from];
+        str += "(" + t.train->line->arr(t.from) + ")" + "->";
+        str += t.train->line->stations[t.to]->name[t.to];
+        str += "(" + t.train->line->dep(t.to) + ")" + " ";
+        str += t.train->line->seat_kind_names[t.kind] + "剩余";
+        str += QString::number(t.num);
 
+    }
+    return result;
+}
 
 
 
