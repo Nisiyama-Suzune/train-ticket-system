@@ -24,12 +24,12 @@ protected:
 public:
     Account(){}
 
-    Account(const std::wstring &name,
-            const std::string &id,
-            const std::string password = "000000");
+    Account(const QString &name,
+            const QString &id,
+            const QString password = "000000");
 
-    void update_password(const std::string &new_password);
-    bool check_password(const std::string &other_password);
+    void update_password(const QString &new_password);
+    bool check_password(const QString &other_password);
 	friend QDataStream& operator >> (QDataStream &in, Account &rhs) {
 		in >> rhs.name >> rhs.ID >> rhs.password;
 		return in;
@@ -48,7 +48,7 @@ public:
 
 public:
     // 会检查是否有相同的票，如果有则只增加其张数。
-    void add_ticket(pool_ptr<Ticket> ticket);
+    void add_ticket(ticket_ptr ticket);
 	friend QDataStream& operator >> (QDataStream &in, User &rhs) {
 		in >> rhs.name >> rhs.ID >> rhs.password;
 		return in;
@@ -57,7 +57,6 @@ public:
 		out << rhs.name << rhs.ID << rhs.password;
 		return out;
 	}
-    void add_ticket(ticket_ptr ticket);
 };
 
 class Admin : public Account {
