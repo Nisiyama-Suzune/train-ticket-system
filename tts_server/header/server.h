@@ -64,6 +64,10 @@ private:
     struct TrainData;
 
 private:
+    const QString log_path;
+    QTextStream log_out;
+
+private:
     Server server;
     user_ptr  current_user;
     admin_ptr current_admin;
@@ -77,6 +81,7 @@ private:
     query_train(const City & from, const Station & to, Date date) const;
     smart_ptr<vector<train_ptr>>
     query_train(const Station & from, const Station & to, Date date) const;
+
 
 
     /// add (admin permission required)

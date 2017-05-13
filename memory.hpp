@@ -6,6 +6,7 @@
 #define TTS_MEMORY_H
 
 #include "vector.hpp"
+#include "exceptions.hpp"
 
 namespace sjtu {
 
@@ -51,6 +52,8 @@ public:
         }
 
         T& operator*() const {
+            if (pos == -1)
+                throw invalid_iterator();
             return memory_pool::container[pos];
         }
         T* operator->() const {
