@@ -351,7 +351,7 @@ bool sjtu::TTS::load_ascii() {
 		if (server.check_user(ans.ID)) {
 			current_user = server.find_user(ans.ID);
 		} else {
-			current_user = register_user(ans.name, "000000");
+			current_user = server.find_user(register_user(ans.name, "000000"));
 			current_user->ID = ans.ID;
 		}
 //		buy_ticket(server.find_line(ans.train_ID)->trains[ans.date], )
