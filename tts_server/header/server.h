@@ -12,6 +12,8 @@
 #include "../../memory.hpp"
 #include "../../smart_ptr.hpp"
 
+#include <QDir>
+#include <cstdlib>
 
 /// Server
 namespace sjtu {
@@ -46,6 +48,8 @@ public:
     bool add_line(const line_ptr & line);
     bool add_station(const station_ptr & station);
     bool add_city(const city_ptr & city);
+    bool add_user(const user_ptr & user);
+    bool add_admin(const admin_ptr & admin);
 };
 
 
@@ -64,9 +68,14 @@ private:
     struct TrainData;
 
 private:
+    const QDir log_path;
+    const QDir data_path;
+
+private:
     Server server;
     user_ptr  current_user;
     admin_ptr current_admin;
+    int id_cnt;
 
     /// query
     smart_ptr<vector<train_ptr>>
@@ -77,6 +86,7 @@ private:
     query_train(const City & from, const Station & to, Date date) const;
     smart_ptr<vector<train_ptr>>
     query_train(const Station & from, const Station & to, Date date) const;
+
 
 
     /// add (admin permission required)
@@ -98,10 +108,13 @@ private:
     // 返回用户当前的票的
     const deque<ticket_ptr> & current_tickets();
 
+public:
     // 登陆账户，返回登录成功与否（只检查ID和密码是否匹配），
     // 出问题会抛出异常
-    bool login_user(const int & ID, const QString password);
-    bool login_admin(const int & ID, const QString password);
+    bool login_user(const int & ID, const QString & password);
+    bool login_admin(const int & ID, const QString & password);
+    int register_user(const QString & name, const QString & password);
+    int register_admin(const QString & name, const QString & password);
 
 private:
     /// parser
@@ -114,8 +127,7 @@ public:
 
 
 public:
-    /// init
-    TTS();
+
 };
 }
 

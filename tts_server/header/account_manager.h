@@ -16,16 +16,16 @@
 namespace sjtu {
 
 class Account {
-protected:
+public:
 	QString name;
-	QString ID;
+    int ID;
 	QString password;
 
 public:
     Account(){}
 
     Account(const QString &name,
-            const QString &id,
+            const int &id,
             const QString password = "000000");
 
     void update_password(const QString &new_password);

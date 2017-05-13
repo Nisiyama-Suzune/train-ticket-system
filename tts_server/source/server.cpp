@@ -76,14 +76,18 @@ bool sjtu::Server::add_city(const sjtu::city_ptr &city) {
     return cities.insert(sjtu::make_pair(city->name, city)).second;
 }
 
+bool sjtu::Server::add_user(const sjtu::user_ptr & user) {
+    return users.insert(sjtu::make_pair(user->ID, user)).second;
+}
 
-
+bool sjtu::Server::add_admin(const sjtu::admin_ptr & admin) {
+    return admins.insert(sjtu::make_pair(admin->ID, admin)).second;
+}
 
 
 
 
 /// TTS
-
 smart_ptr<sjtu::vector<sjtu::train_ptr>>
 sjtu::TTS::query_train(const sjtu::City &from, const sjtu::City &to, sjtu::Date date) const {
     /* 实现：
@@ -116,6 +120,96 @@ sjtu::TTS::query_train(const sjtu::City &from, const sjtu::City &to, sjtu::Date 
             }
         }
     }
+
+    return result;
+}
+
+smart_ptr<sjtu::vector<sjtu::train_ptr>>
+sjtu::TTS::query_train(const sjtu::Station & from, const sjtu::City & to, sjtu::Date date) const {
+    smart_ptr<vector<train_ptr>> result(new vector<train_ptr>);
+
+//    vector<station_ptr>::const_iterator from_station;
+//    for (from_station = from.stations.cbegin(); from_station != from.stations.cend() ; ++from_station) {
+        vector<line_ptr>::const_iterator cur_line;
+        for (cur_line = from.lines.cbegin(); cur_line != from.lines.cend(); ++cur_line) {
+            if (!(*cur_line)->check_date(date)) {
+                continue;
+            }
+            vector<station_ptr>::const_iterator cur_station = (*cur_line)->stations.cbegin();
+            while ((*cur_station)->name != from.name) {
+                ++cur_station;
+            }
+            while (cur_station != (*cur_line)->stations.cend()) {
+                if ((*cur_station)->location->name != to.name) {
+                    break;
+                }
+                ++cur_station;
+            }
+            if (cur_station != (*cur_line)->stations.cend()) {
+                result->push_back((*cur_line)->trains[date]);
+            }
+        }
+//    }
+
+    return result;
+}
+
+smart_ptr<sjtu::vector<sjtu::train_ptr>>
+sjtu::TTS::query_train(const sjtu::City & from, const sjtu::Station & to, sjtu::Date date) const {
+    smart_ptr<vector<train_ptr>> result(new vector<train_ptr>);
+
+    vector<station_ptr>::const_iterator from_station;
+    for (from_station = from.stations.cbegin(); from_station != from.stations.cend() ; ++from_station) {
+        vector<line_ptr>::const_iterator cur_line;
+        for (cur_line = (*from_station)->lines.cbegin(); cur_line != (*from_station)->lines.cend(); ++cur_line) {
+            if (!(*cur_line)->check_date(date)) {
+                continue;
+            }
+            vector<station_ptr>::const_iterator cur_station = (*cur_line)->stations.cbegin();
+            while ((*cur_station)->name != (*from_station)->name) {
+                ++cur_station;
+            }
+            while (cur_station != (*cur_line)->stations.cend()) {
+                if ((*cur_station)->name != to.name) {
+                    break;
+                }
+                ++cur_station;
+            }
+            if (cur_station != (*cur_line)->stations.cend()) {
+                result->push_back((*cur_line)->trains[date]);
+            }
+        }
+    }
+
+    return result;
+}
+
+smart_ptr<sjtu::vector<sjtu::train_ptr>>
+sjtu::TTS::query_train(const sjtu::Station & from, const sjtu::Station & to, sjtu::Date date) const {
+    smart_ptr<vector<train_ptr>> result(new vector<train_ptr>);
+
+//    vector<station_ptr>::const_iterator from_station;
+//    for (from_station = from.stations.cbegin(); from_station != from.stations.cend() ; ++from_station) {
+        vector<line_ptr>::const_iterator cur_line;
+        for (cur_line = from.lines.cbegin(); cur_line != from.lines.cend(); ++cur_line) {
+            if (!(*cur_line)->check_date(date)) {
+                continue;
+            }
+            vector<station_ptr>::const_iterator cur_station = (*cur_line)->stations.cbegin();
+            while ((*cur_station)->name != from.name) {
+                ++cur_station;
+            }
+            while (cur_station != (*cur_line)->stations.cend()) {
+                if ((*cur_station)->name != to.name) {
+                    break;
+                }
+                ++cur_station;
+            }
+            if (cur_station != (*cur_line)->stations.cend()) {
+                result->push_back((*cur_line)->trains[date]);
+            }
+        }
+//    }
 
     return result;
 }
@@ -170,7 +264,7 @@ const sjtu::deque<sjtu::ticket_ptr> &sjtu::TTS::current_tickets() {
     return current_user->tickets;
 }
 
-bool sjtu::TTS::login_user(const int & ID, const QString password) {
+bool sjtu::TTS::login_user(const int & ID, const QString & password) {
     user_ptr user = server.find_user(ID);
     if (user->check_password(password)) {
         current_user = user;
@@ -180,7 +274,7 @@ bool sjtu::TTS::login_user(const int & ID, const QString password) {
     return false;
 }
 
-bool sjtu::TTS::login_admin(const int &ID, const QString password) {
+bool sjtu::TTS::login_admin(const int &ID, const QString & password) {
     admin_ptr admin = server.find_admin(ID);
     if (admin->check_password(password)) {
         current_admin = admin;
@@ -190,6 +284,26 @@ bool sjtu::TTS::login_admin(const int &ID, const QString password) {
     return false;
 }
 
+int sjtu::TTS::register_user(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    user_ptr user = memory_pool<User>::get_T();
+    user->ID = ID;
+    user->name = name;
+    user->password = password;
+    server.add_user(user);
+    return ID;
+}
+
+int sjtu::TTS::register_admin(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    admin_ptr admin = memory_pool<Admin>::get_T();
+    admin->ID = ID;
+    admin->name = name;
+    admin->password = password;
+    server.add_admin(admin);
+    return ID;
+}
+
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
     line_ptr line = memory_pool<Line>::get_T();
@@ -197,11 +311,11 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     line->seat_kind_names = line_data.seat_kind_names;
     line->miles = line_data.miles;
     line->price = line_data.prices;
-    for (int i = 0; i < line_data.time_arrive.size(); ++i) {
+    for (int i = 0; i < (int)line_data.time_arrive.size(); ++i) {
         line->arr_time.push_back(line_data.time_arrive[i]);
         line->dep_time.push_back(line_data.time_stop[i]);
     }
-    for (int i = 0; i < line_data.stations.size(); ++i) {
+    for (int i = 0; i < (int)line_data.stations.size(); ++i) {
         const QString &station_name = line_data.stations[i];
         if (!server.check_station(station_name))
             add_station(StationData(station_name, station_name));
@@ -347,7 +461,3 @@ sjtu::TTS::BuyReturnData sjtu::TTS::operation_transform(QString str)
 
 
 
-
-sjtu::TTS::TTS() {
-
-}
