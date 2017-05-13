@@ -107,8 +107,11 @@ private:
      */
     bool return_ticket(ticket_ptr ticket, int num);
 
-    // 返回用户当前的票的
+private: // 返回用户当前的票的
     const deque<ticket_ptr> & current_tickets();
+public:
+    vector<QString> current_tickets(int ID);
+
 
 public:
     // 登陆账户，返回登录成功与否（只检查ID和密码是否匹配），
@@ -126,6 +129,10 @@ public:
     /// API
     bool add_line(const QString & str);
 
+
+private: // 查找station-station的票
+    vector<Ticket> q_ss_ticket(const QString &f, const QString &t, int date);
+public:
     vector<QString> query_city_city(const QString &f, const QString &t, int date);
 
 

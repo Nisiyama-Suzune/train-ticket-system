@@ -315,11 +315,6 @@ int sjtu::TTS::register_admin(const QString & name, const QString & password) {
     return ID;
 }
 
-
-bool sjtu::TTS::is_train_type(QChar ch) {
-	return (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
-}
-
 bool sjtu::TTS::load_ascii() {
 	QDir dir = QDir::current();
 	QString directory = QDir::currentPath();
@@ -354,34 +349,9 @@ bool sjtu::TTS::load_ascii() {
 	while (fin2.readLineInto(&str)) {
 		BuyReturnData ans = operation_transform(str);
 		current_user = _add_user(ans.name, ans.ID);
-		if (); ///TODO
+        if (1); ///TODO
 	}
 	return true;
-}
-
-bool sjtu::TTS::load_binary() {
-	QString directory = QDir::currentPath();
-	directory += "/../train-ticket-system/operation.dat";
-	file = QFile(directory);
-}
-int sjtu::TTS::register_user(const QString & name, const QString & password) {
-    int ID = id_cnt++;
-    user_ptr user = memory_pool<User>::get_T();
-    user->ID = ID;
-    user->name = name;
-    user->password = password;
-    server.add_user(user);
-    return ID;
-}
-
-int sjtu::TTS::register_admin(const QString & name, const QString & password) {
-    int ID = id_cnt++;
-    admin_ptr admin = memory_pool<Admin>::get_T();
-    admin->ID = ID;
-    admin->name = name;
-    admin->password = password;
-    server.add_admin(admin);
-    return ID;
 }
 
 sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
@@ -581,6 +551,7 @@ bool sjtu::TTS::add_line(const QString & str) {
 }
 
 sjtu::vector<QString> sjtu::TTS::query_city_city(const QString &f, const QString &t, int date) {
+    /// TODO
     Date t_date(date);
     const City &from = server.find_city(f);
     const City &to   = server.find_city(t);
@@ -588,14 +559,90 @@ sjtu::vector<QString> sjtu::TTS::query_city_city(const QString &f, const QString
     QString str;
     for (auto iter = tmp->begin(); iter != tmp->end(); ++iter) {
         const Train& train = **iter;
-        str += train.line->name + "  ";
-        str += f + " -> " + t + "\n";
+        for (auto iter = train.line->seat_kind_names.begin();
+             iter != train.line->seat_kind_names.end(); ++iter) {
+            str = "";
+            str += train.line->name + "  ";
+            str += "起点：" + f + "（" + train.line->arr()
+        }
     }
 }
 
+sjtu::vector<QString> sjtu::TTS::current_tickets(int ID) {
+    vector<QString> result;
+    QString str;
 
+    current_user =  server.find_user(ID);
+    const deque<ticket_ptr> & cur_tickets = current_tickets();
+    for (auto iter = cur_tickets.begin(); iter != cur_tickets.end(); ++iter) {
+        const Ticket & ticket = **iter;
+        str = "";
+        str += ticket.train->line->name + " ";
+        str += "从" + ticket.train->line->stations[ticket.from]
+                + "到" + ticket.train->line->stations[ticket.to];
+        str += " " + ticket.train->date.toStr();
+        str += " " + QString::number(ticket.num) + "张";
+        result.push_back(str);
+    }
+   return result;
+}
 
+/* 查询：找出从车站到车站之间的所有可行车票
+ * 需要：车次；起点车站；出发时间；终点车站；到达时间；座位名字，价格，余票
+ * 实现：
+ * 通过query_train可以得到经过起点和终点的所有车次，车次有了
+ * 起点车站和终点车站的名字本来就有
+ * 出发时间和到达时间，需要这个站在line中的位置，就可以得到了
+ * 座位名字和价格也可以通过line来找到。
+ * 从Ticket中，可以得到车次；起点
+ */
 
+sjtu::vector<sjtu::Ticket> sjtu::TTS::q_ss_ticket(const QString &f, const QString &t, int date) {
+    const Station & from = server.find_station(f);
+    const Station & to   = server.find_station(t);
+    Date t_date(date);
+    smart_ptr<vector<train_ptr>> tmp = query_train(from, to, t_date);
+
+    vector<Ticket> result;
+
+    for (auto iter = tmp->begin(); iter != tmp->end(); ++iter) {
+        const Train & train = **iter;
+        Ticket add;
+
+        int st, ed;
+        for (st = 0; st < train.line->stations.size(); ++st) {
+            if (f == train.line->stations[st]->name)
+                break;
+        }
+        for (ed = 0; ed < train.line->stations.size(); ++ed) {
+            if (t == train.line->stations[ed]->name)
+                break;
+        }
+        add.train = *iter;
+        add.from = st;
+        add.to   = to;
+
+        for (int i = 0; i < train.line->seat_kind_names.size(); ++i)
+        {
+            add.kind = i;
+            int num;
+            double price;
+            for (int p = st; p < ed; ++p) {
+                price += train.line->price[p];
+                if (num > train.station_available_tickets[p]) {
+                    num = train.station_available_tickets[p];
+                    if (num == 0)
+                        break;
+                }
+            }
+            if (!num) {
+                result.push_back(add);
+            }
+        }
+    }
+
+    return result;
+}
 
 
 
