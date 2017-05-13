@@ -25,8 +25,8 @@ private:
 
     // map
     static vector<void*> container; // num -> containers
-    static vector<void (*)(size_t)> put; // num -> put_xxx
-
+    static vector<void (*)(int)> put; // num -> put_xxx
+    
 
     // containers
     static vector<Station> stations;
@@ -39,15 +39,18 @@ private:
     static vector<Admin> admins;
 
     // recycle
-    static vector<size_t> stations_recycle;
-    static vector<size_t> cities_recycle;
-    static vector<size_t> lines_recycle;
-    static vector<size_t> trains_recycle;
-    static vector<size_t> tickets_recycle;
+    static vector<int> stations_recycle;
+    static vector<int> cities_recycle;
+    static vector<int> lines_recycle;
+    static vector<int> trains_recycle;
+    static vector<int> tickets_recycle;
 
-    static vector<size_t> users_recycle;
-    static vector<size_t> admins_recycle;
+    static vector<int> users_recycle;
+    static vector<int> admins_recycle;
 
+    // cnt
+    static vector<vector<int>> cnt;
+    
 public:
     static pool_ptr<Station> get_station();
     static pool_ptr<City> get_city();
@@ -64,14 +67,14 @@ public:
 private:
     template <typename> friend class pool_ptr;
 
-    static void put_station(size_t pos);
-    static void put_city(size_t pos);
-    static void put_line(size_t pos);
-    static void put_train(size_t pos);
-    static void put_ticket(size_t pos);
+    static void put_station(int pos);
+    static void put_city(int pos);
+    static void put_line(int pos);
+    static void put_train(int pos);
+    static void put_ticket(int pos);
 
-    static void put_user(size_t pos);
-    static void put_admin(size_t pos);
+    static void put_user(int pos);
+    static void put_admin(int pos);
 };
 
 

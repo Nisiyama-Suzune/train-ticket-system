@@ -6,24 +6,27 @@
 #define TTS_MEMORY_H
 
 #include "vector.hpp"
+#include <fstream>
+using std::ifstream;
+using std::ofstream;
 
 /// pool_ptr, allocate
 namespace sjtu {
 template<class T>
 class pool_ptr {
-    friend pool_ptr<T> get_T(vector<T> * container, void (*put)(size_t));
+    friend pool_ptr<T> get_T(vector<T> * container, void (*put)(int), vector<int>*);
 
 protected:
-    size_t pos;
+    int pos;
     vector<T> *container;
-    void (*put)(size_t);
+    void (*put)(int);
+    vector<int> *cnt;
 
-    int *cnt;
     void terminate();
 
 public:
     pool_ptr();
-    explicit pool_ptr(size_t, vector<T>*, void (*)(size_t));
+    explicit pool_ptr(int, vector<T>*, void (*)(int), vector<int>*);
     pool_ptr(const pool_ptr &other);
     ~pool_ptr();
     const pool_ptr &operator=(const pool_ptr &ptr);
@@ -47,23 +50,39 @@ public:
     bool operator!=(const pool_ptr &other) {
         return !(*this == other);
     }
+
+public:
+    /// IO
+    void save(ofstream & fout) {
+        fout << pos;
+    }
+    template <class pool>
+    void load(ifstream & fin) {
+        fin >> pos;
+        container = (vector<T>*)pool::containers[T::Type];
+        put = pool::put[T::Type];
+        cnt = pool::cnt[T::Type];
+    }
+
 };
+
+
+
+template <class T>
+pool_ptr<T> get_T(vector<T> * container,
+                  void (*put)(int), vector<int>* cnt) {
+    container->push_back(T());
+    return pool_ptr<T>((int)container->size(), container, put, cnt);
+}
 
 template <class T>
 void pool_ptr<T>::terminate() {
     if (cnt != nullptr) {
-        --(*cnt);
-        if (*cnt == 0) {
+        --(*cnt)[pos];
+        if ((*cnt)[pos] == 0) {
             put(pos);
-            delete cnt;
         }
     }
-}
-
-template <class T>
-pool_ptr<T> get_T(vector<T> * container, void (*put)(size_t)) {
-    container->push_back(T());
-    return pool_ptr<T>(container->size(), container, put);
 }
 
 template <class T>
@@ -75,11 +94,13 @@ pool_ptr<T>::pool_ptr() {
 }
 
 template <class T>
-pool_ptr<T>::pool_ptr(size_t _pos, vector <T> * _container, void (*_put)(size_t)) {
+pool_ptr<T>::pool_ptr(int _pos, vector <T> * _container,
+                      void (*_put)(int), vector<int>* _cnt) {
     pos = _pos;
     container = _container;
     put = _put;
-    cnt = new int(1);
+    cnt = _cnt;
+    (*cnt)[pos] = 1;
 }
 
 template <class T>
@@ -89,7 +110,7 @@ pool_ptr<T>::pool_ptr(const pool_ptr<T> &other) {
     put = other.put;
     cnt = other.cnt;
     if (cnt != nullptr)
-        ++(*cnt);
+        ++(*cnt)[pos];
 }
 
 template <class T>
@@ -107,13 +128,13 @@ const pool_ptr<T> &pool_ptr<T>::operator=(const pool_ptr<T> &ptr) {
     put = ptr.put;
     cnt = ptr.cnt;
     if (cnt != nullptr)
-        ++(*cnt);
+        ++(*cnt)[pos];
     return ptr;
 }
 
 template <class T>
 bool pool_ptr<T>::expired() const {
-    return (cnt == nullptr);
+    return (*cnt)[pos] == 0;
 }
 
 
