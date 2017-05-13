@@ -105,6 +105,14 @@ private:
 
 private:
     /// parser
+	LineData line_transform(QString str);
+	BuyReturnData operation_transform(QString str);
+public:
+    /// API
+
+
+};
+
 struct LineData {
 public:
 	QString name;
@@ -153,64 +161,7 @@ public:
 	}
 	#endif //output_debug
 };
-LineData line_transform(QString str)
-{
-	QTextStream sin(&str);
-	QTextStream cout(stdout);
 
-	LineData ans;
-	QString tmp = sin.readLine();
-	QStringList parts = tmp.split(",");
-	ans.name = parts[0];
-	tmp = sin.readLine();
-	parts = tmp.split(",");
-	int kinds = 0;
-	for (int i = 5; i < parts.size(); ++i) {
-		ans.seat_kind_names.push_back(parts[i]);
-		++kinds;
-	}
-	for (int i = 0; i < kinds; ++i)
-		ans.prices.push_back(vector<double>());
-//	ans.prices.reserve(kinds);
-
-	while (sin.readLineInto(&tmp)) {
-		parts = tmp.split(",");
-		ans.stations.push_back(parts[0]);
-
-		int time_arrive = 0, x, time_stop;
-
-		QChar maohao;
-		QTextStream cin2(&parts[2]);
-		cin2 >> time_arrive >> maohao >> x;
-		time_arrive = time_arrive * 100 + x;
-		ans.time_arrive.push_back(time_arrive);
-
-		QTextStream cin3(&parts[3]);
-		cin3 >> time_stop >> maohao >> x;
-		time_stop = time_stop * 100 + x;
-		ans.time_stop.push_back(time_stop);
-
-		QTextStream cin4(&parts[4]);
-		cin4 >> x;
-		ans.miles.push_back(x);
-
-		double price = 0.0;
-		for (int i = 0; i < kinds; ++i) {
-			if (parts[5 + i][0] == '-')
-				price = -1;
-			else {
-				QTextStream cin5(&parts[5 + i]);
-				cin5 >> maohao;
-				cin5 >> price;
-			}
-			ans.prices[i].push_back(price);
-		}
-	}
-#ifdef output_debug
-	cout << ans << endl;
-#endif //output_debug
-	return ans;
-}
 struct BuyReturnData
 {
 	QString name;
@@ -238,44 +189,7 @@ struct BuyReturnData
 	#endif //output_debug
 };
 
-BuyReturnData operation_transform(QString str)
-{
-	QTextStream sin(&str);
-	QTextStream cout(stdout);
-
-	BuyReturnData ans;
-	QString tmp = sin.readLine();
-	QStringList parts = tmp.split(' ');
-
-	ans.name = parts[0];
-
-	QTextStream cin1(&parts[1]);
-//	ans.ID = parts[1];
-	cin1 >> ans.ID;
-
-	ans.operation = parts[2];
-
-	QTextStream cin2(&parts[3]);
-	cin2 >> ans.num;
-
-	ans.kind_of_seat = parts[4];
-	ans.train_ID = parts[7];
-	ans.from_station = parts[9];
-	ans.to_station = parts[11];
-	ans.date = parts[13];
-	#ifdef output_debug
-	cout << ans << endl;
-	#endif //output_debug
-	return ans;
-}
 	///parser end
-
-public:
-    /// API
-
-
-};
-
 /*
 struct TTS::LineData {
     QString name;
@@ -330,6 +244,7 @@ struct TTS::BuyReturnData {
     QString date;
 };
 */
+
 
 }
 
