@@ -183,6 +183,13 @@ struct Line {
         }
         return "";
     }
+
+    int find_pos(const QString &name) {
+        for (int i = 0; i < stations.size(); ++i) {
+            if (name == stations[i]->name)
+                return i;
+        }
+    }
 };
 
 /**Same line share one line object

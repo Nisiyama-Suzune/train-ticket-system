@@ -365,7 +365,7 @@ sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
 bool sjtu::TTS::load_binary() {
 	QString directory = QDir::currentPath();
 	directory += "/../train-ticket-system/operation.dat";
-	file = QFile(directory);
+    QFile file(directory);
 }
 int sjtu::TTS::register_user(const QString & name, const QString & password) {
     int ID = id_cnt++;
