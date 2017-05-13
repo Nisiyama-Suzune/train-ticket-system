@@ -4,6 +4,14 @@
 #include "userreturn.h"
 #include "userhistory.h"
 #include "usermainwindow.h"
+#include "../tts_server/header/server.h"
+#include <QString>
+#include "vector.hpp"
+#include <QListWidget>
+#include <QListWidgetItem>
+
+extern sjtu::TTS tts;
+extern int ID;
 
 userticket::userticket(QWidget *parent) :
     QDialog(parent),
@@ -39,4 +47,13 @@ void userticket::on_pushButton_3_clicked()
 {
     usermainwindow u_main;
     u_main.exec();
+}
+
+void userticket::on_pushButton_6_clicked()
+{
+    sjtu::vector<QString> vec = tts.current_tickets(ID);
+    for(int i = 0; i < vec.size(); ++i)
+    {
+        QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
+    }
 }

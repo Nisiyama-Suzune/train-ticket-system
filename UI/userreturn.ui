@@ -62,33 +62,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QTableWidget" name="tableWidget">
-       <row>
-        <property name="text">
-         <string>新建行</string>
-        </property>
-       </row>
-       <row>
-        <property name="text">
-         <string>新建行</string>
-        </property>
-       </row>
-       <column>
-        <property name="text">
-         <string>新建列</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>新建列</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>新建列</string>
-        </property>
-       </column>
-      </widget>
+      <widget class="QListWidget" name="listWidget"/>
      </item>
     </layout>
    </item>

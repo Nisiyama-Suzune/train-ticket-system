@@ -32,7 +32,14 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QPushButton" name="buy_ticket_button">
+        <widget class="QPushButton" name="pushButton_6">
+         <property name="text">
+          <string>显示订单</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
          <property name="text">
           <string>我要买票</string>
          </property>
