@@ -288,6 +288,9 @@ bool sjtu::TTS::login_admin(const int &ID, const QString & password) {
     return false;
 }
 
+bool sjtu::TTS::is_train_type(QChar ch) {
+	return (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
+}
 int sjtu::TTS::register_user(const QString & name, const QString & password) {
     while (server.check_user(id_cnt))
         ++id_cnt;
@@ -354,6 +357,31 @@ bool sjtu::TTS::load_ascii() {
 		if (); ///TODO
 	}
 	return true;
+}
+
+bool sjtu::TTS::load_binary() {
+	QString directory = QDir::currentPath();
+	directory += "/../train-ticket-system/operation.dat";
+	file = QFile(directory);
+}
+int sjtu::TTS::register_user(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    user_ptr user = memory_pool<User>::get_T();
+    user->ID = ID;
+    user->name = name;
+    user->password = password;
+    server.add_user(user);
+    return ID;
+}
+
+int sjtu::TTS::register_admin(const QString & name, const QString & password) {
+    int ID = id_cnt++;
+    admin_ptr admin = memory_pool<Admin>::get_T();
+    admin->ID = ID;
+    admin->name = name;
+    admin->password = password;
+    server.add_admin(admin);
+    return ID;
 }
 
 sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
