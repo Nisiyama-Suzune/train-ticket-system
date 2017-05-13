@@ -64,6 +64,9 @@ public:
     bool add_line(const pool_ptr<Line> & line);
     bool add_station(const pool_ptr<Station> & station);
     bool add_city(const pool_ptr<City> & city);
+
+	void load(QDataStream &in);
+	void save(QDataStream &out);
 };
 
 }
@@ -171,12 +174,12 @@ public:
 	}
 	#endif //output_debug
 };
-Line_Data line_transform(QString str)
+LineData line_transform(QString str)
 {
 	QTextStream sin(&str);
 	QTextStream cout(stdout);
 
-	Line_Data ans;
+	LineData ans;
 	QString tmp = sin.readLine();
 	QStringList parts = tmp.split(",");
 	ans.name = parts[0];
@@ -229,7 +232,7 @@ Line_Data line_transform(QString str)
 #endif //output_debug
 	return ans;
 }
-struct BuyData
+struct BuyReturnData
 {
 	QString name;
 	int ID;
@@ -255,12 +258,12 @@ struct BuyData
 	}
 	#endif //output_debug
 };
-BuyData operation_transform(QString str)
+BuyReturnData operation_transform(QString str)
 {
 	QTextStream sin(&str);
 	QTextStream cout(stdout);
 
-	BuyData ans;
+	BuyReturnData ans;
 	QString tmp = sin.readLine();
 	QStringList parts = tmp.split(' ');
 

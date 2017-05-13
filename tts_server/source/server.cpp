@@ -76,9 +76,23 @@ bool sjtu::Server::add_city(const sjtu::pool_ptr<sjtu::City> &city) {
     return cities.insert(sjtu::make_pair(city->name, city)).second;
 }
 
+void sjtu::Server::load(QDataStream &in)
+{
+	users.load(in);
+	admins.load(in);
+	lines.load(in);
+	cities.load(in);
+	stations.load(in);
+}
 
-
-
+void sjtu::Server::save(QDataStream &out)
+{
+	users.save(out);
+	admins.save(out);
+	lines.save(out);
+	cities.save(out);
+	stations.save(out);
+}
 
 
 
