@@ -6,7 +6,7 @@
 
 /// server
 
-sjtu::city_ptr sjtu::Server::find_city(const sjtu::Server::QString &name) const {
+sjtu::city_ptr sjtu::Server::find_city(const QString &name) const {
     auto result = cities.find(name);
     if (result == cities.cend())
         throw exception("city", "does not exist.");
@@ -29,14 +29,14 @@ sjtu::admin_ptr sjtu::Server::find_admin(const int &ID) const {
     return admin->second;
 }
 
-sjtu::station_ptr sjtu::Server::find_station(const sjtu::QString &name) const {
+sjtu::station_ptr sjtu::Server::find_station(const QString &name) const {
     auto station = stations.find(name);
     if (station == stations.cend())
         throw exception("station", "does not exist");
     return station->second;
 }
 
-sjtu::line_ptr sjtu::Server::find_line(const sjtu::QString &name) const {
+sjtu::line_ptr sjtu::Server::find_line(const QString &name) const {
     auto line = lines.find(name);
     if (line == lines.cend())
         throw exception("line", "does not exist");
@@ -44,7 +44,7 @@ sjtu::line_ptr sjtu::Server::find_line(const sjtu::QString &name) const {
 }
 
 
-bool sjtu::Server::check_city(const sjtu::Server::QString &name) const {
+bool sjtu::Server::check_city(const QString &name) const {
     return cities.find(name) != cities.cend();
 }
 
@@ -56,11 +56,11 @@ bool sjtu::Server::check_admin(const int &ID) const {
     return admins.find(ID) != admins.cend();
 }
 
-bool sjtu::Server::check_station(const sjtu::QString &name) const {
+bool sjtu::Server::check_station(const QString &name) const {
     return stations.find(name) != stations.cend();
 }
 
-bool sjtu::Server::check_line(const sjtu::QString &name) const {
+bool sjtu::Server::check_line(const QString &name) const {
     return lines.find(name) != lines.cend();
 }
 
@@ -170,7 +170,7 @@ const sjtu::deque<sjtu::ticket_ptr> &sjtu::TTS::current_tickets() {
     return current_user->tickets;
 }
 
-bool sjtu::TTS::login_user(const int & ID, const std::string password) {
+bool sjtu::TTS::login_user(const int & ID, const QString password) {
     user_ptr user = server.find_user(ID);
     if (user->check_password(password)) {
         current_user = user;
@@ -180,7 +180,7 @@ bool sjtu::TTS::login_user(const int & ID, const std::string password) {
     return false;
 }
 
-bool sjtu::TTS::login_admin(const int &ID, const std::string password) {
+bool sjtu::TTS::login_admin(const int &ID, const QString password) {
     admin_ptr admin = server.find_admin(ID);
     if (admin->check_password(password)) {
         current_admin = admin;

@@ -63,13 +63,21 @@ public:
         bool operator!=(const pool_ptr& rhs) {
             return pos != rhs.pos;
         }
+
+        friend QDataStream& operator >>(QDataStream &in, pool_ptr &rhs) {
+            in >> rhs.pos;
+            return in;
+        }
+        friend QDataStream& operator <<(QDataStream &out,const pool_ptr& rhs) {
+            out << rhs.pos;
+            return out;
+        }
     };
 
-    static void     put_T(int pos);
+    static void put_T(int pos);
 public:
     static pool_ptr get_T(T a = T());
     static int size();
-
 };
 
 /// memory_pool
@@ -94,7 +102,7 @@ typename memory_pool<T>::pool_ptr memory_pool<T>::get_T(T a) {
     }
     int pos = recycler.back();
     recycler.pop_back();
-    return pool_ptr((int)container.size() - 1);
+    return pool_ptr(pos - 1);
 }
 template <class T>
 void memory_pool<T>::put_T(int pos) {

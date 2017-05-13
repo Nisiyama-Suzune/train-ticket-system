@@ -101,27 +101,6 @@ private:
 		ans->right = right.first;
 		return pair<node *, node *>(ans, right.second);
 	}
-	template<class pool>
-	pair<node*, node*> in(QDataStream &is, node *prevnode) {
-		long long heap;
-		is >> heap;
-		if (heap < 0) return pair<node *, node *>(nullptr, prevnode);
-		m_size++;
-		Key k;
-		T v;
-		is >> k;
-		v.load<pool>(is);
-		node *ans = new node(heap, new value_type(k, v));
-		pair<node *, node *> left = in(is, prevnode);
-		ans->left = left.first;
-		ans->prev = left.second;
-		if (left.second)
-			left.second->next = ans;
-		else
-			nbegin = ans;
-		pair<node *, node *> right = in(is, ans);
-		ans->right = right.first;
-		return pair<node *, node *>(ans, right.second);}
 
 	void out(QDataStream &os, node *n) {
 		if (!n) {
@@ -665,15 +644,6 @@ public:
 		m.nend->prev = n.second;
 		n.second->next = m.nend;
 		return is;
-	}
-	template<class pool>
-	void load(QDataStream &is)
-	{
-		clear();
-		pair<node*, node*> n = in<pool>(is, nullptr);
-		nend->left = n.first;
-		nend->prev = n.second;
-		n.second->next = nend;
 	}
 };
 

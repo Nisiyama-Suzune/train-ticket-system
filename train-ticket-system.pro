@@ -28,20 +28,19 @@ SOURCES += main.cpp\
     tts_server/source/server.cpp \
     tts_server/source/train_manager.cpp \
     tts_server/source/account_manager.cpp \
-    tts_server/source/memory_pool.cpp
 
 HEADERS  += mainwindow.h \
     vector.hpp \
     utility.hpp \
     smart_ptr.hpp \
     map.hpp \
-    list.hpp \
+    deque.hpp \
     memory.hpp \
     exceptions.hpp \
     tts_server/header/train_manager.h \
     tts_server/header/server.h \
     tts_server/header/account_manager.h \
-    tts_server/header/memory_pool.h
+    tts_server/header/forward_declaration.h
 
 FORMS    += mainwindow.ui
 

@@ -100,8 +100,8 @@ private:
 
     // 登陆账户，返回登录成功与否（只检查ID和密码是否匹配），
     // 出问题会抛出异常
-    bool login_user(const int & ID, const std::string password);
-    bool login_admin(const int & ID, const std::string password);
+    bool login_user(const int & ID, const QString password);
+    bool login_admin(const int & ID, const QString password);
 
 private:
     /// parser
