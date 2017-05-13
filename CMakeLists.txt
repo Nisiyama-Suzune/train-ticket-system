@@ -24,5 +24,5 @@ set(SOURCE_FILES
         map.hpp
         memory.hpp
         smart_ptr.hpp
-        )
+        tts_server/source/memory_pool.cpp tts_server/header/memory_pool.h)
 add_executable(tts ${SOURCE_FILES})

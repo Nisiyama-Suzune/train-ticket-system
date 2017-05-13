@@ -29,12 +29,10 @@ public:
     bool check_password(const std::string &other_password);
 };
 
-class Admin : public Account {
-
-};
-
 class User : public Account {
 public:
+    static const int Type = 5;
+
     list<pool_ptr<Ticket>> tickets;
 
 public:
@@ -43,27 +41,12 @@ public:
 
 };
 
-}
-
-/// account_memory_pool
-namespace sjtu {
-
-class account_memory_pool {
-private:
-    vector<User>  users;
-    vector<Admin> admins;
-
+class Admin : public Account {
 public:
-    pool_ptr<User>  get_user() {
-        users.push_back(User());
-        return pool_ptr<User>(users.size() - 1, &users);
-    }
-    pool_ptr<Admin> get_admin() {
-        admins.push_back(Admin());
-        return pool_ptr<Admin>(admins.size() - 1, &admins);
-    }
+    static const int Type = 6;
 };
 
 }
+
 
 #endif //TTS_ACCOUNT_MANAGER_H

@@ -36,6 +36,13 @@ sjtu::pool_ptr<sjtu::Station> sjtu::Server::find_station(const sjtu::QString &na
     return station->second;
 }
 
+sjtu::pool_ptr<sjtu::Line> sjtu::Server::find_line(const sjtu::QString &name) const {
+    auto line = lines.find(name);
+    if (line == lines.cend())
+        throw exception("line", "does not exist");
+    return line->second;
+}
+
 
 bool sjtu::Server::check_city(const sjtu::Server::QString &name) const {
     return cities.find(name) != cities.cend();
@@ -53,6 +60,10 @@ bool sjtu::Server::check_station(const sjtu::QString &name) const {
     return stations.find(name) != stations.cend();
 }
 
+bool sjtu::Server::check_line(const sjtu::QString &name) const {
+    return lines.find(name) != lines.cend();
+}
+
 bool sjtu::Server::add_line(const sjtu::pool_ptr<sjtu::Line> &line) {
     return lines.insert(sjtu::make_pair(line->name, line)).second;
 }
@@ -61,7 +72,9 @@ bool sjtu::Server::add_station(const sjtu::pool_ptr<sjtu::Station> &station) {
     return stations.insert(sjtu::make_pair(station->name, station)).second;
 }
 
-
+bool sjtu::Server::add_city(const sjtu::pool_ptr<sjtu::City> &city) {
+    return cities.insert(sjtu::make_pair(city->name, city)).second;
+}
 
 
 
@@ -108,6 +121,7 @@ sjtu::TTS::query_train(const sjtu::City &from, const sjtu::City &to, sjtu::Date 
 }
 
 /// User
+
 bool sjtu::TTS::buy_ticket(sjtu::pool_ptr<sjtu::Train> train, int from, int to, int kind, int num) {
     vector<vector<double>> &price = train->line->price;
     vector<vector<int>> &remaining = train->station_available_tickets;
@@ -128,7 +142,7 @@ bool sjtu::TTS::buy_ticket(sjtu::pool_ptr<sjtu::Train> train, int from, int to, 
     }
 
     // 更新账户
-    pool_ptr<Ticket> ticket = t_m_p.get_ticket(from, to, kind, ticket_price, num);
+    pool_ptr<Ticket> ticket = memory_pool::get_ticket(from, to, kind, ticket_price, num);
     ticket->train = train;
     current_user->add_ticket(ticket);
     return true;
@@ -173,7 +187,7 @@ bool sjtu::TTS::login_admin(const int &ID, const std::string password) {
 
 bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
     // station
-    pool_ptr<Line> line = t_m_p.get_line();
+    pool_ptr<Line> line = memory_pool::get_line();
     line->name = line_data.name;
     line->seat_kind_names = line_data.seat_kind_names;
     line->miles = line_data.miles;
@@ -183,8 +197,8 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
         line->dep_time.push_back(line_data.time_stop[i]);
     }
     for (int i = 0; i < line_data.stations.size(); ++i) {
-        QString &station_name = line_data.stations[i];
-        if (server.check_station(station_name))
+        const QString &station_name = line_data.stations[i];
+        if (!server.check_station(station_name))
             add_station(StationData(station_name, station_name));
 
         line->stations.push_back(
@@ -196,10 +210,30 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
 }
 
 bool sjtu::TTS::add_station(const sjtu::TTS::StationData &station_data) {
-    pool_ptr<Station> station = t_m_p.get_station();
+    pool_ptr<Station> station = memory_pool::get_station();
     station->name = station_data.name;
-    // TODO add city
+    if (!server.check_city(station_data.location))
+        add_city(CityData(station_data.location));
     station->location = server.find_city(station_data.location);
+    station->location->stations.push_back(station);
     return server.add_station(station);
 }
 
+bool sjtu::TTS::add_city(const sjtu::TTS::CityData &city_data) {
+    pool_ptr<City> city = memory_pool::get_city();
+    city->name = city_data.name;
+    return server.add_city(city);
+}
+
+bool sjtu::TTS::add_train(const sjtu::TTS::TrainData & train_data) {
+    if (!server.check_line(train_data.line_name))
+        return false;
+
+    pool_ptr<Train> train = memory_pool::get_train();
+    pool_ptr<Line> line = server.find_line(train_data.line_name);
+    train->line = line;
+    train->date = train_data.date;
+    train->selling = train_data.selling;
+    train->station_available_tickets = train_data.station_available_tickets;
+    return line->trains.insert(make_pair(train_data.date, train)).second;
+}
