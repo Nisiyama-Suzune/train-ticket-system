@@ -27,7 +27,7 @@ struct Date {
     Date(int date) {
         year = date / 10000;
         month = (date / 100) % 100;
-        day = date % 100
+		day = date % 100;
     }
 
 
