@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+cmake-build-debug/
+\#temp.cpp
+test/
+header_structure.txt
+train-ticket-system.*
