@@ -41,7 +41,9 @@ SOURCES +=\
     UI/usermainwindow.cpp \
     UI/userregister.cpp \
     UI/userreturn.cpp \
-    UI/userticket.cpp
+    UI/userticket.cpp \
+    UI/search.cpp \
+    UI/chooseseat.cpp
 
 HEADERS  += \
     vector.hpp \
@@ -68,7 +70,9 @@ HEADERS  += \
     UI/usermainwindow.h \
     UI/userregister.h \
     UI/userreturn.h \
-    UI/userticket.h
+    UI/userticket.h \
+    UI/search.h \
+    UI/chooseseat.h
 
 FORMS    += \
     UI/adminadd.ui \
@@ -76,16 +80,16 @@ FORMS    += \
     UI/adminlogin.ui \
     UI/adminmainwindow.ui \
     UI/adminregister.ui \
-    UI/beginwindow.ui \
     UI/mainwindow.ui \
-    UI/old.ui \
     UI/userbuy.ui \
     UI/userhistory.ui \
     UI/userlogin.ui \
     UI/usermainwindow.ui \
     UI/userregister.ui \
     UI/userreturn.ui \
-    UI/userticket.ui
+    UI/userticket.ui \
+    UI/search.ui \
+    UI/chooseseat.ui
 
 DISTFILES += \
     log.txt

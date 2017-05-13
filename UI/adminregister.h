@@ -15,6 +15,9 @@ public:
     explicit Adminregister(QWidget *parent = 0);
     ~Adminregister();
 
+private slots:
+    void on_confirm_clicked();
+
 private:
     Ui::Adminregister *ui;
 };

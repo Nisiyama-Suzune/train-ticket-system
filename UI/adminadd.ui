@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>400</height>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,7 +55,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit_2"/>
+          <widget class="QLineEdit" name="lineEdit"/>
          </item>
          <item>
           <widget class="QLabel" name="label_5">
@@ -65,7 +65,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit_4"/>
+          <widget class="QLineEdit" name="lineEdit_2"/>
          </item>
         </layout>
        </item>
@@ -79,7 +79,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit"/>
+          <widget class="QLineEdit" name="lineEdit_3"/>
          </item>
          <item>
           <widget class="QLabel" name="label_4">
@@ -89,7 +89,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit_3"/>
+          <widget class="QLineEdit" name="lineEdit_4"/>
          </item>
         </layout>
        </item>
@@ -103,7 +103,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit_5"/>
+          <widget class="QLineEdit" name="lineEdit_5"/>
          </item>
         </layout>
        </item>
@@ -124,8 +124,6 @@
   </layout>
   <zorder>buttonBox</zorder>
   <zorder>label_2</zorder>
-  <zorder>horizontalLayoutWidget_4</zorder>
-  <zorder>commandLinkButton</zorder>
  </widget>
  <resources/>
  <connections>

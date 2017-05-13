@@ -20,9 +20,13 @@ private slots:
 
     void on_pushButton_2_clicked();
 
-	void on_pushButton_6_clicked();
+    void on_comboBox_activated(const QString &arg1);
 
-	void on_query_with_station_clicked();
+    void on_pushButton_6_clicked();
+
+    void on_search_by_station_clicked();
+
+    void on_search_by_city_clicked();
 
 private:
     Ui::userbuy *ui;
