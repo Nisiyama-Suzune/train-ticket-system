@@ -41,7 +41,8 @@ HEADERS  += mainwindow.h \
     tts_server/header/train_manager.h \
     tts_server/header/server.h \
     tts_server/header/account_manager.h \
-    tts_server/header/memory_pool.h
+    tts_server/header/memory_pool.h \
+    tts_server/header/forward_declaration.h
 
 FORMS    += mainwindow.ui
 
