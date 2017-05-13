@@ -123,7 +123,7 @@ private:
 
 private:
     /// parser
-struct Line_Data {
+struct LineData {
 public:
 	QString name;
 	vector<QString> seat_kind_names;
@@ -229,7 +229,7 @@ Line_Data line_transform(QString str)
 #endif //output_debug
 	return ans;
 }
-struct buy_data
+struct BuyData
 {
 	QString name;
 	int ID;
@@ -240,7 +240,8 @@ struct buy_data
 	QString from_station;
 	QString to_station;
 	QString date;
-	friend QTextStream& operator << (QTextStream& out, const buy_data& x) {
+	#ifdef output_debug
+	friend QTextStream& operator << (QTextStream& out, const BuyData& x) {
 		out << "name         = " << x.name << endl;
 		out << "ID           = " << x.ID << endl;
 		out << "operation    = " << x.operation << endl;
@@ -252,13 +253,14 @@ struct buy_data
 		out << "data         = " << x.date << endl;
 		return out;
 	}
+	#endif //output_debug
 };
-buy_data operation_transform(QString str)
+BuyData operation_transform(QString str)
 {
 	QTextStream sin(&str);
 	QTextStream cout(stdout);
 
-	buy_data ans;
+	BuyData ans;
 	QString tmp = sin.readLine();
 	QStringList parts = tmp.split(' ');
 
@@ -284,7 +286,6 @@ buy_data operation_transform(QString str)
 	///parser end
 
 	///save & load
-	friend QDataStream& operator << (QDataStream& out, );
 public:
     /// API
 
