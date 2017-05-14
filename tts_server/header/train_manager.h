@@ -184,6 +184,12 @@ struct Line {
                 return i;
         }
     }
+	int seat_type(const QString & name) {
+		for (int i = 0; i < (int)seat_kind_names.size(); ++i)
+			if (seat_kind_names[i] == name)
+				return i;
+		return -1;
+	}
 };
 
 /**Same line share one line object
@@ -213,8 +219,8 @@ struct Train {
 
     QString get_name();
     int station_pos_in_line(const QString & station_name);
-    double calulate_price(const QString & dep, const QString & arr);
-    int min_avail(const QString & dep, const QString & arr);
+	double calulate_price(const QString & dep, const QString & arr, const QString & seat_type);
+	int min_avail(const QString & dep, const QString & arr, const QString & seat_type);
 
 };
 
