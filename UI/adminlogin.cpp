@@ -3,6 +3,7 @@
 #include "adminregister.h"
 #include "adminmainwindow.h"
 #include "../tts_server/header/server.h"
+#include "../tts_server/header/query.h"
 #include <QMessageBox>
 
 extern sjtu::TTS tts;
@@ -32,8 +33,7 @@ void adminlogin::on_pushButton_3_clicked()
 
 void adminlogin::on_loginBtn_clicked()
 {
-    /*
-    if(tts.login_admin(ui->userLineEdit->text().toInt(),ui->pwdLineEdit->text() ))
+    if(tts.login_admin(sjtu::login_admin_data(ui->userLineEdit->text().toInt(), ui->pwdLineEdit->text())))
     {
         ID = ui->userLineEdit->text().toInt();
         adminmainwindow a_main;
@@ -42,5 +42,8 @@ void adminlogin::on_loginBtn_clicked()
     else
     {
         QMessageBox::warning(this, tr("Warning"), tr("user name or password error!"), QMessageBox::Yes);
-    }*/
+        ui->userLineEdit->clear();
+        ui->pwdLineEdit->clear();
+        ui->userLineEdit->setFocus();
+    }
 }
