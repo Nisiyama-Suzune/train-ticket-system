@@ -20,13 +20,6 @@ struct Line;    // 2
 struct Train;   // 3
 struct Ticket;  // 4
 
-typedef memory_pool<User>::pool_ptr    user_ptr;
-typedef memory_pool<Admin>::pool_ptr   admin_ptr;
-typedef memory_pool<Station>::pool_ptr station_ptr;
-typedef memory_pool<City>::pool_ptr    city_ptr;
-typedef memory_pool<Line>::pool_ptr    line_ptr;
-typedef memory_pool<Train>::pool_ptr   train_ptr;
-typedef memory_pool<Ticket>::pool_ptr  ticket_ptr;
 }
 
 

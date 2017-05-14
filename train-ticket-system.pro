@@ -94,5 +94,3 @@ FORMS    += \
 DISTFILES += \
     log.txt
 
-SUBDIRS += \
-    UI/ticket3.pro

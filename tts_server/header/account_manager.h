@@ -15,6 +15,9 @@
 /// Account
 namespace sjtu {
 
+typedef memory_pool<User>::pool_ptr    user_ptr;
+typedef memory_pool<Admin>::pool_ptr   admin_ptr;
+
 class Account {
 public:
 	QString name;

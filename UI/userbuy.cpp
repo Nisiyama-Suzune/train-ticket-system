@@ -56,13 +56,11 @@ void userbuy::on_search_by_station_clicked()
 
 void userbuy::on_search_by_city_clicked()
 {
-	/*
-	sjtu::vector<QString> vec = tts.query_city_city(ui->start_by_city->currentText(), ui->end_by_city->currentText(), ui->time_by_city->currentData().toInt());
-    for(int i = 0; i < vec.size(); ++i)
-    {
-        QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
-    }
-	*/
+//    sjtu::vector<QString> vec = tts.query_city_city(ui->start_by_city->currentText(), ui->end_by_city->currentText(), ui->time_by_city->currentData().toInt());
+//    for(int i = 0; i < vec.size(); ++i)
+//    {
+//        QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
+//    }
 }
 
 void userbuy::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
