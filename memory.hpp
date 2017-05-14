@@ -112,8 +112,9 @@ typename memory_pool<T>::pool_ptr memory_pool<T>::get_T(T a) {
         return pool_ptr((int)container.size() -1);
     }
     int pos = recycler.back();
+    counter[pos] = 0;
     recycler.pop_back();
-    return pool_ptr(pos - 1);
+    return pool_ptr(pos);
 }
 template <class T>
 void memory_pool<T>::put_T(int pos) {

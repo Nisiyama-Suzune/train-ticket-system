@@ -318,7 +318,8 @@ int sjtu::TTS::register_admin(const QString & name, const QString & password) {
 bool sjtu::TTS::load_ascii() {
 	QDir dir = QDir::current();
 	QString directory = QDir::currentPath();
-	directory += "/../train-ticket-system/trains.csv";
+    directory += "/../train-ticket-system/trains.csv";
+    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/trains.csv";
 	QFile file(directory);
 	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No such file!" << std::endl;
