@@ -203,6 +203,7 @@ struct Line {
 				return i;
 		return -1;
 	}
+
 };
 
 /**Same line share one line object
@@ -239,6 +240,13 @@ struct Train {
     }
 
 	QString get_station_name(const QString & city_name);
+    void add_tickets(const QString & from, const QString & to, const QString & kind, int val) {
+        int l = line->find_pos(from), r = line->find_pos(to);
+        int k = line->seat_type(kind);
+        for (int i = l; i < r; ++i) {
+            station_available_tickets[k][i] += val;
+        }
+    }
 };
 
 struct Ticket {

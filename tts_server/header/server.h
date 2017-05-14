@@ -63,6 +63,10 @@ public:
 	bool add_user(const user_ptr & user);
 	bool add_admin(const admin_ptr & admin);
 
+    void delete_line(const QString & line) {
+        lines.erase(lines.find(line));
+    }
+
 public:
 	friend QDataStream& operator >> (QDataStream &in, Server &rhs) {
 		in >> rhs.users >> rhs.admins >> rhs.lines >> rhs.cities
@@ -158,6 +162,8 @@ public:
     login_user_ans login_user(const login_user_data & data);
     login_admin_ans login_admin(const login_admin_data & data);
     return_tickets_ans return_tickets(const return_tickets_data & data);
+    buy_tickets_ans buy_tickets(const buy_tickets_data & data);
+    delete_line_ans delete_line(const delete_line_data & data);
 };
 }
 

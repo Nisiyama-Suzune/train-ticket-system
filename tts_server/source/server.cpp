@@ -697,6 +697,7 @@ sjtu::login_admin_ans sjtu::TTS::login_admin(const sjtu::login_admin_data & data
 }
 
 sjtu::return_tickets_ans sjtu::TTS::return_tickets(const sjtu::return_tickets_data & data) {
+    // TODO
     Ticket tmp;
     Line &line = *server.find_line(data.train_name);
     tmp.train = line.trains[Date(data.start_date)];
@@ -709,15 +710,47 @@ sjtu::return_tickets_ans sjtu::TTS::return_tickets(const sjtu::return_tickets_da
         if (tmp.equal_ex_num(ticket)) {
             if (ticket.num < data.ticket_number)
                 return false;
+            ticket.num -= data.ticket_number;
+            ticket.train->add_tickets(data.start_station, data.end_station, data.seat_kind,data.ticket_number);
+            if (ticket.num == 0)
+                user.tickets.erase(iter);
             return true;
         }
     }
     return false;
 }
 
+sjtu::buy_tickets_ans sjtu::TTS::buy_tickets(const sjtu::buy_tickets_data & data) {
+    User &user = *server.find_user(data.ID);
+    Line &line = *server.find_line(data.train_name);
+    Train &train = *(line.trains[Date(data.start_date)]);
+    if (train.min_avail(data.start_station, data.end_station, data.seat_kind) < data.ticket_num) {
+        return false;
+    }
+    ticket_ptr tmp = memory_pool<Ticket>::get_T();
+    tmp->train = line.trains[Date(data.start_date)];
+    tmp->from = line.find_pos(data.start_station);
+    tmp->to   = line.find_pos(data.end_station);
+    tmp->kind = line.seat_type(data.seat_kind);
+    train.add_tickets(data.start_station, data.end_station, data.seat_kind,-data.ticket_num);
+    for (auto iter = user.tickets.begin(); iter != user.tickets.end(); ++iter) {
+        if ((*iter)->equal_ex_num(*tmp)) {
+            (*iter)->num += data.ticket_num;
+            return true;
+        }
+    }
+    tmp->price = train.calulate_price(data.start_station, data.end_station, data.seat_kind);
+    tmp->num = data.ticket_num;
+    user.tickets.push_back(tmp);
+    return true;
+}
 
-
-
+sjtu::delete_line_ans sjtu::TTS::delete_line(const sjtu::delete_line_data & data) {
+    if (!server.check_line(data))
+        return false;
+    server.delete_line(data);
+    return true;
+}
 
 
 

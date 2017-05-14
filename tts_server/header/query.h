@@ -5,6 +5,8 @@
 
 namespace sjtu {
 
+// add_line completed
+
 struct login_user_data {
     int ID;
     QString password;
@@ -70,8 +72,25 @@ struct return_tickets_data {
     QString seat_kind;
     int ticket_number;
 };
-
 typedef bool return_tickets_ans;
+
+struct buy_tickets_data {
+    int ID;
+    QString train_name;
+    int start_date;
+    QString start_station;
+    QString end_station;
+    QString seat_kind;
+    int ticket_num;
+    // 数据成员太多了，构造函数太长了，
+    // 你到时候声明一个变量逐步赋值好了。
+};
+typedef bool buy_tickets_ans;
+
+typedef QString delete_line_data; // line_name
+typedef bool delete_line_ans;
+
+
 
 /*函数接口名
  *
