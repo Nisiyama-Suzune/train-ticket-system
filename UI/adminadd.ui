@@ -13,117 +13,104 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
-    <widget class="QLabel" name="label_2">
-     <property name="font">
-      <font>
-       <family>微软雅黑 Light</family>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>添加线路</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>回到主页</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QCommandLinkButton" name="commandLinkButton">
-         <property name="text">
-          <string>新建城市/站点</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>终点站</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>到达时间</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_2"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>始发站</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_3"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>出发时间</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_4"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>车次编号</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_5"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-  </layout>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>11</y>
+     <width>120</width>
+     <height>39</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑 Light</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>添加线路</string>
+   </property>
+  </widget>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>396</y>
+     <width>193</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QCommandLinkButton" name="commandLinkButton">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>20</y>
+     <width>424</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>新建城市/站点</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>60</y>
+     <width>424</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>车次编号</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit_5"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>160</y>
+     <width>331</width>
+     <height>161</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>200</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>回到主页</string>
+   </property>
+  </widget>
   <zorder>buttonBox</zorder>
   <zorder>label_2</zorder>
+  <zorder>commandLinkButton</zorder>
+  <zorder></zorder>
+  <zorder>textEdit</zorder>
  </widget>
  <resources/>
  <connections>
