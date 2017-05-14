@@ -3,12 +3,24 @@
 
 #include <QString>
 
-struct query_ticket_data {
-    QString dep_city;
+namespace sjtu {
 
+
+
+struct query_ticket_cc_data {
+    QString dep_city;
+    QString arr_city;
+    int date;
+};
+
+struct query_ticket_ss_data {
+    QString dep_satation;
+    QString arr_station;
+    int date;
 };
 
 struct query_ticket_ans {
+    // 返回vector
     QString train_name;
     int start_date;
     QString start_station;
@@ -39,5 +51,6 @@ struct query_my_order
  * delete_line
  * */
 
+}
 
 #endif // QUERY_H

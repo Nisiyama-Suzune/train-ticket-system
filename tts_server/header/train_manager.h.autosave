@@ -183,6 +183,7 @@ struct Line {
             if (name == stations[i]->name)
                 return i;
         }
+        return -1;
     }
 	int seat_type(const QString & name) {
 		for (int i = 0; i < (int)seat_kind_names.size(); ++i)

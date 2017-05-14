@@ -647,7 +647,7 @@ sjtu::vector<sjtu::Ticket> sjtu::TTS::q_ss_ticket(const QString &f, const QStrin
         {
             add.kind = i;
             int num;
-            double price;
+            double price = 0;
             for (int p = st; p < ed; ++p) {
                 price += train.line->price[i][p];
                 if (num > train.station_available_tickets[i][p]) {
@@ -687,4 +687,52 @@ sjtu::vector<QString> sjtu::TTS::q_ss(const QString &f, const QString &t, int da
 
 
 
+sjtu::vector<sjtu::query_ticket_ans> sjtu::TTS::query_city_city(const sjtu::query_ticket_cc_data & data) {
+    const City & from = *server.find_city(data.dep_city);
+    const City & to   = *server.find_city(data.arr_city);
+    const vector<train_ptr> & trains = *query_train(from, to, Date(data.date));
 
+    vector<query_ticket_ans> ans;
+
+    for (int i = 0; i < (int)trains.size(); ++i) {
+        Train & train = *trains[i];
+        query_ticket_ans tmp;
+        tmp.train_name = train.get_name();
+        tmp.start_date = data.date;
+        tmp.start_station = train.get_station_name(from.name);
+        tmp.start_time = train.line->dep(tmp.start_station);
+        tmp.end_station = train.get_station_name(to.name);
+        tmp.end_time = train.line->arr(tmp.end_station);
+        for (int i = 0; i < (int)train.line->seat_kind_names.size(); ++i) {
+            tmp.seat_kind = train.line->seat_kind_names[i];
+            tmp.ticket_left = train.min_avail(tmp.start_station, tmp.end_station, tmp.seat_kind);
+            ans.push_back(tmp);
+        }
+    }
+    return ans;
+}
+sjtu::vector<sjtu::query_ticket_ans> sjtu::TTS::query_station_station(const sjtu::query_ticket_ss_data & data) {
+    const Station & from = *server.find_station(data.dep_satation);
+    const Station & to   = *server.find_station(data.arr_station);
+    const vector<train_ptr> & trains = *query_train(from, to, Date(data.date));
+
+    vector<query_ticket_ans> ans;
+
+    for (int i = 0; i < (int)trains.size(); ++i) {
+        Train & train = *trains[i];
+        query_ticket_ans tmp;
+        tmp.train_name = train.get_name();
+        tmp.start_date = data.date;
+        tmp.start_station = data.dep_satation;
+        tmp.start_time = train.line->dep(tmp.start_station);
+        tmp.end_station = data.arr_station;
+        tmp.end_time = train.line->arr(tmp.end_station);
+        for (int i = 0; i < (int)train.line->seat_kind_names.size(); ++i) {
+            tmp.seat_kind = train.line->seat_kind_names[i];
+            tmp.ticket_left = train.min_avail(tmp.start_station, tmp.end_station, tmp.seat_kind);
+            ans.push_back(tmp);
+        }
+    }
+    return ans;
+
+}
