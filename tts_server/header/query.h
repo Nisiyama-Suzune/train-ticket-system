@@ -101,6 +101,7 @@ struct buy_tickets_data {
     QString end_station;
     QString seat_kind;
     int ticket_num;
+    buy_tickets_data(){}
     buy_tickets_data(int id ,QString a, int b, QString c, QString d, QString e, int f):
         ID(id), train_name(a), start_date(b), start_station(c), end_station(d), seat_kind(e), ticket_num(f){}
     // 数据成员太多了，构造函数太长了，
