@@ -4,6 +4,7 @@
 #include "usermainwindow.h"
 #include "../tts_server/header/server.h"
 #include <QMessageBox>
+#include "../tts_server/header/query.h"
 
 extern sjtu::TTS tts;
 extern int ID;
@@ -28,7 +29,7 @@ void userlogin::on_pushButton_3_clicked()
 
 void userlogin::on_loginBtn_clicked()
 {
-    if(tts.login_user(ui->userLineEdit->text().toInt(), ui->pwdLineEdit->text()))
+    if(tts.login_user(sjtu::login_user_data(ui->userLineEdit->text().toInt(), ui->pwdLineEdit->text())))
     {
         ID = ui->userLineEdit->text().toInt();
         usermainwindow u_main;

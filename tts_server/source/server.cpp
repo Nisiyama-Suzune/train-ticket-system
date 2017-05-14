@@ -220,73 +220,8 @@ sjtu::TTS::query_train(const sjtu::Station & from, const sjtu::Station & to, sjt
 
 /// User
 
-bool sjtu::TTS::buy_ticket(sjtu::train_ptr train, int from, int to, int kind, int num) {
-	vector<vector<double>> &price = train->line->price;
-	vector<vector<int>> &remaining = train->station_available_tickets;
-	if (!train->selling)
-		return false;
 
-	// 检查票是否足够
-	for (int i = from; i < to; ++i) {
-		if (remaining[i][kind] < num)
-			return false;
-	}
 
-	// 更新余票，计算价格
-	double ticket_price = 0;
-	for (int i = from; i < to; ++i) {
-		remaining[i][kind] -= num;
-		ticket_price += price[i][kind];
-	}
-
-	// 更新账户
-	ticket_ptr ticket = memory_pool<Ticket>::get_T();//(from, to, kind, ticket_price, num);
-	ticket->from  = from;
-	ticket->to    = to;
-	ticket->kind  = kind;
-	ticket->price = ticket_price;
-	ticket->num   = num;
-	ticket->train = train;
-	current_user->add_ticket(ticket);
-	return true;
-}
-
-bool sjtu::TTS::return_ticket(sjtu::ticket_ptr ticket, int num) {
-	deque<ticket_ptr> &tickets = current_user->tickets;
-	for (auto iter = tickets.begin(); iter != tickets.end(); ++iter) {
-		if ((*iter)->equal_ex_num(*ticket)) {
-			if ((*iter)->num < num)
-				return false;
-			(*iter)->num -= num;
-			return true;
-		}
-	}
-	return false;
-}
-
-const sjtu::deque<sjtu::ticket_ptr> &sjtu::TTS::current_tickets() {
-	return current_user->tickets;
-}
-
-bool sjtu::TTS::login_user(const int & ID, const QString & password) {
-	user_ptr user = server.find_user(ID);
-	if (user->check_password(password)) {
-		current_user = user;
-		current_admin = admin_ptr();
-		return true;
-	}
-	return false;
-}
-
-bool sjtu::TTS::login_admin(const int &ID, const QString & password) {
-	admin_ptr admin = server.find_admin(ID);
-	if (admin->check_password(password)) {
-		current_admin = admin;
-		current_user = user_ptr();
-		return true;
-	}
-	return false;
-}
 
 bool sjtu::TTS::is_train_type(QChar ch) {
 	return (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
@@ -350,10 +285,10 @@ bool sjtu::TTS::load_ascii() {
 	while (fin2.readLineInto(&str)) {
 		BuyReturnData ans = operation_transform(str);
 		if (server.check_user(ans.ID)) {
-			current_user = server.find_user(ans.ID);
+//			current_user = server.find_user(ans.ID);
 		} else {
-			current_user = server.find_user(register_user(ans.name, "000000"));
-			current_user->ID = ans.ID;
+            auto user = server.find_user(register_user(ans.name, "000000"));
+            user->ID = ans.ID;
 		}
 //		buy_ticket(server.find_line(ans.train_ID)->trains[ans.date], )
 	}
@@ -590,24 +525,6 @@ bool sjtu::TTS::add_line(const QString & str) {
 }
 
 
-sjtu::vector<QString> sjtu::TTS::current_tickets(int ID) {
-    vector<QString> result;
-    QString str;
-
-    current_user =  server.find_user(ID);
-    const deque<ticket_ptr> & cur_tickets = current_tickets();
-    for (auto iter = cur_tickets.cbegin(); iter != cur_tickets.cend(); ++iter) {
-        const Ticket & ticket = **iter;
-        str = "";
-        str += ticket.train->line->name + " ";
-        str += "从" + ticket.train->line->stations[ticket.from]->name
-                + "到" + ticket.train->line->stations[ticket.to]->name;
-        str += " " + ticket.train->date.toStr();
-        str += " " + QString::number(ticket.num) + "张";
-        result.push_back(str);
-    }
-   return result;
-}
 
 /* 查询：找出从车站到车站之间的所有可行车票
  * 需要：车次；起点车站；出发时间；终点车站；到达时间；座位名字，价格，余票
@@ -737,3 +654,120 @@ sjtu::vector<sjtu::query_ticket_ans> sjtu::TTS::query_station_station(const sjtu
     return ans;
 
 }
+
+sjtu::vector<sjtu::query_my_order_ans> sjtu::TTS::query_my_order(const sjtu::query_my_order_data & data) {
+    user_ptr user = server.find_user(data.ID);
+    deque<ticket_ptr> &tickets = user->tickets;
+
+    vector<query_my_order_ans> result;
+    for (auto iter = tickets.begin(); iter != tickets.end(); ++iter) {
+        query_my_order_ans tmp;
+        Ticket &ticket = **iter;
+        tmp.train_name = ticket.train->get_name();
+        tmp.start_date = ticket.train->date.toStr();
+        tmp.start_station = ticket.train->get_station_name(ticket.from);
+        tmp.start_time = ticket.train->line->dep(ticket.from);
+        tmp.end_station = ticket.train->get_station_name(ticket.to);
+        tmp.end_time   = ticket.train->line->dep(ticket.to);
+        tmp.seat_kind = ticket.train->line->seat_kind_names[ticket.kind];
+        tmp.ticket_number = ticket.num;
+        result.push_back(tmp);
+    }
+    return result;
+}
+
+sjtu::login_user_ans sjtu::TTS::login_user(const sjtu::login_user_data & data) {
+    if (!server.check_user(data.ID)) {
+        return false;
+    }
+    if (!server.find_user(data.ID)->check_password(data.password)) {
+        return false;
+    }
+    return true;
+}
+
+sjtu::login_admin_ans sjtu::TTS::login_admin(const sjtu::login_admin_data & data) {
+    if (!server.check_admin(data.ID)) {
+        return false;
+    }
+    if (!server.find_admin(data.ID)->check_password(data.password)) {
+        return false;
+    }
+    return true;
+}
+
+sjtu::return_tickets_ans sjtu::TTS::return_tickets(const sjtu::return_tickets_data & data) {
+    // TODO
+    Ticket tmp;
+    Line &line = *server.find_line(data.train_name);
+    tmp.train = line.trains[Date(data.start_date)];
+    tmp.from = tmp.train->line->find_pos(data.start_station);
+    tmp.to   = tmp.train->line->find_pos(data.end_station);
+    tmp.kind = tmp.train->line->seat_type(data.seat_kind);
+    User &user = *server.find_user(data.ID);
+    for (auto iter = user.tickets.begin(); iter != user.tickets.end(); ++iter) {
+        Ticket &ticket = **iter;
+        if (tmp.equal_ex_num(ticket)) {
+            if (ticket.num < data.ticket_number)
+                return false;
+            ticket.num -= data.ticket_number;
+            ticket.train->add_tickets(data.start_station, data.end_station, data.seat_kind,data.ticket_number);
+            if (ticket.num == 0)
+                user.tickets.erase(iter);
+            return true;
+        }
+    }
+    return false;
+}
+
+sjtu::buy_tickets_ans sjtu::TTS::buy_tickets(const sjtu::buy_tickets_data & data) {
+    User &user = *server.find_user(data.ID);
+    Line &line = *server.find_line(data.train_name);
+    Train &train = *(line.trains[Date(data.start_date)]);
+    if (train.min_avail(data.start_station, data.end_station, data.seat_kind) < data.ticket_num) {
+        return false;
+    }
+    ticket_ptr tmp = memory_pool<Ticket>::get_T();
+    tmp->train = line.trains[Date(data.start_date)];
+    tmp->from = line.find_pos(data.start_station);
+    tmp->to   = line.find_pos(data.end_station);
+    tmp->kind = line.seat_type(data.seat_kind);
+    train.add_tickets(data.start_station, data.end_station, data.seat_kind,-data.ticket_num);
+    for (auto iter = user.tickets.begin(); iter != user.tickets.end(); ++iter) {
+        if ((*iter)->equal_ex_num(*tmp)) {
+            (*iter)->num += data.ticket_num;
+            return true;
+        }
+    }
+    tmp->price = train.calulate_price(data.start_station, data.end_station, data.seat_kind);
+    tmp->num = data.ticket_num;
+    user.tickets.push_back(tmp);
+    return true;
+}
+
+sjtu::delete_line_ans sjtu::TTS::delete_line(const sjtu::delete_line_data & data) {
+    if (!server.check_line(data))
+        return false;
+    server.delete_line(data);
+    return true;
+}
+
+sjtu::register_user_ans sjtu::TTS::register_user(const sjtu::register_user_data & data) {
+    return register_user(data.name, data.password);
+}
+
+sjtu::register_admin_ans sjtu::TTS::register_admin(const sjtu::register_admin_data & data) {
+    return register_admin(data.name, data.password);
+}
+
+
+
+
+
+
+
+
+
+
+
+

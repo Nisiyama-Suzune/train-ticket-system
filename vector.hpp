@@ -19,18 +19,18 @@ private:
 	T * storage;
 	int MaxSize;
 	int NowLength;
-	void DoubleSpace()
-	{
-		T * tem = storage;
-		MaxSize *= 2;
-		storage = (T*)operator new[](MaxSize * sizeof(T));
-		for(int i = 0; i < NowLength; ++i)
-		{
-			new(storage + i) T(tem[i]);
-		}
-		tem -> ~T();
-		delete []tem;
-	}
+    void DoubleSpace()
+    {
+        T * tem = storage;
+        MaxSize *= 2;
+        storage = (T*)operator new[](MaxSize * sizeof(T));
+        for(int i = 0; i < NowLength; ++i)
+        {
+            new(storage + i) T(tem[i]);
+            tem[i].~T();
+        }
+        operator delete [](tem);
+    }
 public:
 	/**
 	 * TODO

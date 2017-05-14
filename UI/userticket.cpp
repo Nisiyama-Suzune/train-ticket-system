@@ -51,9 +51,10 @@ void userticket::on_pushButton_3_clicked()
 
 void userticket::on_pushButton_6_clicked()
 {
+    /*
     sjtu::vector<QString> vec = tts.current_tickets(ID);
     for(int i = 0; i < vec.size(); ++i)
     {
         QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
-    }
+    }*/
 }
