@@ -26,3 +26,11 @@ int sjtu::Train::min_avail(const QString &dep, const QString &arr, const QString
 		ans = std::min(ans, station_available_tickets[k][i]);
 	return ans;
 }
+
+QString sjtu::Train::get_station_name(const QString &city_name) {
+	int sz = line->stations.size();
+	for (int i = 0; i < sz; ++i)
+		if (line->stations[i]->location->name == city_name)
+			return line->stations[i]->name;
+	return "No_such_station_in_this_line";
+}

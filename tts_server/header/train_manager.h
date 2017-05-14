@@ -221,7 +221,7 @@ struct Train {
     int station_pos_in_line(const QString & station_name);
 	double calulate_price(const QString & dep, const QString & arr, const QString & seat_type);
 	int min_avail(const QString & dep, const QString & arr, const QString & seat_type);
-
+	QString get_station_name(const QString & city_name);
 };
 
 struct Ticket {
