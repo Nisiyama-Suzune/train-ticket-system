@@ -52,7 +52,7 @@ void userticket::on_pushButton_3_clicked()
 
 void userticket::on_pushButton_6_clicked()
 {
-    sjtu::vector<query_my_order_ans> vec = tts.query_my_order(query_my_order_data(ID));
+    sjtu::vector<sjtu::query_my_order_ans> vec = tts.query_my_order(sjtu::query_my_order_data(ID));
     for(int i = 0; i < vec.size(); ++i)
     {
         QListWidgetItem * Qlw = new QListWidgetItem(vec[i].toQString(), ui->listWidget);

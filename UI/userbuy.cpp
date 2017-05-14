@@ -51,7 +51,7 @@ void userbuy::on_search_by_station_clicked()
 
 void userbuy::on_search_by_city_clicked()
 {
-    sjtu::vector<sjtu::query_ticket_ans> vec = tts.query_city_city(sjtu::quert_ticket_cc_data(ui->start_by_city->currentText(), ui->end_by_city->currentText(), ui->time_by_city->currentData().toInt()));
+    sjtu::vector<sjtu::query_ticket_ans> vec = tts.query_city_city(sjtu::query_ticket_cc_data(ui->start_by_city->currentText(), ui->end_by_city->currentText(), ui->time_by_city->currentData().toInt()));
     for(int i = 0; i < vec.size(); ++i)
     {
         QListWidgetItem * Qlw = new QListWidgetItem(vec[i].toQString(), ui->listWidget);
@@ -62,5 +62,5 @@ void userbuy::on_listWidget_itemDoubleClicked(QListWidgetItem *item){}
 
 void userbuy::on_pushButton_3_clicked()
 {
-    if(buy_tickets(ui->listWidget-))
+    //if(buy_tickets)
 }

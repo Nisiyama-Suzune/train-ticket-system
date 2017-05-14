@@ -29,7 +29,7 @@ void userlogin::on_pushButton_3_clicked()
 
 void userlogin::on_loginBtn_clicked()
 {
-    if(tts.login_user_ans(sjtu::login_user_data(ui->userLineEdit->text().toInt(), ui->pwdLineEdit->text())))
+    if(tts.login_user(sjtu::login_user_data(ui->userLineEdit->text().toInt(), ui->pwdLineEdit->text())))
     {
         ID = ui->userLineEdit->text().toInt();
         usermainwindow u_main;
@@ -38,8 +38,8 @@ void userlogin::on_loginBtn_clicked()
     else
     {
         QMessageBox::warning(this, tr("Warning"), tr("user name or password error!"), QMessageBox::Yes);
-        ui->usrLineEdit->clear();
+        ui->userLineEdit->clear();
         ui->pwdLineEdit->clear();
-        ui->usrLineEdit->setFocus();
+        ui->userLineEdit->setFocus();
     }
 }
