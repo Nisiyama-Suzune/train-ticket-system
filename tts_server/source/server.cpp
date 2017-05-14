@@ -737,3 +737,42 @@ sjtu::vector<sjtu::query_ticket_ans> sjtu::TTS::query_station_station(const sjtu
     return ans;
 
 }
+
+sjtu::vector<sjtu::query_my_order_ans> sjtu::TTS::query_my_order(const sjtu::query_my_order_data & data) {
+    user_ptr user = server.find_user(data.ID);
+    deque<ticket_ptr> &tickets = user->tickets;
+
+    vector<query_my_order_ans> result;
+    for (auto iter = tickets.begin(); iter != tickets.end(); ++iter) {
+        query_my_order_ans tmp;
+        Ticket &ticket = **iter;
+        tmp.train_name = ticket.train->get_name();
+        tmp.start_date = ticket.train->date.toStr();
+        tmp.start_station = ticket.train->get_station_name(ticket.from);
+        tmp.start_time = ticket.train->line->dep(ticket.from);
+        tmp.end_station = ticket.train->get_station_name(ticket.to);
+        tmp.end_time   = ticket.train->line->dep(ticket.to);
+        tmp.seat_kind = ticket.train->line->seat_kind_names[ticket.kind];
+        tmp.ticket_number = ticket.num;
+        result.push_back(tmp);
+    }
+    return result;
+}
+
+sjtu::login_user_ans sjtu::TTS::login_user(const sjtu::login_user_data & data) {
+    if (!server.check_user(data.ID)) {
+        return false;
+    }
+    if (!server.find_user(data.ID)->check_password(data.password)) {
+        return false;
+    }
+    return true;
+}
+
+
+
+
+
+
+
+

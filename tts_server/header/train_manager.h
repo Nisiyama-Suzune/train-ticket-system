@@ -75,7 +75,6 @@ struct Date {
     QString toStr() {
         return QString::number(year) + "." + QString::number(month) + "." + QString::number(day);
     }
-
 };
 
 struct Station {
@@ -183,6 +182,7 @@ struct Line {
             if (name == stations[i]->name)
                 return i;
         }
+        return -1;
     }
 	int seat_type(const QString & name) {
 		for (int i = 0; i < (int)seat_kind_names.size(); ++i)
@@ -221,6 +221,9 @@ struct Train {
     int station_pos_in_line(const QString & station_name);
 	double calulate_price(const QString & dep, const QString & arr, const QString & seat_type);
 	int min_avail(const QString & dep, const QString & arr, const QString & seat_type);
+    QString get_station_name(int pos) {
+        return line->stations[pos]->name;
+    }
 
 	QString get_station_name(const QString & city_name);
 };

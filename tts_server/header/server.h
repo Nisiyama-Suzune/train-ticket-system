@@ -150,7 +150,7 @@ private:
 	LineData line_transform(QString str);
 	BuyReturnData operation_transform(QString str);
 public:
-	bool add_line(const QString & str);
+
 
 private: // 查找station-station的票
     vector<Ticket> q_ss_ticket(const QString &f, const QString &t, int date);
@@ -167,13 +167,16 @@ public:
 	bool load_ascii();
 	bool load_binary();
 	void save_binary();
-	TTS();
+    TTS();
 	~TTS();
 
 public:
     /// API
     vector<query_ticket_ans> query_city_city(const query_ticket_cc_data & data);
     vector<query_ticket_ans> query_station_station(const query_ticket_ss_data & data);
+    vector<query_my_order_ans> query_my_order(const query_my_order_data & data);
+    bool add_line(const QString & str);
+    login_user_ans login_user(const login_user_data & data);
 };
 }
 

@@ -5,7 +5,14 @@
 
 namespace sjtu {
 
+typedef bool login_user_ans;
 
+struct login_user_data {
+    QString password;
+    int ID;
+    login_user_data(QString _p, int _ID)
+        : password(_p), ID(_ID){}
+};
 
 struct query_ticket_cc_data {
     QString dep_city;
@@ -31,10 +38,16 @@ struct query_ticket_ans {
     int ticket_left;
 };
 
-struct query_my_order
+struct query_my_order_data {
+    int ID;
+    query_my_order_data(int _id) : ID(_id) {}
+};
+
+struct query_my_order_ans
 {
+    // 返回vector
     QString train_name;
-    int start_date;
+    QString start_date;
     QString start_station;
     QString start_time;
     QString end_station;
