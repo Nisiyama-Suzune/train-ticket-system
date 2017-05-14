@@ -32,6 +32,7 @@ void adminlogin::on_pushButton_3_clicked()
 
 void adminlogin::on_loginBtn_clicked()
 {
+    /*
     if(tts.login_admin(ui->userLineEdit->text().toInt(),ui->pwdLineEdit->text() ))
     {
         ID = ui->userLineEdit->text().toInt();
@@ -41,5 +42,5 @@ void adminlogin::on_loginBtn_clicked()
     else
     {
         QMessageBox::warning(this, tr("Warning"), tr("user name or password error!"), QMessageBox::Yes);
-    }
+    }*/
 }

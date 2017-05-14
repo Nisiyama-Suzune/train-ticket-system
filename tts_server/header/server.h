@@ -98,8 +98,6 @@ private:
 private:
 
     Server server;
-    user_ptr  current_user;
-    admin_ptr current_admin;
     int id_cnt;
 
     /// query
@@ -122,28 +120,9 @@ private:
     bool add_city(const CityData &);
     bool add_train(const TrainData &);
 
-    /// user
-    /* 买票，如果票不够了或者没开票，则返回false。
-     * 否则则修改余票，并且往当前登陆账户的票数里新增一张票。
-     */
-    bool buy_ticket(train_ptr train, int from, int to, int kind, int num);
-
-    /* 退票，如果当前该张票余票不够，则返回false
-     */
-    bool return_ticket(ticket_ptr ticket, int num);
-
-private: // 返回用户当前的票的
-    const deque<ticket_ptr> & current_tickets();
 public:
-    vector<QString> current_tickets(int ID);
-
-public:
-	// 登陆账户，返回登录成功与否（只检查ID和密码是否匹配），
-	// 出问题会抛出异常
-	bool login_user(const int & ID, const QString & password);
-	bool login_admin(const int & ID, const QString & password);
-	int register_user(const QString & name, const QString & password);
-	int register_admin(const QString & name, const QString & password);
+    int register_user(const QString & name, const QString & password);
+    int register_admin(const QString & name, const QString & password);
 
 private:
 	/// parser
@@ -177,6 +156,8 @@ public:
     vector<query_my_order_ans> query_my_order(const query_my_order_data & data);
     bool add_line(const QString & str);
     login_user_ans login_user(const login_user_data & data);
+    login_admin_ans login_admin(const login_admin_data & data);
+    return_tickets_ans return_tickets(const return_tickets_data & data);
 };
 }
 
