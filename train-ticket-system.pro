@@ -72,7 +72,8 @@ HEADERS  += \
     UI/userreturn.h \
     UI/userticket.h \
     UI/search.h \
-    UI/chooseseat.h
+    UI/chooseseat.h \
+    tts_server/header/query.h
 
 FORMS    += \
     UI/adminadd.ui \

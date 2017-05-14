@@ -76,16 +76,6 @@ struct Date {
         return QString::number(year) + "." + QString::number(month) + "." + QString::number(day);
     }
 
-/*
-	void load(QDataStream& in)
-	{
-		in >> year >> month >> day >> hour >> min >> sec;
-	}
-	void save(QDataStream& out)
-	{
-		out << year << month << day << hour << min << sec;
-	}
-	*/
 };
 
 struct Station {
@@ -220,6 +210,12 @@ struct Train {
 		out << rhs.line << rhs.date << rhs.selling << rhs.station_available_tickets;
 		return out;
 	}
+
+    QString get_name();
+    int station_pos_in_line(const QString & station_name);
+    double calulate_price(const QString & dep, const QString & arr);
+    int min_avail(const QString & dep, const QString & arr);
+
 };
 
 struct Ticket {

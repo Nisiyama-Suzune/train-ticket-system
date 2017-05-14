@@ -20,6 +20,10 @@ adminlogin::~adminlogin()
     delete ui;
 }
 
+void adminlogin::on_register_2_clicked()
+{
+}
+
 void adminlogin::on_pushButton_3_clicked()
 {
     Adminregister a_reg;
