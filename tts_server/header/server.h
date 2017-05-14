@@ -36,13 +36,11 @@ private:
 	typedef map<QString, line_ptr> LineContainer; //ID -> Line
 	typedef map<QString, city_ptr> CityContainer; //name -> City
 	typedef map<QString, station_ptr> StationContainer;
-//	typedef list<Log> LogContainer;
 	UserContainer     users;
 	AdminContainer    admins;
 	LineContainer     lines;
 	CityContainer     cities;
 	StationContainer  stations;
-//	LogContainer      logs;
 
 public:
 	bool check_city(const QString & name) const;
@@ -100,9 +98,11 @@ private:
 	const QDir data_path;
 
 private:
+    typedef QString Log;
 
     Server server;
     int id_cnt;
+    deque<Log> logs;
 
     /// query
     smart_ptr<vector<train_ptr>>
@@ -155,6 +155,9 @@ public:
 
 public:
     /// API
+    void add_log(const QString &log) {
+        logs.push_back(log);
+    }
     vector<query_ticket_ans> query_city_city(const query_ticket_cc_data & data);
     vector<query_ticket_ans> query_station_station(const query_ticket_ss_data & data);
     vector<query_my_order_ans> query_my_order(const query_my_order_data & data);
