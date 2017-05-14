@@ -164,6 +164,8 @@ public:
     return_tickets_ans return_tickets(const return_tickets_data & data);
     buy_tickets_ans buy_tickets(const buy_tickets_data & data);
     delete_line_ans delete_line(const delete_line_data & data);
+    register_user_ans register_user(const register_user_data & data);
+    register_admin_ans register_admin(const register_admin_data & data);
 };
 }
 

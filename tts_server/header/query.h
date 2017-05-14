@@ -90,7 +90,21 @@ typedef bool buy_tickets_ans;
 typedef QString delete_line_data; // line_name
 typedef bool delete_line_ans;
 
+struct register_user_data {
+    QString name;
+    QString password;
+    register_user_data(QString _name, QString _p)
+        : name(_name), password(_p) {}
+};
+typedef int register_user_ans; // ID
 
+struct register_admin_data {
+    QString name;
+    QString password;
+    register_admin_data(QString _name, QString _p)
+        : name(_name), password(_p) {}
+};
+typedef int register_admin_ans; // ID
 
 /*函数接口名
  *

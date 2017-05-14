@@ -752,7 +752,13 @@ sjtu::delete_line_ans sjtu::TTS::delete_line(const sjtu::delete_line_data & data
     return true;
 }
 
+sjtu::register_user_ans sjtu::TTS::register_user(const sjtu::register_user_data & data) {
+    return register_user(data.name, data.password);
+}
 
+sjtu::register_admin_ans sjtu::TTS::register_admin(const sjtu::register_admin_data & data) {
+    return register_admin(data.name, data.password);
+}
 
 
 
