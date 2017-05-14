@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QDir>
 #include <QIODevice>
+#include "../header/query.h"
 
 /// server
 
@@ -285,11 +286,19 @@ bool sjtu::TTS::load_ascii() {
 	while (fin2.readLineInto(&str)) {
 		BuyReturnData ans = operation_transform(str);
 		if (server.check_user(ans.ID)) {
-//			current_user = server.find_user(ans.ID);
 		} else {
             auto user = server.find_user(register_user(ans.name, "000000"));
             user->ID = ans.ID;
 		}
+		buy_tickets_data tmp;
+		tmp.ID = ans.ID;
+		tmp.train_name = ans.train_ID;
+		tmp.start_date = ans.date;
+		tmp.start_station = ans.from_station;
+		tmp.end_station = ans.to_station;
+		tmp.seat_kind = ans.kind_of_seat;
+		tmp.ticket_num = ans.num;
+		buy_tickets(tmp);
 //		buy_ticket(server.find_line(ans.train_ID)->trains[ans.date], )
 	}
 	return true;
