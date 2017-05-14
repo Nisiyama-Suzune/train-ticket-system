@@ -24,8 +24,7 @@ typedef memory_pool<Train>::pool_ptr   train_ptr;
 typedef memory_pool<Ticket>::pool_ptr  ticket_ptr;
 
 struct Date {
-    int year, month, day;
-    int hour, min, sec;
+    int year = 0, month = 0, day = 0;
 
     Date(){}
     Date(int date) {
@@ -33,8 +32,27 @@ struct Date {
         month = (date / 100) % 100;
 		day = date % 100;
     }
+    Date(QString date) {
+
+        int t = 1000;
+        for (int i = 0; i <= 3; ++i) {
+            year += (date[i].unicode() - '0') * t;
+            t /= 10;
+        }
+        t = 10;
+        for (int i = 5; i <= 6; ++i) {
+            month += (date[i].unicode()-'0') * t;
+            t /= 10;
+        }
+        t = 0;
+        for (int i = 8; i <= 9; ++i) {
+            day += (date[i].unicode()-'0') * t;
+            t /= 10;
+        }
+    }
 
 
+    /*
     friend bool operator<(const Date &lhs, const Date &rhs) {
         if (lhs.year != rhs.year) return lhs.year < rhs.year;
         else if (lhs.month != rhs.month) return lhs.month < rhs.month;
@@ -42,19 +60,14 @@ struct Date {
         else if (lhs.hour != rhs.hour) return lhs.hour < rhs.hour;
         else if (lhs.min != rhs.min) return lhs.min < rhs.min;
         else return lhs.sec < rhs.sec;
-    }
+    }*/
 
     bool same_day(const Date &rhs) const {
         return year == rhs.year && month == rhs.month && day == rhs.day;
     }
 
-    friend bool same_day(const Date &lhs, const Date &rhs) {
-        return lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year;
-    }
-
     bool operator==(const Date &rhs) {
-        return year == rhs.year && month == rhs.month && day == rhs.day
-               && hour == rhs.hour && min == rhs.min && sec == rhs.sec;
+        return year == rhs.year && month == rhs.month && day == rhs.day;
     }
 
     class cmp_date {
@@ -64,18 +77,17 @@ struct Date {
         }
     };
 	friend QDataStream& operator >> (QDataStream &in, Date& rhs) {
-		in >> rhs.year >> rhs.month >> rhs.day >> rhs.hour >> rhs.min >> rhs.sec;
+        in >> rhs.year >> rhs.month >> rhs.day;
 		return in;
 	}
 	friend QDataStream& operator << (QDataStream &out, const Date& rhs) {
-		out << rhs.year << rhs.month << rhs.day << rhs.hour << rhs.min << rhs.sec;
+        out << rhs.year << rhs.month << rhs.day;
 		return out;
 	}
 
     QString toStr() {
         return QString::number(year) + "." + QString::number(month) + "." + QString::number(day);
     }
-
 };
 
 struct Station {
@@ -183,6 +195,7 @@ struct Line {
             if (name == stations[i]->name)
                 return i;
         }
+        return -1;
     }
 	int seat_type(const QString & name) {
 		for (int i = 0; i < (int)seat_kind_names.size(); ++i)
@@ -190,6 +203,7 @@ struct Line {
 				return i;
 		return -1;
 	}
+
 };
 
 /**Same line share one line object
@@ -221,8 +235,18 @@ struct Train {
     int station_pos_in_line(const QString & station_name);
 	double calulate_price(const QString & dep, const QString & arr, const QString & seat_type);
 	int min_avail(const QString & dep, const QString & arr, const QString & seat_type);
+    QString get_station_name(int pos) {
+        return line->stations[pos]->name;
+    }
 
 	QString get_station_name(const QString & city_name);
+    void add_tickets(const QString & from, const QString & to, const QString & kind, int val) {
+        int l = line->find_pos(from), r = line->find_pos(to);
+        int k = line->seat_type(kind);
+        for (int i = l; i < r; ++i) {
+            station_available_tickets[k][i] += val;
+        }
+    }
 };
 
 struct Ticket {

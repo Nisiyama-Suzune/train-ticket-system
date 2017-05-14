@@ -63,6 +63,10 @@ public:
 	bool add_user(const user_ptr & user);
 	bool add_admin(const admin_ptr & admin);
 
+    void delete_line(const QString & line) {
+        lines.erase(lines.find(line));
+    }
+
 public:
 	friend QDataStream& operator >> (QDataStream &in, Server &rhs) {
 		in >> rhs.users >> rhs.admins >> rhs.lines >> rhs.cities
@@ -98,8 +102,6 @@ private:
 private:
 
     Server server;
-    user_ptr  current_user;
-    admin_ptr current_admin;
     int id_cnt;
 
     /// query
@@ -122,35 +124,16 @@ private:
     bool add_city(const CityData &);
     bool add_train(const TrainData &);
 
-    /// user
-    /* 买票，如果票不够了或者没开票，则返回false。
-     * 否则则修改余票，并且往当前登陆账户的票数里新增一张票。
-     */
-    bool buy_ticket(train_ptr train, int from, int to, int kind, int num);
-
-    /* 退票，如果当前该张票余票不够，则返回false
-     */
-    bool return_ticket(ticket_ptr ticket, int num);
-
-private: // 返回用户当前的票的
-    const deque<ticket_ptr> & current_tickets();
 public:
-    vector<QString> current_tickets(int ID);
-
-public:
-	// 登陆账户，返回登录成功与否（只检查ID和密码是否匹配），
-	// 出问题会抛出异常
-	bool login_user(const int & ID, const QString & password);
-	bool login_admin(const int & ID, const QString & password);
-	int register_user(const QString & name, const QString & password);
-	int register_admin(const QString & name, const QString & password);
+    int register_user(const QString & name, const QString & password);
+    int register_admin(const QString & name, const QString & password);
 
 private:
 	/// parser
 	LineData line_transform(QString str);
 	BuyReturnData operation_transform(QString str);
 public:
-	bool add_line(const QString & str);
+
 
 private: // 查找station-station的票
     vector<Ticket> q_ss_ticket(const QString &f, const QString &t, int date);
@@ -167,13 +150,22 @@ public:
 	bool load_ascii();
 	bool load_binary();
 	void save_binary();
-	TTS();
+    TTS();
 	~TTS();
 
 public:
     /// API
     vector<query_ticket_ans> query_city_city(const query_ticket_cc_data & data);
     vector<query_ticket_ans> query_station_station(const query_ticket_ss_data & data);
+    vector<query_my_order_ans> query_my_order(const query_my_order_data & data);
+    bool add_line(const QString & str);
+    login_user_ans login_user(const login_user_data & data);
+    login_admin_ans login_admin(const login_admin_data & data);
+    return_tickets_ans return_tickets(const return_tickets_data & data);
+    buy_tickets_ans buy_tickets(const buy_tickets_data & data);
+    delete_line_ans delete_line(const delete_line_data & data);
+    register_user_ans register_user(const register_user_data & data);
+    register_admin_ans register_admin(const register_admin_data & data);
 };
 }
 
