@@ -12,3 +12,5 @@ chooseseat::~chooseseat()
 {
     delete ui;
 }
+
+

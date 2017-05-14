@@ -31,6 +31,8 @@ private slots:
 
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_pushButton_3_clicked();
+
 private:
     Ui::userbuy *ui;
 };

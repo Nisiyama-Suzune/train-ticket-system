@@ -158,11 +158,12 @@ public:
     vector<query_ticket_ans> query_city_city(const query_ticket_cc_data & data);
     vector<query_ticket_ans> query_station_station(const query_ticket_ss_data & data);
     vector<query_my_order_ans> query_my_order(const query_my_order_data & data);
-    bool add_line(const QString & str);
+    bool add_line(const QString & data);
     login_user_ans login_user(const login_user_data & data);
     login_admin_ans login_admin(const login_admin_data & data);
     return_tickets_ans return_tickets(const return_tickets_data & data);
     buy_tickets_ans buy_tickets(const buy_tickets_data & data);
+    buy_tickets_ans buy_tickets(const QString & data);
     delete_line_ans delete_line(const delete_line_data & data);
     register_user_ans register_user(const register_user_data & data);
     register_admin_ans register_admin(const register_admin_data & data);

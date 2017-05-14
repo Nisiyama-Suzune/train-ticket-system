@@ -20,7 +20,7 @@ Adminregister::~Adminregister()
 
 void Adminregister::on_confirm_clicked()
 {
-    int id = tts.register_admin(ui->userLineEdit->text(), ui->pwdLineEdit->text());
+    int id = tts.register_admin_ans(ui->userLineEdit->text(), ui->pwdLineEdit->text());
     QLabel * label = new QLabel("你的id号是");
     label->show();
     adminlogin a_log;
