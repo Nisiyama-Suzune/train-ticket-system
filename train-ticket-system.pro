@@ -90,7 +90,8 @@ FORMS    += \
     UI/userreturn.ui \
     UI/userticket.ui \
     UI/search.ui \
-    UI/chooseseat.ui
+    UI/chooseseat.ui \
+    UI/beginwindow.ui
 
 DISTFILES += \
     log.txt

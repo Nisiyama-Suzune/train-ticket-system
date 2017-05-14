@@ -5,7 +5,8 @@
 
 struct query_ticket_data {
     QString dep_city;
-
+    QString arr_city;
+    int date;
 };
 
 struct query_ticket_ans {
