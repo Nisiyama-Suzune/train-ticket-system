@@ -236,6 +236,7 @@ int sjtu::TTS::register_user(const QString & name, const QString & password) {
 	user->name = name;
 	user->password = password;
 	server.add_user(user);
+    auto user2 = server.find_user(ID);
 	return ID;
 }
 
@@ -254,15 +255,14 @@ int sjtu::TTS::register_admin(const QString & name, const QString & password) {
 bool sjtu::TTS::load_ascii() {
 	QDir dir = QDir::current();
 	QString directory = QDir::currentPath();
-    directory += "/../train-ticket-system/trains.csv";
-//    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/trains.csv";
+//    directory += "/../train-ticket-system/trains.csv";
+    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/trains.csv";
 	QFile file(directory);
 	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No trains' ascii file!" << std::endl;
 		return false;
 	}
 	QTextStream fin(&file);
-
 	QString str, tmp;
 	str = fin.readLine();
 
@@ -277,6 +277,7 @@ bool sjtu::TTS::load_ascii() {
 
 	directory = QDir::currentPath();
 	directory += "/../train-ticket-system/operation.out";
+    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/operation.out";
 	QFile file2(directory);
 	if (!file2.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No operation ascii file!" << std::endl;
@@ -286,10 +287,11 @@ bool sjtu::TTS::load_ascii() {
 	while (fin2.readLineInto(&str)) {
 		BuyReturnData ans = operation_transform(str);
 		if (server.check_user(ans.ID)) {
-		} else {
-            auto user = server.find_user(register_user(ans.name, "000000"));
-            user->ID = ans.ID;
-		}
+            auto user = server.find_user(ans.ID);
+            user->name = ans.name;
+        } else {
+           _add_user(ans.name, ans.ID);
+        }
 		buy_tickets_data tmp;
 		tmp.ID = ans.ID;
 		tmp.train_name = ans.train_ID;
@@ -730,8 +732,15 @@ sjtu::return_tickets_ans sjtu::TTS::return_tickets(const sjtu::return_tickets_da
 }
 
 sjtu::buy_tickets_ans sjtu::TTS::buy_tickets(const sjtu::buy_tickets_data & data) {
+    if (!server.check_user(data.ID))
+        return false;
+    if (!server.check_line(data.train_name))
+        return false;
+
     User &user = *server.find_user(data.ID);
     Line &line = *server.find_line(data.train_name);
+    if (!line.check_date(Date(data.start_date)))
+        return false;
     Train &train = *(line.trains[Date(data.start_date)]);
     if (train.min_avail(data.start_station, data.end_station, data.seat_kind) < data.ticket_num) {
         return false;
