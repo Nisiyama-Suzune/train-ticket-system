@@ -11,6 +11,7 @@
 #include "account_manager.h"
 #include "../../memory.hpp"
 #include "../../smart_ptr.hpp"
+#include "query.h"
 
 #include <QDir>
 #include <cstdlib>
@@ -149,7 +150,6 @@ private:
 	LineData line_transform(QString str);
 	BuyReturnData operation_transform(QString str);
 public:
-	/// API
 	bool add_line(const QString & str);
 
 private: // 查找station-station的票
@@ -169,6 +169,11 @@ public:
 	void save_binary();
 	TTS();
 	~TTS();
+
+public:
+    /// API
+    vector<query_ticket_ans> query_city_city(const query_ticket_cc_data & data);
+    vector<query_ticket_ans> query_station_station(const query_ticket_ss_data & data);
 };
 }
 

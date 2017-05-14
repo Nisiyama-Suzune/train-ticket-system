@@ -11,12 +11,16 @@ struct query_ticket_cc_data {
     QString dep_city;
     QString arr_city;
     int date;
+    query_ticket_cc_data(QString a, QString b, int c) :
+        dep_city(a), arr_city(b), date(c){}
 };
 
 struct query_ticket_ss_data {
     QString dep_satation;
     QString arr_station;
     int date;
+    query_ticket_ss_data(QString a, Qstring b, int c) :
+        dep_satation(a), arr_station(b), date(c){}
 };
 
 struct query_ticket_ans {
