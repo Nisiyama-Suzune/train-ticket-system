@@ -2,6 +2,7 @@
 #define USERBUY_H
 
 #include <QDialog>
+#include <QListWidgetItem>
 
 namespace Ui {
 class userbuy;

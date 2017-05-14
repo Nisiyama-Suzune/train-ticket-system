@@ -319,7 +319,7 @@ public:
 	};
 
 	map() {
-		const long long mod = 1E16 + 7, a = 17, b = 5E15 + 13;
+//		const long long mod = 1E16 + 7, a = 17, b = 5E15 + 13;
 		nend = new node(mod);
 		nbegin = nend;
 		m_size = 0;

@@ -3,6 +3,7 @@
 #include "userregister.h"
 #include "usermainwindow.h"
 #include "../tts_server/header/server.h"
+#include <QMessageBox>
 
 extern sjtu::TTS tts;
 extern int ID;

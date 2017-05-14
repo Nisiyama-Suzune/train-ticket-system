@@ -1,9 +1,9 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "../tts_server/header/server.h"
 #include "../tts_server/header/account_manager.h"
 #include "../tts_server/header/train_manager.h"
 #include "../tts_server/header/forward_declaration.h"
+#include "../tts_server/header/server.h"
 
 sjtu::TTS tts;
 int ID;

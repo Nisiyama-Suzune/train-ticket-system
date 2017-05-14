@@ -17,13 +17,23 @@
 /// Stations, etc.
 namespace sjtu {
 
+typedef memory_pool<Station>::pool_ptr station_ptr;
+typedef memory_pool<City>::pool_ptr    city_ptr;
+typedef memory_pool<Line>::pool_ptr    line_ptr;
+typedef memory_pool<Train>::pool_ptr   train_ptr;
+typedef memory_pool<Ticket>::pool_ptr  ticket_ptr;
+
 struct Date {
     int year, month, day;
     int hour, min, sec;
 
+    Date(){}
+    Date(int date) {
+        year = date / 10000;
+        month = (date / 100) % 100;
+		day = date % 100;
+    }
 
-    Date(int y = 0, int m = 0, int d = 0, int h = 0, int min = 0, int sec = 0) :
-            year(y), month(m), day(d), hour(h), min(min), sec(sec) {}
 
     friend bool operator<(const Date &lhs, const Date &rhs) {
         if (lhs.year != rhs.year) return lhs.year < rhs.year;
@@ -38,9 +48,9 @@ struct Date {
         return year == rhs.year && month == rhs.month && day == rhs.day;
     }
 
-    /*friend bool same_day(const Date &lhs, const Date &rhs) {
+    friend bool same_day(const Date &lhs, const Date &rhs) {
         return lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year;
-    }*/
+    }
 
     bool operator==(const Date &rhs) {
         return year == rhs.year && month == rhs.month && day == rhs.day
@@ -62,6 +72,9 @@ struct Date {
 		return out;
 	}
 
+    QString toStr() {
+        return QString::number(year) + "." + QString::number(month) + "." + QString::number(day);
+    }
 
 /*
 	void load(QDataStream& in)
@@ -129,8 +142,8 @@ struct Line {
     QString name;                     // K1234, G27 etc
     vector<QString> seat_kind_names; // 座位种类名
     vector<station_ptr> stations;  // 经过的车站，0为起点站
-    vector<Date> arr_time;               // 到站时间
-    vector<Date> dep_time;               // 离站时间
+    vector<int> arr_time;               // 到站时间
+    vector<int> dep_time;               // 离站时间
     vector<int> miles;                   // 距离始发站的里程
     vector<vector<double>> price;            // 从第i到第i+1站的第j种票票价
 
@@ -150,6 +163,37 @@ struct Line {
 			<< rhs.dep_time << rhs.miles << rhs.price;
 		return out;
 	}
+
+    QString arr(int pos) {
+        return QString::number(arr_time[pos] / 100) + ":" + QString::number(arr_time[pos] % 100);
+    }
+    QString dep(int pos) {
+        return QString::number(dep_time[pos] / 100) + ":" + QString::number(dep_time[pos] % 100);
+    }
+
+    QString arr(const QString &name) {
+        for (int pos = 0; pos < arr_time.size(); ++pos) {
+            if (name == stations[pos]->name) {
+                return arr(pos);
+            }
+        }
+        return "";
+    }
+    QString dep(const QString &name) {
+        for (int pos = 0; pos < dep_time.size(); ++pos) {
+            if (name == stations[pos]->name) {
+                return dep(pos);
+            }
+        }
+        return "";
+    }
+
+    int find_pos(const QString &name) {
+        for (int i = 0; i < stations.size(); ++i) {
+            if (name == stations[i]->name)
+                return i;
+        }
+    }
 };
 
 /**Same line share one line object
@@ -186,6 +230,12 @@ struct Ticket {
     int kind;                  // 这张票的种类
     double price;                 // 票价 = Sigma price[i][kind]
     int num;                   // user拥有的张数
+
+    Ticket(){}
+    Ticket(train_ptr _t, int from, int to, int kind, double price, int num)
+        : train(_t), from(from), to(to), kind(kind), price(price), num(num) {}
+
+
 
     bool equal_ex_num(const Ticket & rhs) {
         return train == rhs.train && from == rhs.from && to == rhs.to

@@ -7,6 +7,7 @@
 
 #include "vector.hpp"
 #include "exceptions.hpp"
+#include <QDataStream>
 
 namespace sjtu {
 
@@ -19,6 +20,13 @@ private:
     static vector<int> recycler;
     static vector<int> counter;
     static int sz;
+public:
+	static void save(QDataStream& out) {
+		out << container << recycler << counter << sz;
+	}
+	static void load(QDataStream &in) {
+		in >> container >> recycler >> counter >> sz;
+	}
 
 public:
     class pool_ptr {
