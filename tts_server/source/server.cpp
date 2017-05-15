@@ -326,47 +326,136 @@ sjtu::user_ptr sjtu::TTS::_add_user(const QString &name, int ID) {
 }
 
 bool sjtu::TTS::load_binary() {
-	QString directory = QDir::currentPath();
-	directory += "/../train-ticket-system/operation.dat";
-	QFile file(directory);
-	if (!file.open(QIODevice::ReadOnly)) {
+	QString path = QDir::currentPath();
+	path += "/../train-ticket-system/data/";
+
+	memory_pool<User>::end_counting();
+	QString User_file_name = "Users.dat";
+	QFile User_file(path + User_file_name);
+	if (!User_file.open(QIODevice::ReadOnly)) return false;
+	QDataStream User_fin(&User_file);
+	memory_pool<User>::save(User_fin);
+	std::cout << "User load success! User's size = " << memory_pool<User>::size() << std::endl;
+
+	memory_pool<Admin>::end_counting();
+	QString Admin_file_name = "Admin.dat";
+	QFile Admin_file(path + Admin_file_name);
+	Admin_file.open(QIODevice::ReadOnly);
+	QDataStream Admin_fin(&Admin_file);
+	memory_pool<Admin>::save(Admin_fin);
+	std::cout << "Admin load success! Admin's size = " << memory_pool<Admin>::size() << std::endl;
+
+	memory_pool<Station>::end_counting();
+	QString Station_file_name = "Station.dat";
+	QFile Station_file(path + Station_file_name);
+	Station_file.open(QIODevice::ReadOnly);
+	QDataStream Station_fin(&Station_file);
+	memory_pool<Station>::save(Station_fin);
+	std::cout << "Station load success! Station's size = " << memory_pool<Station>::size() << std::endl;
+
+	memory_pool<City>::end_counting();
+	QString City_file_name = "City.dat";
+	QFile City_file(path + City_file_name);
+	City_file.open(QIODevice::ReadOnly);
+	QDataStream City_fin(&City_file);
+	memory_pool<City>::save(City_fin);
+	std::cout << "City load success! City's size = " << memory_pool<City>::size() << std::endl;
+
+	memory_pool<Line>::end_counting();
+	QString Line_file_name = "Line.dat";
+	QFile Line_file(path + Line_file_name);
+	Line_file.open(QIODevice::ReadOnly);
+	QDataStream Line_fin(&Line_file);
+	memory_pool<Line>::save(Line_fin);
+	std::cout << "Line load success! Line's size = " << memory_pool<Line>::size() << std::endl;
+
+	memory_pool<Train>::end_counting();
+	QString Train_file_name = "Train.dat";
+	QFile Train_file(path + Train_file_name);
+	Train_file.open(QIODevice::ReadOnly);
+	QDataStream Train_fin(&Train_file);
+	memory_pool<Train>::save(Train_fin);
+	std::cout << "Train load success! Train's size = " << memory_pool<Train>::size() << std::endl;
+
+	memory_pool<Ticket>::end_counting();
+	QString Ticket_file_name = "Ticket.dat";
+	QFile Ticket_file(path + Ticket_file_name);
+	Ticket_file.open(QIODevice::ReadOnly);
+	QDataStream Ticket_fin(&Ticket_file);
+	memory_pool<Ticket>::save(Ticket_fin);
+	std::cout << "Ticket load success! Ticket's size = " << memory_pool<Ticket>::size() << std::endl;
+
+	QString server_file_name = "Server.dat";
+	QFile server_file(path + server_file_name);
+	if (!server_file.open(QIODevice::ReadOnly)) {
 		std::cout << "Load failed!" << std::endl;
 		return false;
 	}
-	QDataStream fin(&file);
-	memory_pool<User>::load(fin);
-	std::cout << "User load success! User's size = " << memory_pool<User>::size() << std::endl;
-	memory_pool<Admin>::load(fin);
-	std::cout << "Admin load success! Admin's size = " << memory_pool<Admin>::size() << std::endl;
-	memory_pool<Station>::load(fin);
-	std::cout << "Station load success! Station's size = " << memory_pool<Station>::size() << std::endl;
-	memory_pool<City>::load(fin);
-	std::cout << "City load success! City's size = " << memory_pool<City>::size() << std::endl;
-	memory_pool<Line>::load(fin);
-	std::cout << "Line load success! Line's size = " << memory_pool<Line>::size() << std::endl;
-	memory_pool<Train>::load(fin);
-	std::cout << "Train load success! Train's size = " << memory_pool<Train>::size() << std::endl;
-	memory_pool<Ticket>::load(fin);
-	std::cout << "Ticket load success! Ticket's size = " << memory_pool<Ticket>::size() << std::endl;
+	QDataStream fin(&server_file);
+
 	fin >> server;
+	memory_pool<User>::start_counting();
+	memory_pool<Admin>::start_counting();
+	memory_pool<Station>::start_counting();
+	memory_pool<City>::start_counting();
+	memory_pool<Line>::start_counting();
+	memory_pool<Train>::start_counting();
+	memory_pool<Ticket>::start_counting();
 //	fin >> users >> admins >> lines >> cities >> stations;
 	return true;
 }
 
 void sjtu::TTS::save_binary() {
-	QString directory = QDir::currentPath();
-	directory += "/../train-ticket-system/operation.dat";
-	QFile file(directory);
-	if (!file.open(QIODevice::WriteOnly)) {
-	}
-	QDataStream fout(&file);
-	memory_pool<User>::save(fout);
-	memory_pool<Admin>::save(fout);
-	memory_pool<Station>::save(fout);
-	memory_pool<City>::save(fout);
-	memory_pool<Line>::save(fout);
-	memory_pool<Train>::save(fout);
-	memory_pool<Ticket>::save(fout);
+	QString path = QDir::currentPath();
+	path += "/../train-ticket-system/data/";
+//	directory = path + "/../train-ticket-system/operation.dat";
+
+	QString User_file_name = "Users.dat";
+	QFile User_file(path + User_file_name);
+	User_file.open(QIODevice::WriteOnly);
+	QDataStream User_fout(&User_file);
+	memory_pool<User>::save(User_fout);
+
+	QString Admin_file_name = "Admin.dat";
+	QFile Admin_file(path + Admin_file_name);
+	Admin_file.open(QIODevice::WriteOnly);
+	QDataStream Admin_fout(&Admin_file);
+	memory_pool<Admin>::save(Admin_fout);
+
+	QString Station_file_name = "Station.dat";
+	QFile Station_file(path + Station_file_name);
+	Station_file.open(QIODevice::WriteOnly);
+	QDataStream Station_fout(&Station_file);
+	memory_pool<Station>::save(Station_fout);
+
+	QString City_file_name = "City.dat";
+	QFile City_file(path + City_file_name);
+	City_file.open(QIODevice::WriteOnly);
+	QDataStream City_fout(&City_file);
+	memory_pool<City>::save(City_fout);
+
+	QString Line_file_name = "Line.dat";
+	QFile Line_file(path + Line_file_name);
+	Line_file.open(QIODevice::WriteOnly);
+	QDataStream Line_fout(&Line_file);
+	memory_pool<Line>::save(Line_fout);
+
+	QString Train_file_name = "Train.dat";
+	QFile Train_file(path + Train_file_name);
+	Train_file.open(QIODevice::WriteOnly);
+	QDataStream Train_fout(&Train_file);
+	memory_pool<Train>::save(Train_fout);
+
+	QString Ticket_file_name = "Ticket.dat";
+	QFile Ticket_file(path + Ticket_file_name);
+	Ticket_file.open(QIODevice::WriteOnly);
+	QDataStream Ticket_fout(&Ticket_file);
+	memory_pool<Ticket>::save(Ticket_fout);
+
+	QString server_file_name = "Server.dat";
+	QFile server_file(path + server_file_name);
+	server_file.open(QIODevice::WriteOnly);
+	QDataStream fout(&server_file);
 	fout << server;
 //	fout << users << admins << lines << cities << stations;
 }
@@ -374,16 +463,8 @@ void sjtu::TTS::save_binary() {
 
 //Constructor
 sjtu::TTS::TTS() {
-	QString directory = QDir::currentPath();
-	directory += "/../train-ticket-system/operation.dat";
-	QFile file(directory);
-    if(!file.open(QIODevice::ReadOnly)) {
-		file.close();
-		load_ascii();
-	} else {
-		file.close();
-		load_binary();
-	}
+	if (load_binary()) return;
+	else load_ascii();
 }
 sjtu::TTS::~TTS() {
 	save_binary();
