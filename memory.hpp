@@ -20,6 +20,7 @@ private:
     static vector<T>   container;
     static vector<int> recycler;
     static vector<int> counter;
+    static bool is_counted;
 public:
 	static void save(QDataStream& out) {
 		out << counter;
@@ -50,11 +51,11 @@ public:
     public:
         pool_ptr() : pos(-1) {}
         explicit pool_ptr(int _pos) : pos(_pos) {
-            if (pos != -1)
+            if (pos != -1 && is_counted)
                 memory_pool::counter[pos]++;
         }
         pool_ptr(const pool_ptr & other) : pos(other.pos) {
-            if (pos != -1)
+            if (pos != -1 && is_counted)
                 memory_pool::counter[pos]++;
         }
         ~pool_ptr() {
@@ -65,7 +66,7 @@ public:
                 return *this;
             terminate();
             pos = other.pos;
-            if (pos != -1)
+            if (pos != -1 && is_counted)
                 memory_pool<T>::counter[pos]++;
             return *this;
         }
@@ -100,6 +101,12 @@ public:
 public:
     static pool_ptr get_T(T a = T());
     static int size();
+    void start_counting() {
+            is_counted = 1;
+        }
+        void end_counting() {
+            is_counted = 0;
+        }
 };
 
 /// memory_pool
@@ -109,7 +116,8 @@ template <class T>
 vector<int> memory_pool<T>::recycler;
 template <class T>
 vector<int> memory_pool<T>::counter;
-
+template <class T>
+bool memory_pool<T>::is_counted = 0;
 
 // get & put
 template<class T>
@@ -127,7 +135,7 @@ typename memory_pool<T>::pool_ptr memory_pool<T>::get_T(T a) {
 }
 template <class T>
 void memory_pool<T>::put_T(int pos) {
-    if (pos != -1) {
+    if (pos != -1 && is_counted) {
         recycler.push_back(pos);
     }
 }
@@ -141,7 +149,7 @@ int memory_pool<T>::size() {
 /// pool_ptr
 template <class T>
 void memory_pool<T>::pool_ptr::terminate() {
-    if (pos == -1)
+    if (pos == -1 || !is_counted)
         return;
     --memory_pool<T>::counter[pos];
 	if (memory_pool<T>::counter[pos] == 0) {
