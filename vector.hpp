@@ -466,11 +466,10 @@ public:
 	friend QDataStream& operator >> (QDataStream &in, vector &rhs) {
 		int tmp;
 		in >> tmp;
-		T x;
 		rhs.clear();
 		for (int i = 0; i < tmp; ++i) {
-			in >> x;
-			rhs.push_back(x);
+            rhs.push_back(T());
+            in >> rhs.storage[rhs.NowLength - 1];
 		}
 		return in;
 	}
