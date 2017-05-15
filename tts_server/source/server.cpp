@@ -303,6 +303,17 @@ bool sjtu::TTS::load_ascii() {
 		buy_tickets(tmp);
 //		buy_ticket(server.find_line(ans.train_ID)->trains[ans.date], )
 	}
+	using std::cout;
+	using std::endl;
+	cout << "ASCII load success!!!" << endl;
+	std::cout << "! User's size = " << memory_pool<User>::size() << std::endl;
+	std::cout << "! Admin's size = " << memory_pool<Admin>::size() << std::endl;
+	std::cout << "! Station's size = " << memory_pool<Station>::size() << std::endl;
+	std::cout << "! City's size = " << memory_pool<City>::size() << std::endl;
+	std::cout << "! Line's size = " << memory_pool<Line>::size() << std::endl;
+	std::cout << "! Train's size = " << memory_pool<Train>::size() << std::endl;
+	std::cout << "! Ticket's size = " << memory_pool<Ticket>::size() << std::endl;
+
 	return true;
 }
 

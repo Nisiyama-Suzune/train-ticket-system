@@ -109,7 +109,7 @@ template<class T>
 typename memory_pool<T>::pool_ptr memory_pool<T>::get_T(T a) {
     if (recycler.empty()) {
         container.push_back(a);
-        counter.push_back(0);
+		counter.push_back(1);
         return pool_ptr((int)container.size() -1);
     }
     int pos = recycler.back();
@@ -137,7 +137,7 @@ void memory_pool<T>::pool_ptr::terminate() {
     if (pos == -1)
         return;
     --memory_pool<T>::counter[pos];
-    if (memory_pool<T>::counter[pos]-- == 0) {
+	if (memory_pool<T>::counter[pos] == 0) {
         put_T(pos);
     }
 }
