@@ -9,6 +9,7 @@
 #include "exceptions.hpp"
 #include <QDataStream>
 
+
 namespace sjtu {
 
 template<class T>
@@ -19,13 +20,22 @@ private:
     static vector<T>   container;
     static vector<int> recycler;
     static vector<int> counter;
-    static int sz;
 public:
 	static void save(QDataStream& out) {
-		out << container << recycler << counter << sz;
+		out << counter;
+		out << recycler;
+		out << container;
 	}
 	static void load(QDataStream &in) {
-		in >> container >> recycler >> counter >> sz;
+		in >> counter;
+		using std::cout;
+		using std::endl;
+		cout << "counter.size() = " << counter.size()  << endl;
+		for (int i = 0; i < counter.size(); ++i)
+			cout << counter[i] << ' ' ;
+		cout << endl;
+		in >> recycler;
+		in >> container;
 	}
 
 public:
@@ -99,21 +109,19 @@ template <class T>
 vector<int> memory_pool<T>::recycler;
 template <class T>
 vector<int> memory_pool<T>::counter;
-template <class T>
-int memory_pool<T>::sz = 0;
 
 
 // get & put
 template<class T>
 typename memory_pool<T>::pool_ptr memory_pool<T>::get_T(T a) {
-    ++sz;
     if (recycler.empty()) {
         container.push_back(a);
-        counter.push_back(0);
+		counter.push_back(1);
         return pool_ptr((int)container.size() -1);
     }
     int pos = recycler.back();
     counter[pos] = 0;
+	container[pos] = a;
     recycler.pop_back();
     return pool_ptr(pos);
 }
@@ -121,13 +129,12 @@ template <class T>
 void memory_pool<T>::put_T(int pos) {
     if (pos != -1) {
         recycler.push_back(pos);
-        --sz;
     }
 }
 
 template <class T>
 int memory_pool<T>::size() {
-    return sz;
+	return container.size() - recycler.size();
 }
 
 
@@ -137,7 +144,7 @@ void memory_pool<T>::pool_ptr::terminate() {
     if (pos == -1)
         return;
     --memory_pool<T>::counter[pos];
-    if (memory_pool<T>::counter[pos]-- == 0) {
+	if (memory_pool<T>::counter[pos] == 0) {
         put_T(pos);
     }
 }

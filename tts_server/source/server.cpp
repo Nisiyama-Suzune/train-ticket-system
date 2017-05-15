@@ -255,8 +255,8 @@ int sjtu::TTS::register_admin(const QString & name, const QString & password) {
 bool sjtu::TTS::load_ascii() {
 	QDir dir = QDir::current();
 	QString directory = QDir::currentPath();
-//    directory += "/../train-ticket-system/trains.csv";
-    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/trains.csv";
+	directory += "/../train-ticket-system/trains.csv";
+//    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/trains.csv";
 	QFile file(directory);
 	if (!file.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No trains' ascii file!" << std::endl;
@@ -277,7 +277,7 @@ bool sjtu::TTS::load_ascii() {
 
 	directory = QDir::currentPath();
 	directory += "/../train-ticket-system/operation.out";
-    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/operation.out";
+//    directory = "/Users/aaronren/Projects/CLionProjects/train-ticket-system/operation.out";
 	QFile file2(directory);
 	if (!file2.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		std::cout << "No operation ascii file!" << std::endl;
@@ -303,6 +303,17 @@ bool sjtu::TTS::load_ascii() {
 		buy_tickets(tmp);
 //		buy_ticket(server.find_line(ans.train_ID)->trains[ans.date], )
 	}
+	using std::cout;
+	using std::endl;
+	cout << "ASCII load success!!!" << endl;
+	std::cout << "! User's size = " << memory_pool<User>::size() << std::endl;
+	std::cout << "! Admin's size = " << memory_pool<Admin>::size() << std::endl;
+	std::cout << "! Station's size = " << memory_pool<Station>::size() << std::endl;
+	std::cout << "! City's size = " << memory_pool<City>::size() << std::endl;
+	std::cout << "! Line's size = " << memory_pool<Line>::size() << std::endl;
+	std::cout << "! Train's size = " << memory_pool<Train>::size() << std::endl;
+	std::cout << "! Ticket's size = " << memory_pool<Ticket>::size() << std::endl;
+
 	return true;
 }
 
@@ -324,12 +335,19 @@ bool sjtu::TTS::load_binary() {
 	}
 	QDataStream fin(&file);
 	memory_pool<User>::load(fin);
+	std::cout << "User load success! User's size = " << memory_pool<User>::size() << std::endl;
 	memory_pool<Admin>::load(fin);
+	std::cout << "Admin load success! Admin's size = " << memory_pool<Admin>::size() << std::endl;
 	memory_pool<Station>::load(fin);
+	std::cout << "Station load success! Station's size = " << memory_pool<Station>::size() << std::endl;
 	memory_pool<City>::load(fin);
+	std::cout << "City load success! City's size = " << memory_pool<City>::size() << std::endl;
 	memory_pool<Line>::load(fin);
+	std::cout << "Line load success! Line's size = " << memory_pool<Line>::size() << std::endl;
 	memory_pool<Train>::load(fin);
+	std::cout << "Train load success! Train's size = " << memory_pool<Train>::size() << std::endl;
 	memory_pool<Ticket>::load(fin);
+	std::cout << "Ticket load success! Ticket's size = " << memory_pool<Ticket>::size() << std::endl;
 	fin >> server;
 //	fin >> users >> admins >> lines >> cities >> stations;
 	return true;

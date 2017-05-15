@@ -4,6 +4,7 @@
 #include "../tts_server/header/train_manager.h"
 #include "../tts_server/header/forward_declaration.h"
 #include "../tts_server/header/server.h"
+#include "../memory.hpp"
 
 sjtu::TTS tts;
 int ID;
