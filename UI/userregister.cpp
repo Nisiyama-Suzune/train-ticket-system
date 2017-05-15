@@ -20,7 +20,7 @@ userregister::~userregister()
 void userregister::on_confirm_clicked()
 {
     int id = tts.register_user(ui->userLineEdit->text(), ui->pwdLineEdit->text());
-    QLabel *label = new QLabel("你的id号是");
+    QLabel *label = new QLabel("你的id号是" + QString::number(id));
     userlogin u_log;
     u_log.exec();
 }

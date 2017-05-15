@@ -3,6 +3,7 @@
 #include "../tts_server/header/server.h"
 #include <QLabel>
 #include "adminlogin.h"
+#include "../tts_server/header/query.h"
 
 extern sjtu::TTS tts;
 

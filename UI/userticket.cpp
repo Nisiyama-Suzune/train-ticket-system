@@ -5,6 +5,7 @@
 #include "userhistory.h"
 #include "usermainwindow.h"
 #include "../tts_server/header/server.h"
+#include "../tts_server/header/query.h"
 #include <QString>
 #include "vector.hpp"
 #include <QListWidget>
@@ -51,10 +52,9 @@ void userticket::on_pushButton_3_clicked()
 
 void userticket::on_pushButton_6_clicked()
 {
-    /*
-    sjtu::vector<QString> vec = tts.current_tickets(ID);
+    sjtu::vector<sjtu::query_my_order_ans> vec = tts.query_my_order(sjtu::query_my_order_data(ID));
     for(int i = 0; i < vec.size(); ++i)
     {
-        QListWidgetItem * Qlw = new QListWidgetItem(vec[i], ui->listWidget);
-    }*/
+        QListWidgetItem * Qlw = new QListWidgetItem(vec[i].toQString(), ui->listWidget);
+    }
 }

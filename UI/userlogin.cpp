@@ -38,5 +38,8 @@ void userlogin::on_loginBtn_clicked()
     else
     {
         QMessageBox::warning(this, tr("Warning"), tr("user name or password error!"), QMessageBox::Yes);
+        ui->userLineEdit->clear();
+        ui->pwdLineEdit->clear();
+        ui->userLineEdit->setFocus();
     }
 }
