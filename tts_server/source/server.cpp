@@ -385,9 +385,12 @@ bool sjtu::TTS::add_line(const sjtu::TTS::LineData &line_data) {
 	}
 	for (int i = 0; i < (int)line_data.stations.size(); ++i) {
 		const QString &station_name = line_data.stations[i];
-		if (!server.check_station(station_name))
-			add_station(StationData(station_name, station_name));
-
+        if (!server.check_station(station_name)) {
+            QString city_name;
+            city_name.push_back(station_name[0]);
+            city_name.push_back(station_name[1]);
+            add_station(StationData(city_name, station_name));
+        }
 		line->stations.push_back(
 				server.find_station(station_name));
 		line->stations.back()->lines.push_back(line);
