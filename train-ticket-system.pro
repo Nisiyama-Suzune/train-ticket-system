@@ -57,6 +57,7 @@ HEADERS  += \
     tts_server/header/server.h \
     tts_server/header/account_manager.h \
     tts_server/header/forward_declaration.h \
+    tts_server/header/query.h \
     UI/adminadd.h \
     UI/admindelete.h \
     UI/adminlogin.h \
