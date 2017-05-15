@@ -22,10 +22,16 @@ private:
     static int sz;
 public:
 	static void save(QDataStream& out) {
-		out << container << recycler << counter << sz;
+		out << sz;
+		out << counter;
+		out << recycler;
+		out << container;
 	}
 	static void load(QDataStream &in) {
-		in >> container >> recycler >> counter >> sz;
+		in >> sz;
+		in >> counter;
+		in >> recycler;
+		in >> container;
 	}
 
 public:
