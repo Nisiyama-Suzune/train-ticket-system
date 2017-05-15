@@ -46,7 +46,8 @@ public:
     public:
         pool_ptr() : pos(-1) {}
         explicit pool_ptr(int _pos) : pos(_pos) {
-            memory_pool::counter[pos]++;
+            if (pos != -1)
+                memory_pool::counter[pos]++;
         }
         pool_ptr(const pool_ptr & other) : pos(other.pos) {
             if (pos != -1)
