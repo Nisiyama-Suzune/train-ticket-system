@@ -23,11 +23,14 @@ private:
     static bool is_counted;
 public:
 	static void save(QDataStream& out) {
+		end_counting();
 		out << counter;
 		out << recycler;
 		out << container;
+		start_counting();
 	}
 	static void load(QDataStream &in) {
+		end_counting();
 		in >> counter;
 		using std::cout;
 		using std::endl;
@@ -37,6 +40,7 @@ public:
 		cout << endl;
 		in >> recycler;
 		in >> container;
+		start_counting();
 	}
 
 public:
@@ -101,10 +105,10 @@ public:
 public:
     static pool_ptr get_T(T a = T());
     static int size();
-    void start_counting() {
+	static void start_counting() {
             is_counted = 1;
         }
-        void end_counting() {
+	static void end_counting() {
             is_counted = 0;
         }
 };
