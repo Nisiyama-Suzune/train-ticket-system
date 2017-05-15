@@ -26,11 +26,13 @@ private:
         storage = (T*)operator new[](MaxSize * sizeof(T));
         for(int i = 0; i < NowLength; ++i)
         {
-            new(storage + i) T(tem[i]);
+//			storage[i] = new T(tem[i]);
+			new(storage + i) T(tem[i]);
             tem[i].~T();
         }
-        operator delete [](tem);
+		operator delete [](tem);
     }
+
 public:
 	/**
 	 * TODO

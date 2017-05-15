@@ -9,6 +9,7 @@
 #include "exceptions.hpp"
 #include <QDataStream>
 
+
 namespace sjtu {
 
 template<class T>
@@ -27,6 +28,12 @@ public:
 	}
 	static void load(QDataStream &in) {
 		in >> counter;
+		using std::cout;
+		using std::endl;
+		cout << "counter.size() = " << counter.size()  << endl;
+		for (int i = 0; i < counter.size(); ++i)
+			cout << counter[i] << ' ' ;
+		cout << endl;
 		in >> recycler;
 		in >> container;
 	}
