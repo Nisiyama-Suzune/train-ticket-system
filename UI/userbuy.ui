@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>userbuy</class>
+ <widget class="QDialog" name="userbuy">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <item>
+    <widget class="QLabel" name="label_8">
+     <property name="font">
+      <font>
+       <family>微软雅黑 Light</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>火车票订票系统</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="start_station_lable">
+       <property name="text">
+        <string>起始站</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="start_by_station">
+       <item>
+        <property name="text">
+         <string>北京</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>上海</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>西藏</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="end_station_label">
+       <property name="text">
+        <string>终点站</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="end_by_station">
+       <item>
+        <property name="text">
+         <string>北京</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>出发时间</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="time_by_station"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="search_by_station">
+       <property name="text">
+        <string>按站查询</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="start_city_label">
+       <property name="text">
+        <string>起始站</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="start_by_city">
+       <item>
+        <property name="text">
+         <string>北京</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>上海</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>西藏</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="end_city_label">
+       <property name="text">
+        <string>终点站</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="end_by_city">
+       <item>
+        <property name="text">
+         <string>北京</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>出发时间</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="time_by_city"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="search_by_city">
+       <property name="text">
+        <string>按城市查询</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="return_main_menu_button">
+         <property name="text">
+          <string>回到主页</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="query_my_ticket">
+         <property name="text">
+          <string>我已买的票</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="log_out_button">
+         <property name="text">
+          <string>登出</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listWidget">
+       <item>
+        <property name="text">
+         <string>新建项目</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>新建项目</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>购票张数</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="ticket_number"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>确定</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>取消</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

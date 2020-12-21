@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>userticket</class>
+ <widget class="QDialog" name="userticket">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <family>微软雅黑 Light</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>全部订单</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton_6">
+         <property name="text">
+          <string>显示订单</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>我要买票</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="return_ticket_button">
+         <property name="text">
+          <string>我要退票</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buy_history_button">
+         <property name="text">
+          <string>历史购票</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="main_menu_button">
+         <property name="text">
+          <string>回到主页</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="log_out_button">
+         <property name="text">
+          <string>登出</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listWidget">
+       <item>
+        <property name="text">
+         <string>新建项目</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>新建项目</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>新建项目</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QScrollBar" name="verticalScrollBar">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
